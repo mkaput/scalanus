@@ -1,12 +1,14 @@
-The Janus Language Specification
-================================
+The Scalanus Language Reference
+===============================
 
 # Introduction
 
-Janus is a simple, dynamically and strongly typed, interpreted language aimed at
-being as easy as possible to implement.
+Scalanus is a simple, dynamically and strongly typed, interpreted language aimed at
+being as easy as possible to implement. It is continuation the
+[Janus](https://github.com/mkaput/janus) programming language with much more features
+and cleaned up grammar & semantics.
 
-This document is the primary reference for the Janus programming language
+This document is the primary reference for the Scalanus programming language
 grammar and semantics.
 
 This document has been greatly inspired by and based on
@@ -16,8 +18,8 @@ copy-pasting tedious paragraphs).
 
 # Notation
 
-Janus' grammar is defined over Unicode codepoints, each conventionally denoted
-`U+XXXX`, for 4 or more hexadecimal digits `X`. _Most_ of Janus' grammar is
+Scalanus' grammar is defined over Unicode codepoints, each conventionally denoted
+`U+XXXX`, for 4 or more hexadecimal digits `X`. _Most_ of Scalanus' grammar is
 confined to the ASCII range of Unicode, and is described in this document by a
 dialect of Extended Backus-Naur Form (EBNF) which can be defined
 self-referentially as follows:
@@ -51,7 +53,7 @@ This EBNF dialect should hopefully be familiar to many readers.
 
 ## Unicode productions
 
-A few productions in Janus' grammar permit Unicode codepoints outside the ASCII
+A few productions in Scalanus' grammar permit Unicode codepoints outside the ASCII
 range. We define these productions in terms of character properties specified
 in the Unicode standard, rather than in terms of ASCII-range codepoints. The
 section [Special Unicode Productions](#special-unicode-productions) lists these
@@ -76,14 +78,14 @@ production. See [tokens](#tokens) for more information.
 
 ## Input format
 
-Janus input is interpreted as a sequence of Unicode codepoints encoded in UTF-8.
-Most Janus grammar rules are defined in terms of printable ASCII-range
+Scalanus input is interpreted as a sequence of Unicode codepoints encoded in UTF-8.
+Most Scalanus grammar rules are defined in terms of printable ASCII-range
 codepoints, but a small number are defined in terms of Unicode properties or
 explicit codepoint lists.
 
 ## Special Unicode Productions
 
-The following productions in the Janus grammar are defined in terms of Unicode
+The following productions in the Scalanus grammar are defined in terms of Unicode
 properties: `ident`, `non_null`, `non_eol`, `non_single_quote` and
 `non_double_quote`.
 
@@ -111,7 +113,7 @@ Some productions are defined by exclusion of particular Unicode characters:
 
 ## Miscellaneous productions
 
-These productions do not have any special Janus grammar meaning, but are
+These productions do not have any special Scalanus grammar meaning, but are
 defined in order to simplify definitions of more sophisticated productions.
 
 ```antlr
@@ -127,9 +129,9 @@ nonzero_dec : '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 
 ```antlr
 comment            : block_comment | line_comment
-block_comment      : "/*" block_comment_body "*/"
+block_comment      : '/*' block_comment_body '*/'
 block_comment_body : [ block_comment | character ]*
-line_comment       : "//" non_eol*
+line_comment       : '//' non_eol*
 ```
 
 ## Whitespace
@@ -151,8 +153,8 @@ token : [ keyword | op | ident | literal | symbol ] whitespace
 |-----------|-----------|-----------|-----------|-----------|
 | and       | as        | break     | case      | class     |
 | const     | continue  | do        | else      | enum      |
-| False     | fn        | for       | if        | in        |
-| let       | loop      | mod       | or        | return    |
+| False     | fn        | for       | if        | import    |
+| in        | loop      | mod       | or        | return    |
 | trait     | True      | type      | while     | yield     |
 
 
@@ -196,7 +198,7 @@ num_lit : nonzero_dec [ dec_digit | '_' ]* float_suffix?
 
 float_suffix : exponent | '.' dec_lit exponent?
 
-exponent : ['E' | 'e' ] [ '-' | '+' ]? dec_lit
+exponent : [ 'E' | 'e' ] [ '-' | '+' ]? dec_lit
 
 dec_lit : [ dec_digit | '_' ]+
 ```
@@ -204,7 +206,7 @@ dec_lit : [ dec_digit | '_' ]+
 #### Boolean literals
 
 ```antlr
-bool_lit : "True" | "False"
+bool_lit : 'True' | 'False'
 ```
 
 The two values of the boolean type are written `True` and `False`.
@@ -212,7 +214,7 @@ The two values of the boolean type are written `True` and `False`.
 #### Unit literal
 
 ```antlr
-unit_lit : "()"
+unit_lit : '()'
 ```
 
 ### Symbols
@@ -228,7 +230,7 @@ otherwise appear as [operators](#operators) or [keywords](#keywords).
 
 # Language grammar
 
-The entry rule of Janus source file is called `program`.
+The entry rule of Scalanus source file is called `program`.
 
 ```antlr
 program : whitespace? stmt*
@@ -237,26 +239,32 @@ program : whitespace? stmt*
 ## Statements
 
 ```antlr
-stmt      : decl_stmt | subst_stmt | expr_stmt | ";"
-decl_stmt : let_decl ";" | item ";"?
-expr_stmt : expr ";"
+stmt : [ decl_stmt | expr ] ';'?
 ```
 
-### Variable bindings
+### Declaration statements
 
 ```antlr
-let_decl : "let" ident "=" expr
+decl_stmt   : assign_stmt | item
+assign_stmt : pattern '=' expr
 ```
 
-Variable binding introduces new subscope with new variable. This prevents
-leaking variables before their declaration and helps programmer prevent
-unexpected variable value changes (though the latter can be mitigated with
-[Substitution statements](#substitution-statements)).
+Variables and items in Scalanus are always immutable.
 
-### Substitution statements
+Assignment statement tries to match given expression with given pattern.
+If matching fails, so does whole statement and `MatchError` is thrown.
+
+Introducing variable or item always comes with introducing new subscope.
+This prevents leaking variables before their declaration and helps programmer
+prevent unexpected variable value changes. Such behaviour means that it is
+possible to redefine variable.
+
+## Patterns
 
 ```antlr
-subst_stmt : lvalue ":=" expr ";"
+pattern        : simple_pattern [ ',' simple_pattern ]*
+simple_pattern : name_pattern
+name_pattern   : ident
 ```
 
 ## Items
@@ -268,8 +276,7 @@ item : fn_item
 ### Functions
 
 ```antlr
-fn_item   : "fn" ident "(" fn_params? ")" block
-fn_params : ident [ "," ident ]*
+fn_item : 'fn' ident '(' pattern? ')' block
 ```
 
 ### Blocks
@@ -279,17 +286,7 @@ The return value of the block is the value of the last expression
 statement, or `()` otherwise.
 
 ```antlr
-block      : "{" stmt* "}"
-```
-
-## Lvalues
-
-Lvalue is a reference to something in memory (either variable or item).
-
-```antlr
-lvalue   : index_lv | path
-index_lv : path "[" expr "]"
-path     : ident
+block : '{' stmt* '}'
 ```
 
 ## Expressions
@@ -297,18 +294,19 @@ path     : ident
 ```antlr
 expr : literal_expr
      | block_expr
+     | tuple_expr
      | op_expr
      | if_expr
+     | for_expr
      | while_expr
      | loop_expr
      | break_expr
      | continue_expr
      | return_expr
-     | lvalue_expr
 
 literal_expr : literal
 block_expr   : block
-lvalue_expr  : lvalue
+tuple_expr   : tuple
 ```
 
 ### Operators
@@ -356,28 +354,65 @@ following precedence table:
 | 1          | -                 | -             | - |
 | 0          | -                 | -             | - |
 
+### Tuples
+
+```antlr
+tuple : '(' expr ',' [ [ expr ',' ]* expr ','? ]? ')
+```
+
+Tuple is an immutable, ordered collection of one or more values.
+In order to differentiate it from grouping expression, if tuple
+contains one value, it has to end with extra comma. Otherwise,
+dangling comma is optional:
+
+```
+(2 + 2)      // grouping
+(2 + 2,)     // 1-tuple
+(2 + 2, 3)   // pair
+(2 + 2, 3,)  // pair
+```
+
 ### If expressions
 
 ```antlr
-if_expr : "if" expr
+if_expr : 'if' expr
           block
           else_tail?
 
-else_tail : "else" [ if_expr | block ]
+else_tail : 'else' [ if_expr | block ]
 ```
 
 The return value of the `if-else` expression is either the result
 of the *if* block, or the *else* one. If the latter one was not
 provided, it evaluates to `()`, e.g.:
 
-```rust
+```
 let a = if False { 1234 } // a == ()
+```
+
+### For loops
+
+```antlr
+for_expr : 'for' pattern 'in' expr
+           block
+```
+
+The `for` loop iterates over an iterable value, for example array or list.
+
+The `for` loop is syntactic sugar for following snippet:
+
+```
+iterator = iter(/* expr */)
+while has_next(iterator) {
+    /* pattern */ = next(iterator)
+    /* body */
+}
 ```
 
 ### While loops
 
 ```antlr
-while_expr : "while" expr
+while_expr : 'while' expr
              block
 ```
 
@@ -386,17 +421,17 @@ always returns `()`.
 
 The `while` loop is syntactic sugar for following snippet:
 
-```rust
+```
 loop {
-    /* body */
     if /* condition */ { break }
+    /* body */
 }
 ```
 
 ### Infinite loops
 
 ```antlr
-loop_expr : "loop" block
+loop_expr : 'loop' block
 ```
 
 `loop` always returns `()`.
@@ -404,26 +439,26 @@ loop_expr : "loop" block
 ### Break expressions
 
 ```antlr
-break_expr : "break"
+break_expr : 'break'
 ```
 
 `break` does not evaluate as it performs jump, but technically
-it evaluates to `()`.
+it should evaluate to `()`.
 
 ### Continue expressions
 
 ```antlr
-continue_expr : "continue"
+continue_expr : 'continue'
 ```
 
 `continue` does not evaluate as it performs jump, but technically
-it evaluates to `()`.
+it should evaluate to `()`.
 
 ### Return expressions
 
 ```antlr
-return_expr : "return" expr
+return_expr : 'return' expr
 ```
 
 `return` does not evaluate as it performs jump, but technically
-it evaluates to `()`.
+it should evaluate to `()`.
