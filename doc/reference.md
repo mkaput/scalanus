@@ -236,6 +236,12 @@ The entry rule of Scalanus source file is called `program`.
 program : whitespace? stmt*
 ```
 
+## Paths
+
+```antlr
+path : TODO
+```
+
 ## Statements
 
 ```antlr
@@ -249,22 +255,17 @@ decl_stmt   : assign_stmt | item
 assign_stmt : pattern '=' expr
 ```
 
-Variables and items in Scalanus are always immutable.
-
 Assignment statement tries to match given expression with given pattern.
-If matching fails, so does whole statement and `MatchError` is thrown.
-
-Introducing variable or item always comes with introducing new subscope.
-This prevents leaking variables before their declaration and helps programmer
-prevent unexpected variable value changes. Such behaviour means that it is
-possible to redefine variable.
+For details see [Patterns](#patterns-semantics) in language semantics chapter.
 
 ## Patterns
 
 ```antlr
 pattern        : simple_pattern [ ',' simple_pattern ]*
-simple_pattern : name_pattern
-name_pattern   : ident
+simple_pattern : name_pattern | mut_pattern | value_pattern
+name_pattern   : path
+mut_pattern    : '@' path
+value_pattern  : '^' path | expr
 ```
 
 ## Items
@@ -462,3 +463,13 @@ return_expr : 'return' expr
 
 `return` does not evaluate as it performs jump, but technically
 it should evaluate to `()`.
+
+# Language semantics
+
+## Patterns semantics
+
+TODO
+
+## Iterators
+
+TODO
