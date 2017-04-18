@@ -322,7 +322,7 @@ following precedence table:
 |------------|-------------------|---------------|---|
 | 20         | `(...)`           | n/a           | Grouping |
 | 19         | `... . ...`       | left-to-right | [Member access](#member-access) |
-|            | `... [ ... ]`     | left-to-right | [Computed member access](#computed-member-access) |
+|            | `... [ ... ]`     | left-to-right | [Computed member access](#member-access) |
 | 18         | `... ( ... )`     | left-to-right | [Function call](#function-call) |
 | 17         | `... ++`          | n/a           | Postfix increment |
 |            | `... --`          | n/a           | Postfix decrement |
@@ -360,13 +360,18 @@ following precedence table:
 
 #### Member access
 
-TODO
+```antlr
+op_mem_acc : expr [ mem_acc_tail | comp_mem_acc_tail ]
 
-#### Computed member access
+mem_acc_tail      : '.' ident
+comp_mem_acc_tail : '[' expr ']'
+```
 
-TODO
+TODO: semantics
 
 #### Function call
+
+TODO
 
 ### Tuples
 
