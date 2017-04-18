@@ -296,8 +296,10 @@ block : '{' stmt* '}'
 
 ```antlr
 expr : literal_expr
-     | block_expr
      | tuple_expr
+     | array_expr
+     | dict_expr
+     | block_expr
      | op_expr
      | if_expr
      | for_expr
@@ -367,11 +369,24 @@ mem_acc_tail      : '.' ident
 comp_mem_acc_tail : '[' expr ']'
 ```
 
-TODO: semantics
+*Member access* and *compound member access* expressions allow
+to access members of compound data structures, such as
+[tuples](#tuples), [arrays](#arrays) and [dictionaries](#dictionaries).
+
+*Member access* expression is just syntactic sugar for
+*compound member access* with `ident` being passed as
+string, i.e.:
+
+```
+foo.bar == foo["bar"]
+```
+
 
 #### Function call
 
-TODO
+```antlr
+fn_call : expr '(' [ expr [ ',' expr ]* ]? ')'
+```
 
 ### Tuples
 
@@ -392,6 +407,14 @@ dangling comma is optional:
 ```
 
 TODO: semantics
+
+### Arrays
+
+TODO
+
+### Dictionaries
+
+TODO
 
 ### If expressions
 
