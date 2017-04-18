@@ -242,6 +242,8 @@ program : whitespace? stmt*
 path : ident
 ```
 
+A *path* is an unique name of an [item](#items) or variable.
+
 ## Statements
 
 ```antlr
