@@ -239,7 +239,7 @@ program : whitespace? stmt*
 ## Paths
 
 ```antlr
-path : TODO
+path : ident
 ```
 
 ## Statements
@@ -256,7 +256,6 @@ assign_stmt : pattern '=' expr
 ```
 
 Assignment statement tries to match given expression with given pattern.
-For details see [Patterns](#patterns-semantics) in language semantics chapter.
 
 ## Patterns
 
@@ -264,9 +263,10 @@ For details see [Patterns](#patterns-semantics) in language semantics chapter.
 pattern        : simple_pattern [ ',' simple_pattern ]*
 simple_pattern : name_pattern | mut_pattern | value_pattern
 name_pattern   : path
-mut_pattern    : '@' path
 value_pattern  : '^' path | expr
 ```
+
+TODO: semantics
 
 ## Items
 
@@ -319,8 +319,9 @@ following precedence table:
 | Precedence | Operator          | Associativity | Operation |
 |------------|-------------------|---------------|---|
 | 20         | `(...)`           | n/a           | Grouping |
-| 19         | -                 | -             | - |
-| 18         | `... ( ... )`     | left-to-right | Function call |
+| 19         | `... . ...`       | left-to-right | [Member access](#member-access) |
+|            | `... [ ... ]`     | left-to-right | [Computed member access](#computed-member-access) |
+| 18         | `... ( ... )`     | left-to-right | [Function call](#function-call) |
 | 17         | `... ++`          | n/a           | Postfix increment |
 |            | `... --`          | n/a           | Postfix decrement |
 | 16         | `! ...`           | right-to-left | Logical NOT |
@@ -355,6 +356,16 @@ following precedence table:
 | 1          | -                 | -             | - |
 | 0          | -                 | -             | - |
 
+#### Member access
+
+TODO
+
+#### Computed member access
+
+TODO
+
+#### Function call
+
 ### Tuples
 
 ```antlr
@@ -372,6 +383,8 @@ dangling comma is optional:
 (2 + 2, 3)   // pair
 (2 + 2, 3,)  // pair
 ```
+
+TODO: semantics
 
 ### If expressions
 
@@ -400,7 +413,8 @@ for_expr : 'for' pattern 'in' expr
 
 The `for` loop iterates over an iterable value, for example array or list.
 
-The `for` loop is syntactic sugar for following snippet:
+The `for` loop is syntactic sugar for a while loop which consumes an
+[iterator](#iterators):
 
 ```
 iterator = iter(/* expr */)
@@ -464,11 +478,7 @@ return_expr : 'return' expr
 `return` does not evaluate as it performs jump, but technically
 it should evaluate to `()`.
 
-# Language semantics
-
-## Patterns semantics
-
-TODO
+# Higher level abstractions
 
 ## Iterators
 
