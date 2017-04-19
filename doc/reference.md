@@ -259,19 +259,82 @@ assign_stmt : pattern '=' expr
 ```
 
 Assignment statement tries to match given expression with given pattern.
+If matching fails, `MatchError` exception is thrown.
 
 ## Patterns
 
 ```antlr
 pattern          : simple_pattern [ ',' simple_pattern ]*
-simple_pattern   : wildcard_pattern | mem_acc_pattern | name_pattern | mut_pattern | value_pattern
+
+simple_pattern   : wildcard_pattern
+                 | mem_acc_pattern
+                 | path_pattern
+                 | mut_pattern
+                 | value_pattern
+                 
 wildcard_pattern : '_'
 mem_acc_pattern  : mem_acc_expr
-name_pattern     : path
-value_pattern    : '^' path | expr
+path_pattern     : path
+value_pattern    : '^' expr
 ```
 
-TODO: semantics
+Pattern matching mechanism allows destructuring complex data, perform
+some assumptions on its values and mutate them. A *pattern* is
+a sequence of one or more [*simple patterns*](#simple-patterns).
+Each simple pattern has special meanings which have been described later.
+
+If matching one of simple patterns fails, the whole process of 
+pattern matching does so, and whole pattern is treated as *unmatched*.
+Handling of unmatched patterns depends on context (usually `MatchError`
+exception is thrown).
+
+If pattern consists of multiple simple pattern, it is assumed that
+matching is performed against a [tuple](#tuples) (otherwise, pattern
+is unmatched). `i`-th simple pattern corresponds to `i`-th tuple element.
+
+**Example**
+
+```
+a, _, c = (1, 2, 3)
+a == 1 and c == 3   // 2 is ignored
+
+a = 3
+a == 3              // path pattern mutates variable/item if it already exists
+
+arr = [1, 2]
+arr[0], arr[1] = (3, 4)
+arr[0] == 3 and arr[1] == 4
+
+x = 1
+^x, ^2 + 2 = (1, 4) // this matches
+^2 + 2 = 5          // but this throws MatchError
+```
+
+### Simple patterns
+
+#### Path pattern
+
+Path pattern has different semantics depending on execution context.
+If path points to undefined variable, a new variable is created with
+matching value. Otherwise pattern tries to mutate pointed existing variable.
+
+#### Value pattern
+
+A value pattern evaluates expression and compares result with matched value.
+If they are different, pattern does not match.
+
+#### Wildcard pattern
+
+A wildcard pattern, denoted `_`, ignores matched value (matches anything). 
+
+#### Member access pattern
+
+A member access pattern tries to mutate specified element of given object.
+
+If object does not have element with given key, `MemberAccessError` is
+thrown.
+
+If mutation is impossible, then `MutationError` is thrown.
 
 ## Items
 
@@ -381,6 +444,7 @@ string, i.e.:
 foo.bar == foo["bar"]
 ```
 
+If object does not have requested member, `MemberAccessError` is thrown.
 
 #### Function call
 
