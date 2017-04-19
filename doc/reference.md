@@ -151,11 +151,12 @@ token : [ keyword | op | ident | literal | symbol ] whitespace
 
 |           |           |           |           |           |
 |-----------|-----------|-----------|-----------|-----------|
-| and       | as        | break     | case      | class     |
-| const     | continue  | do        | else      | enum      |
-| False     | fn        | for       | if        | import    |
-| in        | loop      | mod       | or        | return    |
-| trait     | True      | type      | while     | yield     |
+| _         | and       | as        | break     | case      |
+| class     | const     | continue  | do        | else      |
+| enum      | False     | fn        | for       | if        |
+| import    | in        | loop      | mod       | or        |
+| return    | trait     | True      | type      | while     |
+| yield     |
 
 
 Keywords are case-sensitive. Each of these has special meaning in its grammar,
@@ -228,7 +229,7 @@ roles in a variety of grammar productions. They are cataloged here for
 completeness as the set of remaining miscellaneous printable tokens that do not
 otherwise appear as [operators](#operators) or [keywords](#keywords).
 
-# Language grammar
+# Elementary language constructs and grammar
 
 The entry rule of Scalanus source file is called `program`.
 
@@ -262,10 +263,12 @@ Assignment statement tries to match given expression with given pattern.
 ## Patterns
 
 ```antlr
-pattern        : simple_pattern [ ',' simple_pattern ]*
-simple_pattern : name_pattern | mut_pattern | value_pattern
-name_pattern   : path
-value_pattern  : '^' path | expr
+pattern          : simple_pattern [ ',' simple_pattern ]*
+simple_pattern   : wildcard_pattern | mem_acc_pattern | name_pattern | mut_pattern | value_pattern
+wildcard_pattern : '_'
+mem_acc_pattern  : mem_acc_expr
+name_pattern     : path
+value_pattern    : '^' path | expr
 ```
 
 TODO: semantics
@@ -363,10 +366,7 @@ following precedence table:
 #### Member access
 
 ```antlr
-op_mem_acc : expr [ mem_acc_tail | comp_mem_acc_tail ]
-
-mem_acc_tail      : '.' ident
-comp_mem_acc_tail : '[' expr ']'
+mem_acc_expr : expr [ '.' ident | '[' expr ']' ]
 ```
 
 *Member access* and *compound member access* expressions allow
@@ -394,7 +394,6 @@ fn_call : expr '(' [ expr [ ',' expr ]* ]? ')'
 tuple : '(' expr ',' [ [ expr ',' ]* expr ','? ]? ')
 ```
 
-Tuple is an immutable, ordered collection of one or more values.
 In order to differentiate it from grouping expression, if tuple
 contains one value, it has to end with extra comma. Otherwise,
 dangling comma is optional:
@@ -406,15 +405,51 @@ dangling comma is optional:
 (2 + 2, 3,)  // pair
 ```
 
-TODO: semantics
+Tuple is an immutable, lightweight, ordered collection of one
+or more values. Its elements are indexed starting with 0.
+
+**Example**
+
+```
+tup = (1, 2, 3)
+a, 2, _ = tup   // tuples can be unpacked with pattern matching
+tup[0] == 1     // or their elements can be accessed directly
+```
 
 ### Arrays
 
-TODO
+Arrays is a mutable (it can be resized), ordered collection of
+zero or more values. Its elements are indexed starting with 0.
+In contrast to tuples, arrays cannot be unpacked.
+
+Arrays do not have dedicated syntax for construction. One
+can create new array using `Array.of` function which instantiates
+new array of all passed arguments.
+
+**Example**
+
+```
+arr = Array.of(1, 2, 3)
+arr[0] == 1
+```
 
 ### Dictionaries
 
-TODO
+```antlr
+dict      : '#{' [ dict_elem [ ',' dict_elem ]* ','? ]? '}'
+dict_elem : expr '=' expr
+```
+
+Dictionary is a mutable, unordered collection of key-value pairs.
+In Scalanus dictionaries are implemented using hashmaps.
+
+**Example**
+
+```
+dict = #{ "hi" = 123, 0 = "foobar" }
+dict.hi == 123
+dict[0] == "foobar"
+```
 
 ### If expressions
 
@@ -431,7 +466,8 @@ of the *if* block, or the *else* one. If the latter one was not
 provided, it evaluates to `()`, e.g.:
 
 ```
-let a = if False { 1234 } // a == ()
+a = if False { 1234 }
+a == ()
 ```
 
 ### For loops
@@ -447,9 +483,9 @@ The `for` loop is syntactic sugar for a while loop which consumes an
 [iterator](#iterators):
 
 ```
-iterator = iter(/* expr */)
-while has_next(iterator) {
-    /* pattern */ = next(iterator)
+it = iter(/* expr */)
+while Iterator.has_next(it) {
+    /* pattern */ = Iterator.next(it)
     /* body */
 }
 ```
