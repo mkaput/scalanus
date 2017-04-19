@@ -548,4 +548,18 @@ it should evaluate to `()`.
 
 ## Iterators
 
-TODO
+An iterator is an object which abstracts operation of traversing
+a collection. Iterator points to *current* element of an *iterable*
+and can go to next element. It provides two operations:
+
+ - `has_next` - check whether there are any elements to iterate over
+ - `next` - get current item and advance iterator
+ 
+These operations can be invoked using `Iterator.has_next` and
+`Iterator.next` functions.
+
+Function `iter` creates new iterator for a collection (tuple, array,
+dictionary). 
+
+Currently the structure of iterator is unspecified, and so it is
+impossible to create custom iterators in code.
