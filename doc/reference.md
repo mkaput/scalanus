@@ -434,13 +434,7 @@ mem_acc_expr : expr [ '.' ident | '[' expr ']' ]
 to access members of compound data structures, such as
 [tuples](#tuples), [arrays](#arrays) and [dictionaries](#dictionaries).
 
-*Member access* expression is just syntactic sugar for
-*compound member access* with `ident` being passed as
-string, i.e.:
-
-```
-foo.bar == foo["bar"]
-```
+TODO: Member access lookups in object method namespace
 
 If object does not have requested member, `MemberAccessError` is thrown.
 
