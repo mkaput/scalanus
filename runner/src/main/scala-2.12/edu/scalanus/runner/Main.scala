@@ -1,8 +1,11 @@
 package edu.scalanus.runner
 
-import edu.scalanus.ScalanusBuildInfo
+import javax.script.ScriptEngineManager
 
 object Main extends App {
-  Console.println(s"Hello Scalanus ${ScalanusBuildInfo.toString} from runner")
+  val scriptEngineManager = new ScriptEngineManager()
+  val scalanus = scriptEngineManager.getEngineByName("Scalanus")
+
+  Console.println(s"Hello Scalanus ${scalanus.getFactory.getEngineVersion} from runner")
   Console.println(args.mkString(", "))
 }
