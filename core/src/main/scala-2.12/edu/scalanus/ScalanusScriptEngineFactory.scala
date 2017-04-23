@@ -10,14 +10,6 @@ class ScalanusScriptEngineFactory extends ScriptEngineFactory {
   private val MIME_TYPES = List("application/x-scalanus")
   private val NAMES = List("scalanus", "Scalanus")
 
-  private lazy val PARAMETERS = Map(
-    ScriptEngine.ENGINE -> getEngineName,
-    ScriptEngine.ENGINE_VERSION -> getEngineVersion,
-    ScriptEngine.NAME -> getEngineName,
-    ScriptEngine.LANGUAGE -> getLanguageName,
-    ScriptEngine.LANGUAGE_VERSION -> getLanguageVersion
-  )
-
   override def getEngineName: String = "Scalanus Engine"
 
   override def getEngineVersion: String = ScalanusBuildInfo.version
@@ -43,7 +35,14 @@ class ScalanusScriptEngineFactory extends ScriptEngineFactory {
 
   override def getOutputStatement(toDisplay: String): String = s"IO.print($toDisplay)"
 
-  override def getParameter(key: String): AnyRef = PARAMETERS.get(key).orNull
+  override def getParameter(key: String): AnyRef = key match {
+    case ScriptEngine.ENGINE => getEngineName
+    case ScriptEngine.ENGINE_VERSION => getEngineVersion
+    case ScriptEngine.NAME => getEngineName
+    case ScriptEngine.LANGUAGE => getLanguageName
+    case ScriptEngine.LANGUAGE_VERSION => getLanguageVersion
+    case _ => null
+  }
 
   override def getProgram(statements: String*): String = statements.mkString("", ";\n", ";")
 
