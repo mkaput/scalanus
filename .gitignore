@@ -7,5 +7,7 @@ project/plugins/project/
 .history
 .cache
 .lib/
-.idea/
 *.iml
+.idea/
+!/.idea/runConfigurations/REPL_Main.xml
+!/.idea/runConfigurations/Runner_Main.xml

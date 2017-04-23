@@ -5,9 +5,13 @@ lazy val commonSettings = Seq(
 )
 
 lazy val core = project
+  .enablePlugins(BuildInfoPlugin)
   .settings(
     commonSettings,
-    name := "scalanus"
+    name := "scalanus",
+    buildInfoKeys := Seq[BuildInfoKey](version),
+    buildInfoPackage := "edu.scalanus",
+    buildInfoObject := "ScalanusBuildInfo"
   )
 
 lazy val repl = project
