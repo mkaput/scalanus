@@ -293,19 +293,19 @@ is unmatched). `i`-th simple pattern corresponds to `i`-th tuple element.
 **Example**
 
 ```
-a, _, c = (1, 2, 3)
+> a, _, c = (1, 2, 3)
 a == 1 and c == 3   // 2 is ignored
 
-a = 3
+> a = 3
 a == 3              // path pattern mutates variable/item if it already exists
 
-arr = [1, 2]
-arr[0], arr[1] = (3, 4)
+> arr = [1, 2]
+> arr[0], arr[1] = (3, 4)
 arr[0] == 3 and arr[1] == 4
 
-x = 1
-^x, ^2 + 2 = (1, 4) // this matches
-^2 + 2 = 5          // but this throws MatchError
+> x = 1
+> ^x, ^2 + 2 = (1, 4) // this matches
+> ^2 + 2 = 5          // but this throws MatchError
 ```
 
 ### Simple patterns
@@ -467,8 +467,8 @@ or more values. Its elements are indexed starting with 0.
 **Example**
 
 ```
-tup = (1, 2, 3)
-a, 2, _ = tup   // tuples can be unpacked with pattern matching
+> tup = (1, 2, 3)
+> a, 2, _ = tup   // tuples can be unpacked with pattern matching
 tup[0] == 1     // or their elements can be accessed directly
 ```
 
@@ -485,7 +485,7 @@ new array of all passed arguments.
 **Example**
 
 ```
-arr = Array.of(1, 2, 3)
+> arr = Array.of(1, 2, 3)
 arr[0] == 1
 ```
 
@@ -502,7 +502,7 @@ In Scalanus dictionaries are implemented using hashmaps.
 **Example**
 
 ```
-dict = #{ "hi" = 123, 0 = "foobar" }
+> dict = #{ "hi" = 123, 0 = "foobar" }
 dict.hi == 123
 dict[0] == "foobar"
 ```
@@ -522,7 +522,7 @@ of the *if* block, or the *else* one. If the latter one was not
 provided, it evaluates to `()`, e.g.:
 
 ```
-a = if False { 1234 }
+> a = if False { 1234 }
 a == ()
 ```
 
