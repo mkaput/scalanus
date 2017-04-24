@@ -9,5 +9,3 @@ project/plugins/project/
 .lib/
 *.iml
 .idea/
-!/.idea/runConfigurations/REPL_Main.xml
-!/.idea/runConfigurations/Runner_Main.xml
