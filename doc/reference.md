@@ -4,9 +4,9 @@ The Scalanus Language Reference
 # Introduction
 
 Scalanus is a simple, dynamically and strongly typed, interpreted language aimed at
-being as easy as possible to implement. It is continuation the
-[Janus](https://github.com/mkaput/janus) programming language with much more features
-and cleaned up grammar & semantics.
+being as easy as possible to implement. It is continuation of the
+[Janus](https://github.com/mkaput/janus) ([Reference](https://github.com/mkaput/janus/blob/master/doc/Language-Specification.md))
+programming language with much more features and cleaned up grammar & semantics.
 
 This document is the primary reference for the Scalanus programming language
 grammar and semantics.
