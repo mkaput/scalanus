@@ -14,16 +14,9 @@ lazy val core = project
     buildInfoObject := "ScalanusBuildInfo"
   )
 
-lazy val repl = project
+lazy val cli = project
   .settings(
     commonSettings,
-    name := "scalanus-repl"
-  )
-  .dependsOn(core)
-
-lazy val runner = project
-  .settings(
-    commonSettings,
-    name := "scalanus-runner"
+    name := "scalanus-cli"
   )
   .dependsOn(core)
