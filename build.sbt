@@ -21,7 +21,10 @@ lazy val core = project
     antlr4Version in Antlr4 := "4.7",
     antlr4PackageName in Antlr4 := Some("edu.scalanus.parser"),
     antlr4GenListener in Antlr4 := true,
-    antlr4GenVisitor in Antlr4 := true
+    antlr4GenVisitor in Antlr4 := true,
+
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
   )
 
 lazy val cli = project
