@@ -41,6 +41,7 @@ class ScalanusScriptEngineFactory extends ScriptEngineFactory {
     case ScriptEngine.NAME => getEngineName
     case ScriptEngine.LANGUAGE => getLanguageName
     case ScriptEngine.LANGUAGE_VERSION => getLanguageVersion
+    case "THREADING" => null // we are not thread-safe
     case _ => null
   }
 
