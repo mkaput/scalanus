@@ -265,13 +265,13 @@ If matching fails, `MatchError` exception is thrown.
 pattern          : simple_pattern [ ',' simple_pattern ]*
 
 simple_pattern   : wildcard_pattern
-                 | mem_acc_pattern
+                 | acc_pattern
                  | path_pattern
                  | mut_pattern
                  | value_pattern
                  
 wildcard_pattern : '_'
-mem_acc_pattern  : mem_acc_expr
+acc_pattern     : mem_acc_expr | idx_acc_expr
 path_pattern     : path
 value_pattern    : '^' expr
 ```
@@ -325,12 +325,12 @@ If they are different, pattern does not match.
 
 A wildcard pattern, denoted `_`, ignores matched value (matches anything). 
 
-#### Member access pattern
+#### Member/index access pattern
 
-A member access pattern tries to mutate specified element of given object.
+A member/index access pattern tries to mutate specified element of given object.
 
-If object does not have element with given key, `MemberAccessError` is
-thrown.
+If object does not have given member, `MemberAccessError` is thrown.
+If object does not have element with given key, `IndexError` is thrown.
 
 If mutation is impossible, then `MutationError` is thrown.
 
@@ -388,7 +388,7 @@ following precedence table:
 |------------|-------------------|---------------|---|
 | 20         | `(...)`           | n/a           | Grouping |
 | 19         | `... . ...`       | left-to-right | [Member access](#member-access) |
-|            | `... [ ... ]`     | left-to-right | [Computed member access](#member-access) |
+|            | `... [ ... ]`     | left-to-right | [Index access](#index-access) |
 | 18         | `... ( ... )`     | left-to-right | [Function call](#function-call) |
 | 17         | `... ++`          | n/a           | Postfix increment |
 |            | `... --`          | n/a           | Postfix decrement |
@@ -427,16 +427,23 @@ following precedence table:
 #### Member access
 
 ```antlr
-mem_acc_expr : expr [ '.' ident | '[' expr ']' ]
+mem_acc_expr : expr '.' ident
 ```
 
-*Member access* and *compound member access* expressions allow
-to access members of compound data structures, such as
-[tuples](#tuples), [arrays](#arrays) and [dictionaries](#dictionaries).
-
-TODO: Member access lookups in object method namespace
+*Member access* expressions allow to access object members: fields, methods, etc.
 
 If object does not have requested member, `MemberAccessError` is thrown.
+
+#### Index access
+
+```antlr
+idx_acc_expr : expr '[' expr ']'
+```
+
+*Index access* expressions allow to access elements of compound data structures
+such as [tuples](#tuples), [arrays](#arrays) and [dictionaries](#dictionaries).
+
+If object does not have requested element, `IndexError` is thrown.
 
 #### Function call
 
