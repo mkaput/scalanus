@@ -8,4 +8,7 @@ project/plugins/project/
 .cache
 .lib/
 *.iml
-.idea/
+.idea/*.xml
+.idea/modules/
+.idea/libraries/
+.idea/inspectionProfiles/
