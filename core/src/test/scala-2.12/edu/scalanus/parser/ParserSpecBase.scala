@@ -19,7 +19,7 @@ abstract class ParserSpecBase extends FunSuite with Matchers with TestDataPathWi
 
   protected def createParseTree(tokenStream: CommonTokenStream): (Parser, ParseTree)
 
-  protected def lexIncludeHiddenTokens: Boolean = false
+  protected def lexIncludeHiddenTokens(f: File): Boolean = false
 
   private val files: Seq[File] = listFiles(testDataDir, Array("lex", EXT))
 
@@ -43,7 +43,7 @@ abstract class ParserSpecBase extends FunSuite with Matchers with TestDataPathWi
     tokens.fill()
 
     val found = tokens.getTokens().asScala
-      .withFilter(token => token.getChannel == 0 || lexIncludeHiddenTokens)
+      .withFilter(token => token.getChannel == 0 || lexIncludeHiddenTokens(f))
       .map(_.toString.trim)
       .mkString(System.lineSeparator)
 

@@ -91,7 +91,7 @@ properties: `ident`, `non_null`, `non_eol`, `non_single_quote` and
 
 The `ident` production is any nonempty Unicode string of the following form:
 
-- The first character has property `XID_start`
+- The first character has property `XID_start` or is `_`
 - The remaining characters have property `XID_continue`
 
 that does _not_ occur in the set of [keywords](#keywords).
