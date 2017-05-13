@@ -219,7 +219,7 @@ unit_lit : '()'
 ### Symbols
 
 ```antlr
-symbol : '[' | ']' | '(' | ')' | '{' | '}' | ',' | ';' | '^' | '#'
+symbol : '[' | ']' | '(' | ')' | '{' | '}' | ',' | ';' | '#'
 ```
 
 Symbols are a general class of printable [tokens](#tokens) that play structural
