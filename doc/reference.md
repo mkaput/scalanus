@@ -166,7 +166,7 @@ reserved to make space for possible future features.
 ### Literals
 
 ```antlr
-literal : string_lit | char_lit | num_lit | bool_lit | unit_lit
+literal : string_lit | char_lit | int_lit | float_lit | bool_lit | unit_lit
 ```
 
 #### Character and string literals
@@ -189,17 +189,17 @@ common_escape  : '\x5c' | 'n' | 'r' | 't' | '0'
 #### Number literals
 
 ```antlr
-num_lit : nonzero_dec [ dec_digit | '_' ]* float_suffix?
-        | '0' [       [ dec_digit | '_' ]* float_suffix?
-              | 'b'   [ '1' | '0' | '_' ]+
-              | 'o'   [ oct_digit | '_' ]+
-              | 'x'   [ hex_digit | '_' ]+  ]
+int_lit : '0b' [ '1' | '0' | '_' ]+
+        | '0o' [ oct_digit | '_' ]+
+        | '0x' [ hex_digit | '_' ]+
+        |      [ dec_digit | '_' ]+
 
-float_suffix : exponent | '.' dec_lit exponent?
+float_lit : [ dec_digit | '_' ]* float_suffix?
 
-exponent : [ 'E' | 'e' ] [ '-' | '+' ]? dec_lit
+float_suffix : '.' [ dec_digit | '_' ]+ exponent?
+             | exponent
 
-dec_lit : [ dec_digit | '_' ]+
+exponent : [ 'E' | 'e' ] [ '-' | '+' ]? [ dec_digit | '_' ]+
 ```
 
 #### Boolean literals
