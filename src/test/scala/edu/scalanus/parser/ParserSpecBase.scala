@@ -6,7 +6,7 @@ import java.nio.file.attribute.BasicFileAttributes
 
 import edu.scalanus.TestDataPathWithResult
 import org.antlr.v4.runtime._
-import org.antlr.v4.runtime.tree.{ParseTree, Trees}
+import org.antlr.v4.runtime.tree.ParseTree
 import org.scalatest.{FunSuite, Matchers}
 
 import scala.collection.JavaConverters._
@@ -64,7 +64,7 @@ abstract class ParserSpecBase extends FunSuite with Matchers with TestDataPathWi
     val stream = CharStreams.fromPath(f.toPath)
     val tokens = createCommonTokenStream(stream)
     val (parser, tree) = createParseTree(tokens)
-    val found = Trees.toStringTree(tree, parser)
+    val found = TreePrettyPrinter.prettyPrint(tree, Some(parser))
     val expected = findExpected(relativePath, found)
     found shouldEqual expected
   }
