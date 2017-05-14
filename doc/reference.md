@@ -246,14 +246,15 @@ A *path* is an unique name of an [item](#items) or variable.
 ## Statements
 
 ```antlr
-stmt : [ decl_stmt | expr ] ';'?
+stmt : decl_stmt
+     | expr ';'
 ```
 
 ### Declaration statements
 
 ```antlr
 decl_stmt   : assign_stmt | item
-assign_stmt : pattern '=' expr
+assign_stmt : pattern '=' expr ';'
 ```
 
 Assignment statement tries to match given expression with given pattern.
@@ -270,7 +271,7 @@ simple_pattern   : wildcard_pattern
                  | value_pattern
                  
 wildcard_pattern : '_'
-acc_pattern     : mem_acc_expr | idx_acc_expr
+acc_pattern      : mem_acc_expr | idx_acc_expr
 path_pattern     : path
 value_pattern    : '^' expr
 ```
@@ -352,7 +353,7 @@ The return value of the block is the value of the last expression
 statement, or `()` otherwise.
 
 ```antlr
-block : '{' stmt* '}'
+block : '{' stmt* expr? '}'
 ```
 
 ## Expressions
