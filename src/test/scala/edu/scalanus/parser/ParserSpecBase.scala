@@ -5,8 +5,8 @@ import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 
 import edu.scalanus.TestDataPathWithResult
+import org.antlr.v4.runtime._
 import org.antlr.v4.runtime.tree.{ParseTree, Trees}
-import org.antlr.v4.runtime.{CharStream, CharStreams, CommonTokenStream, Parser}
 import org.scalatest.{FunSuite, Matchers}
 
 import scala.collection.JavaConverters._
@@ -42,10 +42,18 @@ abstract class ParserSpecBase extends FunSuite with Matchers with TestDataPathWi
     val tokens = createCommonTokenStream(stream)
     tokens.fill()
 
+    val recognizer = tokens.getTokenSource match {
+      case lexer: Lexer => lexer
+      case _ => null
+    }
+
     val found = tokens.getTokens().asScala
       .withFilter(token => token.getChannel == 0 || lexIncludeHiddenTokens(f))
-      .map(_.toString.trim)
-      .mkString(System.lineSeparator)
+      .map {
+        case ctok: CommonToken => ctok.toString(recognizer)
+        case tok => tok.toString
+      }
+      .mkString("\n")
 
     val expected = findExpected(relativePath, found)
 
