@@ -8,7 +8,7 @@ trait TestDataPath {
 
   protected def basePath: String = ???
 
-  protected val baseTestDataPath = "core/src/test/resources"
+  protected val baseTestDataPath = "src/test/resources"
 
   protected val testDataPath: String = s"$baseTestDataPath/$basePath"
 

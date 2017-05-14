@@ -12,3 +12,8 @@ project/plugins/project/
 .idea/modules/
 .idea/libraries/
 .idea/inspectionProfiles/
+.gradle
+/build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache

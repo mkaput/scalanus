@@ -12,13 +12,13 @@ class ScalanusScriptEngineFactory extends ScriptEngineFactory {
 
   override def getEngineName: String = "Scalanus Engine"
 
-  override def getEngineVersion: String = ScalanusBuildInfo.version
+  override def getEngineVersion: String = "1.0"
 
   override def getExtensions: JavaList[String] = EXTENSIONS.asJava
 
   override def getLanguageName: String = "scalanus"
 
-  override def getLanguageVersion: String = ScalanusBuildInfo.version
+  override def getLanguageVersion: String = "1.0"
 
   override def getMethodCallSyntax(obj: String, m: String, args: String*): String = {
     if (m == null || m.isEmpty) return ""
