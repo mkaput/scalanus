@@ -267,7 +267,6 @@ pattern          : simple_pattern [ ',' simple_pattern ]*
 simple_pattern   : wildcard_pattern
                  | acc_pattern
                  | path_pattern
-                 | mut_pattern
                  | value_pattern
                  
 wildcard_pattern : '_'
@@ -360,8 +359,8 @@ block : '{' stmt* '}'
 
 ```antlr
 expr : literal_expr
+     | path_expr
      | tuple_expr
-     | array_expr
      | dict_expr
      | block_expr
      | op_expr
@@ -374,6 +373,7 @@ expr : literal_expr
      | return_expr
 
 literal_expr : literal
+path_expr    : path
 block_expr   : block
 tuple_expr   : tuple
 ```
@@ -454,7 +454,7 @@ fn_call : expr '(' [ expr [ ',' expr ]* ]? ')'
 ### Tuples
 
 ```antlr
-tuple : '(' expr ',' [ [ expr ',' ]* expr ','? ]? ')
+tuple : '(' expr ',' [ [ expr ',' ]* expr ','? ]? ')'
 ```
 
 In order to differentiate it from grouping expression, if tuple
