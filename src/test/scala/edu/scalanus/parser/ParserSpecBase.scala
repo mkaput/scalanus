@@ -64,7 +64,7 @@ abstract class ParserSpecBase extends FunSuite with Matchers with TestDataPathWi
     val stream = CharStreams.fromPath(f.toPath)
     val tokens = createCommonTokenStream(stream)
     val (parser, tree) = createParseTree(tokens)
-    val found = TreePrettyPrinter.prettyPrint(tree, Some(parser))
+    val found = TreePrettyPrinter(tree, parser)
     val expected = findExpected(relativePath, found)
     found shouldEqual expected
   }
