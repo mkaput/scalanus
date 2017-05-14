@@ -5,11 +5,149 @@ grammar Scalanus;
 //////////////////////////////////////////////////////////////////////////////
 
 
-init : '{' value ( ',' value )* '}' ;
+// Top-level program rule
 
-value : init
-      | INT_LIT
+program : stmts EOF;
+
+
+// Paths
+
+path : IDENT ;
+
+
+// Various building blocks
+
+block   : '{' stmts '}' ;
+
+literal : CHAR_LIT
+        | STRING_LIT
+        | FLOAT_LIT
+        | INT_LIT
+        | BOOL_LIT
+        | unit
+        ;
+
+unit    : '(' ')' ;
+
+
+// Statements
+
+stmt  : pattern '=' expr  # assignStmt
+      | item              # itemStmt
+      | expr              # exprStmt
       ;
+
+stmts : stmt ( ';' stmt)* ;
+
+
+// Patterns
+
+pattern        : simplePattern ( ',' simplePattern )* ;
+
+simplePattern : '_'                # wildcardPattern
+              | expr '.' IDENT     # memAccPattern
+              | expr '[' expr ']'  # idxAccPattern
+              | path               # pathPattern
+              | '^' expr           # valuePattern
+              ;
+
+
+// Items
+
+item : 'fn' IDENT '(' pattern? ')' block  # fnItem
+     | block                              # blockItem
+     ;
+
+
+// Expressions
+
+expr : literal                          # literalExpr
+     | path                             # pathExpr
+
+     | tuple                            # tupleExpr
+     | dict                             # dictExpr
+
+     | block                            # blockExpr
+
+     | '(' expr ')'                     # parenExpr
+
+     | expr '.' IDENT                   # memAccExpr
+     | expr '[' expr ']'                # idxAccExpr
+
+     | expr '(' fnCallArgs? ')'         # fnCallExpr
+
+     | expr '++'                        # postfixIncrExpr
+     | expr '--'                        # postfixDecrExpr
+
+     | <assoc=right> '!' expr           # notExpr
+     | <assoc=right> '~' expr           # bnotExpr
+     | <assoc=right> '++' expr          # prefixIncrExpr
+     | <assoc=right> '--' expr          # prefixDecrExpr
+     | <assoc=right> '+' expr           # unaryPlusExpr
+     | <assoc=right> '-' expr           # unaryMinusExpr
+
+     | <assoc=right> expr '**' expr     # powExpr
+
+     | expr '*' expr                    # mulExpr
+     | expr '/' expr                    # divExpr
+     | expr 'mod' expr                  # modExpr
+
+     | expr '+' expr                    # addExpr
+     | expr '-' expr                    # subExpr
+
+     | expr '<<' expr                   # bitshiftLeftExpr
+     | expr '>>' expr                   # bitshiftRightExpr
+
+     | expr '&' expr                    # bandExpr
+     | expr '^' expr                    # xorExpr
+     | expr '|' expr                    # borExpr
+
+     | expr '==' expr                   # eqExpr
+     | expr '!=' expr                   # neqExpr
+     | expr '<' expr                    # ltExpr
+     | expr '>' expr                    # gtExpr
+     | expr '<=' expr                   # lteqExpr
+     | expr '>=' expr                   # gteqExpr
+
+     | expr 'and' expr                  # andExpr
+     | expr 'or' expr                   # orExpr
+
+     | ifCond                           # ifExpr
+     | forLoop                          # forExpr
+     | whileLoop                        # whileExpr
+     | loop                             # loopExpr
+
+     | 'break'                          # breakExpr
+     | 'continue'                       # continueExpr
+     | 'return' expr                    # returnExpr
+     ;
+
+
+fnCallArgs : expr ( ',' expr )* ;
+
+
+// Tuples
+
+tuple : '(' expr ',' ( ( expr ',' )* expr ','? )? ')' ;
+
+
+// Dicts
+
+dict     : '#' '{' ( dictElem ( ',' dictElem )* ','? )? '}' ;
+dictElem : expr '=' expr ;
+
+
+// If expressions
+
+ifCond   : 'if' expr block elseTail? ;
+elseTail : 'else' ( ifCond | block ) ;
+
+
+// Loops
+
+forLoop   : 'for' pattern 'in' expr block ;
+whileLoop : 'while' expr block ;
+loop      : 'loop' block ;
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -126,11 +264,6 @@ EXPONENT     : [Ee] [\-+]? ( DEC_DIGIT | '_' )+ ;
 // Boolean literals
 
 BOOL_LIT : 'True' | 'False' ;
-
-
-// Unit literal
-
-UNIT : '()' ;
 
 
 // Identifiers

@@ -19,6 +19,6 @@ class ParserSpec extends ParserSpecBase {
 
   override protected def createParseTree(tokenStream: CommonTokenStream): (Parser, ParseTree) = {
     val parser = new ScalanusParser(tokenStream)
-    (parser, parser.init())
+    (parser, parser.program())
   }
 }

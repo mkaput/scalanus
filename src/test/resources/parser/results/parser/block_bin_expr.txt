@@ -1,0 +1,72 @@
+program [line 1, offset 0:1]
+    stmts [line 1, offset 0:1]
+        stmt:itemStmt [line 1, offset 0:1]
+            item:fnItem [line 1, offset 0:1]
+                'fn': fn
+                IDENT: foo
+                '(': (
+                pattern [line 1, offset 7:7]
+                    simplePattern:pathPattern [line 1, offset 7:7]
+                        path [line 1, offset 7:7]
+                            IDENT: x
+                ')': )
+                block [line 1, offset 10:10]
+                    '{': {
+                    stmts [line 2, offset 16:18]
+                        stmt:assignStmt [line 2, offset 16:18]
+                            pattern [line 2, offset 16:18]
+                                simplePattern:pathPattern [line 2, offset 16:18]
+                                    path [line 2, offset 16:18]
+                                        IDENT: foo
+                            '=': =
+                            expr:literalExpr [line 2, offset 22:22]
+                                literal [line 2, offset 22:22]
+                                    unit [line 2, offset 22:22]
+                                        '(': (
+                                        ')': )
+                    ERROR: {
+                    ERROR: foo
+                    ERROR: }
+                    ERROR: (
+                    ERROR: )
+                    ERROR: _
+                    ERROR: =
+                    ERROR: {
+                    ERROR: 1
+                    ERROR: }
+                    ERROR: *
+                    ERROR: 2
+                    ERROR: _
+                    ERROR: =
+                    ERROR: {
+                    ERROR: 1
+                    ERROR: }
+                    ERROR: &
+                    ERROR: 2
+                    ERROR: _
+                    ERROR: =
+                    ERROR: loop
+                    ERROR: {
+                    ERROR: }
+                    ERROR: *
+                    ERROR: 1
+                    ERROR: 2
+                    ERROR: &
+                    ERROR: {
+                    ERROR: 1
+                    ERROR: }
+                    ERROR: fn
+                    ERROR: bar
+                    ERROR: (
+                    ERROR: )
+                    ERROR: {
+                    ERROR: }
+                    ERROR: _
+                    ERROR: =
+                    ERROR: {
+                    ERROR: bar
+                    ERROR: }
+                    ERROR: (
+                    ERROR: )
+                    ERROR: }
+    EOF: <EOF>

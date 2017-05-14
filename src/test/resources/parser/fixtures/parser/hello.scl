@@ -1,1 +1,4 @@
-{90, 20, {30, 10}}
+fn hello() {
+      message = "Hello World!";
+      IO.println("Hello World!")
+}

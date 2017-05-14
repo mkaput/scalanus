@@ -1,0 +1,43 @@
+program [line 1, offset 0:1]
+    stmts [line 1, offset 0:1]
+        stmt:itemStmt [line 1, offset 0:1]
+            item:fnItem [line 1, offset 0:1]
+                'fn': fn
+                IDENT: foo
+                '(': (
+                ')': )
+                block [line 1, offset 9:9]
+                    '{': {
+                    stmts [line 2, offset 15:19]
+                        stmt:exprStmt [line 2, offset 15:19]
+                            expr:whileExpr [line 2, offset 15:19]
+                                whileLoop [line 2, offset 15:19]
+                                    'while': while
+                                    expr:literalExpr [line 2, offset 21:24]
+                                        literal [line 2, offset 21:24]
+                                            BOOL_LIT: True
+                                    block [line 2, offset 26:26]
+                                        '{': {
+                                        stmts [line 2, offset 28:32]
+                                            stmt:exprStmt [line 2, offset 28:32]
+                                                expr:breakExpr [line 2, offset 28:32]
+                                                    'break': break
+                                        '}': }
+                    ERROR: for
+                    ERROR: _
+                    ERROR: in
+                    ERROR: bulbulator
+                    ERROR: {
+                    ERROR: continue
+                    ERROR: }
+                    ERROR: loop
+                    ERROR: {
+                    ERROR: }
+                    ERROR: _
+                    ERROR: =
+                    ERROR: loop
+                    ERROR: {
+                    ERROR: break
+                    ERROR: }
+                    ERROR: }
+    EOF: <EOF>

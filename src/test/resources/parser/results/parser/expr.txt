@@ -1,0 +1,108 @@
+program [line 1, offset 0:1]
+    stmts [line 1, offset 0:1]
+        stmt:itemStmt [line 1, offset 0:1]
+            item:fnItem [line 1, offset 0:1]
+                'fn': fn
+                IDENT: test
+                '(': (
+                ')': )
+                block [line 1, offset 10:10]
+                    '{': {
+                    stmts [line 2, offset 16:16]
+                        stmt:exprStmt [line 2, offset 16:16]
+                            expr:subExpr [line 2, offset 16:16]
+                                expr:addExpr [line 2, offset 16:16]
+                                    expr:pathExpr [line 2, offset 16:16]
+                                        path [line 2, offset 16:16]
+                                            IDENT: x
+                                    '+': +
+                                    expr:pathExpr [line 2, offset 20:20]
+                                        path [line 2, offset 20:20]
+                                            IDENT: y
+                                '-': -
+                                expr:mulExpr [line 2, offset 24:24]
+                                    expr:mulExpr [line 2, offset 24:24]
+                                        expr:pathExpr [line 2, offset 24:24]
+                                            path [line 2, offset 24:24]
+                                                IDENT: z
+                                        '*': *
+                                        expr:fnCallExpr [line 2, offset 28:28]
+                                            expr:literalExpr [line 2, offset 28:28]
+                                                literal [line 2, offset 28:28]
+                                                    INT_LIT: 0
+                                            '(': (
+                                            fnCallArgs [line 3, offset 35:35]
+                                                expr:addExpr [line 3, offset 35:35]
+                                                    expr:pathExpr [line 3, offset 35:35]
+                                                        path [line 3, offset 35:35]
+                                                            IDENT: x
+                                                    '+': +
+                                                    expr:pathExpr [line 3, offset 39:39]
+                                                        path [line 3, offset 39:39]
+                                                            IDENT: y
+                                            ')': )
+                                    '*': *
+                                    expr:pathExpr [line 3, offset 44:44]
+                                        path [line 3, offset 44:44]
+                                            IDENT: z
+                    ERROR: t
+                    ERROR: =
+                    ERROR: (
+                    ERROR: 0
+                    ERROR: ,
+                    ERROR: 1
+                    ERROR: ,
+                    ERROR: 2
+                    ERROR: )
+                    ERROR: t
+                    ERROR: =
+                    ERROR: (
+                    ERROR: 0
+                    ERROR: ,
+                    ERROR: 1
+                    ERROR: ,
+                    ERROR: 2
+                    ERROR: ,
+                    ERROR: )
+                    ERROR: t
+                    ERROR: .
+                    ERROR: a
+                    ERROR: f
+                    ERROR: .
+                    ERROR: m
+                    ERROR: (
+                    ERROR: )
+                    ERROR: f
+                    ERROR: [
+                    ERROR: "m"
+                    ERROR: ]
+                    ERROR: (
+                    ERROR: )
+                    ERROR: f
+                    ERROR: (
+                    ERROR: )
+                    ERROR: t
+                    ERROR: =
+                    ERROR: (
+                    ERROR: )
+                    ERROR: {
+                    ERROR: }
+                    ERROR: {
+                    ERROR: {
+                    ERROR: 92
+                    ERROR: }
+                    ERROR: .
+                    ERROR: foo_bar
+                    ERROR: (
+                    ERROR: )
+                    ERROR: }
+                    ERROR: return
+                    ERROR: (
+                    ERROR: x
+                    ERROR: ==
+                    ERROR: y
+                    ERROR: )
+                    ERROR: +
+                    ERROR: 1
+                    ERROR: }
+    EOF: <EOF>

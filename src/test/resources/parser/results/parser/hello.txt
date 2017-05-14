@@ -1,1 +1,37 @@
-(init { (value 90) , (value 20) , (value (init { (value 30) , (value 10) })) })
+program [line 1, offset 0:1]
+    stmts [line 1, offset 0:1]
+        stmt:itemStmt [line 1, offset 0:1]
+            item:fnItem [line 1, offset 0:1]
+                'fn': fn
+                IDENT: hello
+                '(': (
+                ')': )
+                block [line 1, offset 11:11]
+                    '{': {
+                    stmts [line 2, offset 19:25]
+                        stmt:assignStmt [line 2, offset 19:25]
+                            pattern [line 2, offset 19:25]
+                                simplePattern:pathPattern [line 2, offset 19:25]
+                                    path [line 2, offset 19:25]
+                                        IDENT: message
+                            '=': =
+                            expr:literalExpr [line 2, offset 29:42]
+                                literal [line 2, offset 29:42]
+                                    STRING_LIT: "Hello World!"
+                        ';': ;
+                        stmt:exprStmt [line 3, offset 51:52]
+                            expr:fnCallExpr [line 3, offset 51:52]
+                                expr:memAccExpr [line 3, offset 51:52]
+                                    expr:pathExpr [line 3, offset 51:52]
+                                        path [line 3, offset 51:52]
+                                            IDENT: IO
+                                    '.': .
+                                    IDENT: println
+                                '(': (
+                                fnCallArgs [line 3, offset 62:75]
+                                    expr:literalExpr [line 3, offset 62:75]
+                                        literal [line 3, offset 62:75]
+                                            STRING_LIT: "Hello World!"
+                                ')': )
+                    '}': }
+    EOF: <EOF>
