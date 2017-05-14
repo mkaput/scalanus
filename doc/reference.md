@@ -248,6 +248,7 @@ A *path* is an unique name of an [item](#items) or variable.
 ```antlr
 stmt : decl_stmt
      | expr ';'
+     | ';'
 ```
 
 ### Declaration statements
@@ -337,7 +338,10 @@ If mutation is impossible, then `MutationError` is thrown.
 ## Items
 
 ```antlr
-item : fn_item
+item       : fn_item
+           | block_item
+     
+block_item : block
 ```
 
 ### Functions
