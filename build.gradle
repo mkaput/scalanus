@@ -1,64 +1,64 @@
 allprojects {
-  apply plugin: 'java'
-  apply plugin: 'scala'
+    apply plugin: 'java'
+    apply plugin: 'scala'
 
-  version '1.0-SNAPSHOT'
+    version '1.0-SNAPSHOT'
 
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
-  repositories {
-    mavenCentral()
-  }
+    repositories {
+        mavenCentral()
+    }
 }
 
 task scalatest(dependsOn: ['testClasses'], type: JavaExec) {
-  main = 'org.scalatest.tools.Runner'
-  args = ['-R', 'build/classes/test', '-o']
-  classpath = sourceSets.test.runtimeClasspath
+    main = 'org.scalatest.tools.Runner'
+    args = ['-R', 'build/classes/test', '-o']
+    classpath = sourceSets.test.runtimeClasspath
 }
 
 project(":") {
-  apply plugin: 'antlr'
+    apply plugin: 'antlr'
 
-  group 'edu.scalanus'
+    group 'edu.scalanus'
 
-  dependencies {
-    compile 'org.scala-lang:scala-library:2.12.1'
+    dependencies {
+        compile 'org.scala-lang:scala-library:2.12.1'
 
-    antlr 'org.antlr:antlr4:4.7'
+        antlr 'org.antlr:antlr4:4.7'
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.scalatest:scalatest_2.12:3.0.1'
-    testCompile 'org.scalacheck:scalacheck_2.12:1.13.4'
-  }
+        testCompile 'junit:junit:4.12'
+        testCompile 'org.scalatest:scalatest_2.12:3.0.1'
+        testCompile 'org.scalacheck:scalacheck_2.12:1.13.4'
+    }
 
-  generateGrammarSource {
-    arguments += ["-visitor", "-listener", "-package", "edu.scalanus.parser"]
-  }
+    generateGrammarSource {
+        arguments += ["-visitor", "-listener", "-package", "edu.scalanus.parser"]
+    }
 
-  compileJava.dependsOn(generateGrammarSource)
-  compileScala.dependsOn(generateGrammarSource)
-  compileTestJava.dependsOn(generateGrammarSource)
-  compileTestScala.dependsOn(generateGrammarSource)
+    compileJava.dependsOn(generateGrammarSource)
+    compileScala.dependsOn(generateGrammarSource)
+    compileTestJava.dependsOn(generateGrammarSource)
+    compileTestScala.dependsOn(generateGrammarSource)
 
-  test.dependsOn(scalatest)
+    test.dependsOn(scalatest)
 }
 
 project(":cli") {
-  group 'edu.scalanus.cli'
+    group 'edu.scalanus.cli'
 
-  dependencies {
-    compile 'org.scala-lang:scala-library:2.12.1'
+    dependencies {
+        compile 'org.scala-lang:scala-library:2.12.1'
 
-    compile project(":")
-  }
-
-  jar {
-    manifest {
-      attributes(
-        "Main-Class": "edu.scalanus.cli.Main"
-      )
+        compile project(":")
     }
-  }
+
+    jar {
+        manifest {
+            attributes(
+                "Main-Class": "edu.scalanus.cli.Main"
+            )
+        }
+    }
 }
