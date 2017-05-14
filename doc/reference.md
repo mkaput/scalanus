@@ -232,7 +232,7 @@ otherwise appear as [operators](#operators) or [keywords](#keywords).
 The entry rule of Scalanus source file is called `program`.
 
 ```antlr
-program : whitespace? stmt*
+program : whitespace? stmts
 ```
 
 ## Paths
@@ -246,16 +246,16 @@ A *path* is an unique name of an [item](#items) or variable.
 ## Statements
 
 ```antlr
-stmt : decl_stmt
-     | expr ';'
-     | ';'
+stmt  : decl_stmt | expr
+
+stmts : stmt [ [ ';' | '\n' ] stmt ]*
 ```
 
 ### Declaration statements
 
 ```antlr
 decl_stmt   : assign_stmt | item
-assign_stmt : pattern '=' expr ';'
+assign_stmt : pattern '=' expr
 ```
 
 Assignment statement tries to match given expression with given pattern.
@@ -357,7 +357,7 @@ The return value of the block is the value of the last expression
 statement, or `()` otherwise.
 
 ```antlr
-block : '{' stmt* expr? '}'
+block : '{' stmts '}'
 ```
 
 ## Expressions
