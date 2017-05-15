@@ -248,8 +248,10 @@ A *path* is an unique name of an [item](#items) or variable.
 ```antlr
 stmt  : decl_stmt | expr
 
-stmts : stmt [ [ ';' | '\n' ] stmt ]*
+stmts : ';'* [ stmt [ [ ';' | '\n' ]+ stmt ]* ]? ';'*
 ```
+
+Statements are separated either by comma (possibly multiple) or by new line.
 
 ### Declaration statements
 

@@ -275,10 +275,11 @@ IDENT : [\p{XID_Start}] [\p{XID_Continue}]*
 
 // Whitespace & comments
 
-WHITE_SPACE   : [ \t\r\n]+                       -> channel(HIDDEN) ;
+SPACE   : [ \t]+    -> channel(HIDDEN) ;
+NEWLINE : [\r\n]+   -> channel(HIDDEN) ;
 
-BLOCK_COMMENT : '/*' ( BLOCK_COMMENT | .)*? '*/' -> channel(HIDDEN) ;
-LINE_COMMENT  : '//' .*? ( '\n' | EOF )          -> channel(HIDDEN) ;
+BLOCK_COMMENT : '/*' ( BLOCK_COMMENT | . )*? ( '*/' | EOF ) -> channel(HIDDEN) ;
+LINE_COMMENT  : '//' .*? ( '\n' | EOF )                     -> channel(HIDDEN) ;
 
 
 // Digit fragments
