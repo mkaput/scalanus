@@ -37,7 +37,7 @@ stmt  : pattern '=' expr  # assignStmt
       | expr              # exprStmt
       ;
 
-stmts : stmt ( ';' stmt)* ;
+stmts : ';'* ( stmt ( ';'* stmt)* )? ';'* ;
 
 
 // Patterns

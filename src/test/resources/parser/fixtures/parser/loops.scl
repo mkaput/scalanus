@@ -1,9 +1,7 @@
-fn foo() {
-    while True { break }
-    for _ in bulbulator { continue }
-    loop {}
+while True { break }
+for _ in bulbulator { continue }
+loop {}
 
-    _ = loop {
-        break
-    }
+_ = loop {
+    break
 }

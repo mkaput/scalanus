@@ -1,0 +1,77 @@
+program [line 1, offset 0:0]
+    stmts [line 1, offset 0:0]
+        ';': ;
+        ';': ;
+        ';': ;
+        stmt:exprStmt [line 3, offset 5:5]
+            expr:subExpr [line 3, offset 5:5]
+                expr:addExpr [line 3, offset 5:5]
+                    expr:pathExpr [line 3, offset 5:5]
+                        path [line 3, offset 5:5]
+                            IDENT: x
+                    '+': +
+                    expr:pathExpr [line 3, offset 9:9]
+                        path [line 3, offset 9:9]
+                            IDENT: y
+                '-': -
+                expr:pathExpr [line 3, offset 13:13]
+                    path [line 3, offset 13:13]
+                        IDENT: z
+        ';': ;
+        stmt:exprStmt [line 4, offset 16:16]
+            expr:mulExpr [line 4, offset 16:16]
+                expr:parenExpr [line 4, offset 16:16]
+                    '(': (
+                    expr:addExpr [line 4, offset 17:17]
+                        expr:pathExpr [line 4, offset 17:17]
+                            path [line 4, offset 17:17]
+                                IDENT: x
+                        '+': +
+                        expr:pathExpr [line 4, offset 21:21]
+                            path [line 4, offset 21:21]
+                                IDENT: y
+                    ')': )
+                '*': *
+                expr:pathExpr [line 4, offset 26:26]
+                    path [line 4, offset 26:26]
+                        IDENT: z
+        ';': ;
+        ';': ;
+        ';': ;
+        ';': ;
+        stmt:exprStmt [line 9, offset 77:77]
+            expr:subExpr [line 9, offset 77:77]
+                expr:addExpr [line 9, offset 77:77]
+                    expr:pathExpr [line 9, offset 77:77]
+                        path [line 9, offset 77:77]
+                            IDENT: x
+                    '+': +
+                    expr:pathExpr [line 9, offset 81:81]
+                        path [line 9, offset 81:81]
+                            IDENT: y
+                '-': -
+                expr:mulExpr [line 9, offset 85:85]
+                    expr:fnCallExpr [line 9, offset 85:85]
+                        expr:pathExpr [line 9, offset 85:85]
+                            path [line 9, offset 85:85]
+                                IDENT: z
+                        '(': (
+                        fnCallArgs [line 10, offset 88:88]
+                            expr:addExpr [line 10, offset 88:88]
+                                expr:pathExpr [line 10, offset 88:88]
+                                    path [line 10, offset 88:88]
+                                        IDENT: x
+                                '+': +
+                                expr:pathExpr [line 10, offset 92:92]
+                                    path [line 10, offset 92:92]
+                                        IDENT: y
+                        ')': )
+                    '*': *
+                    expr:pathExpr [line 10, offset 97:97]
+                        path [line 10, offset 97:97]
+                            IDENT: z
+        ';': ;
+        ';': ;
+        ';': ;
+        ';': ;
+    EOF: <EOF>

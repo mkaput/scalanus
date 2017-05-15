@@ -1,72 +1,134 @@
-program [line 1, offset 0:1]
-    stmts [line 1, offset 0:1]
-        stmt:itemStmt [line 1, offset 0:1]
-            item:fnItem [line 1, offset 0:1]
-                'fn': fn
-                IDENT: foo
-                '(': (
-                pattern [line 1, offset 7:7]
-                    simplePattern:pathPattern [line 1, offset 7:7]
-                        path [line 1, offset 7:7]
-                            IDENT: x
-                ')': )
-                block [line 1, offset 10:10]
+program [line 1, offset 0:2]
+    stmts [line 1, offset 0:2]
+        stmt:assignStmt [line 1, offset 0:2]
+            pattern [line 1, offset 0:2]
+                simplePattern:pathPattern [line 1, offset 0:2]
+                    path [line 1, offset 0:2]
+                        IDENT: foo
+            '=': =
+            expr:literalExpr [line 1, offset 6:6]
+                literal [line 1, offset 6:6]
+                    unit [line 1, offset 6:6]
+                        '(': (
+                        ')': )
+        ';': ;
+        stmt:itemStmt [line 2, offset 10:10]
+            item:blockItem [line 2, offset 10:10]
+                block [line 2, offset 10:10]
                     '{': {
-                    stmts [line 2, offset 16:18]
-                        stmt:assignStmt [line 2, offset 16:18]
-                            pattern [line 2, offset 16:18]
-                                simplePattern:pathPattern [line 2, offset 16:18]
-                                    path [line 2, offset 16:18]
-                                        IDENT: foo
-                            '=': =
-                            expr:literalExpr [line 2, offset 22:22]
-                                literal [line 2, offset 22:22]
-                                    unit [line 2, offset 22:22]
-                                        '(': (
-                                        ')': )
-                    ERROR: {
-                    ERROR: foo
-                    ERROR: }
-                    ERROR: (
-                    ERROR: )
-                    ERROR: _
-                    ERROR: =
-                    ERROR: {
-                    ERROR: 1
-                    ERROR: }
-                    ERROR: *
-                    ERROR: 2
-                    ERROR: _
-                    ERROR: =
-                    ERROR: {
-                    ERROR: 1
-                    ERROR: }
-                    ERROR: &
-                    ERROR: 2
-                    ERROR: _
-                    ERROR: =
-                    ERROR: loop
-                    ERROR: {
-                    ERROR: }
-                    ERROR: *
-                    ERROR: 1
-                    ERROR: 2
-                    ERROR: &
-                    ERROR: {
-                    ERROR: 1
-                    ERROR: }
-                    ERROR: fn
-                    ERROR: bar
-                    ERROR: (
-                    ERROR: )
-                    ERROR: {
-                    ERROR: }
-                    ERROR: _
-                    ERROR: =
-                    ERROR: {
-                    ERROR: bar
-                    ERROR: }
-                    ERROR: (
-                    ERROR: )
-                    ERROR: }
+                    stmts [line 2, offset 11:13]
+                        stmt:exprStmt [line 2, offset 11:13]
+                            expr:pathExpr [line 2, offset 11:13]
+                                path [line 2, offset 11:13]
+                                    IDENT: foo
+                    '}': }
+        stmt:exprStmt [line 3, offset 16:16]
+            expr:literalExpr [line 3, offset 16:16]
+                literal [line 3, offset 16:16]
+                    unit [line 3, offset 16:16]
+                        '(': (
+                        ')': )
+        ';': ;
+        stmt:assignStmt [line 5, offset 21:21]
+            pattern [line 5, offset 21:21]
+                simplePattern:wildcardPattern [line 5, offset 21:21]
+                    '_': _
+            '=': =
+            expr:mulExpr [line 5, offset 25:25]
+                expr:blockExpr [line 5, offset 25:25]
+                    block [line 5, offset 25:25]
+                        '{': {
+                        stmts [line 5, offset 27:27]
+                            stmt:exprStmt [line 5, offset 27:27]
+                                expr:literalExpr [line 5, offset 27:27]
+                                    literal [line 5, offset 27:27]
+                                        INT_LIT: 1
+                        '}': }
+                '*': *
+                expr:literalExpr [line 5, offset 33:33]
+                    literal [line 5, offset 33:33]
+                        INT_LIT: 2
+        ';': ;
+        stmt:assignStmt [line 6, offset 36:36]
+            pattern [line 6, offset 36:36]
+                simplePattern:wildcardPattern [line 6, offset 36:36]
+                    '_': _
+            '=': =
+            expr:bandExpr [line 6, offset 40:40]
+                expr:blockExpr [line 6, offset 40:40]
+                    block [line 6, offset 40:40]
+                        '{': {
+                        stmts [line 6, offset 42:42]
+                            stmt:exprStmt [line 6, offset 42:42]
+                                expr:literalExpr [line 6, offset 42:42]
+                                    literal [line 6, offset 42:42]
+                                        INT_LIT: 1
+                        '}': }
+                '&': &
+                expr:literalExpr [line 6, offset 48:48]
+                    literal [line 6, offset 48:48]
+                        INT_LIT: 2
+        ';': ;
+        stmt:assignStmt [line 7, offset 51:51]
+            pattern [line 7, offset 51:51]
+                simplePattern:wildcardPattern [line 7, offset 51:51]
+                    '_': _
+            '=': =
+            expr:mulExpr [line 7, offset 55:58]
+                expr:loopExpr [line 7, offset 55:58]
+                    loop [line 7, offset 55:58]
+                        'loop': loop
+                        block [line 7, offset 60:60]
+                            '{': {
+                            stmts [line 7, offset 61:61]
+                            '}': }
+                '*': *
+                expr:literalExpr [line 7, offset 65:65]
+                    literal [line 7, offset 65:65]
+                        INT_LIT: 1
+        ';': ;
+        stmt:exprStmt [line 8, offset 68:68]
+            expr:bandExpr [line 8, offset 68:68]
+                expr:literalExpr [line 8, offset 68:68]
+                    literal [line 8, offset 68:68]
+                        INT_LIT: 2
+                '&': &
+                expr:blockExpr [line 8, offset 72:72]
+                    block [line 8, offset 72:72]
+                        '{': {
+                        stmts [line 8, offset 74:74]
+                            stmt:exprStmt [line 8, offset 74:74]
+                                expr:literalExpr [line 8, offset 74:74]
+                                    literal [line 8, offset 74:74]
+                                        INT_LIT: 1
+                        '}': }
+        ';': ;
+        stmt:itemStmt [line 10, offset 80:81]
+            item:fnItem [line 10, offset 80:81]
+                'fn': fn
+                IDENT: bar
+                '(': (
+                ')': )
+                block [line 10, offset 89:89]
+                    '{': {
+                    stmts [line 10, offset 90:90]
+                    '}': }
+        stmt:assignStmt [line 11, offset 92:92]
+            pattern [line 11, offset 92:92]
+                simplePattern:wildcardPattern [line 11, offset 92:92]
+                    '_': _
+            '=': =
+            expr:fnCallExpr [line 11, offset 96:96]
+                expr:blockExpr [line 11, offset 96:96]
+                    block [line 11, offset 96:96]
+                        '{': {
+                        stmts [line 11, offset 97:99]
+                            stmt:exprStmt [line 11, offset 97:99]
+                                expr:pathExpr [line 11, offset 97:99]
+                                    path [line 11, offset 97:99]
+                                        IDENT: bar
+                        '}': }
+                '(': (
+                ')': )
+        ';': ;
     EOF: <EOF>
