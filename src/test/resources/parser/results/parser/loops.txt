@@ -1,58 +1,58 @@
-program [line 1, offset 0:4]
-    stmts [line 1, offset 0:4]
-        stmt:exprStmt [line 1, offset 0:4]
-            expr:whileExpr [line 1, offset 0:4]
-                whileLoop [line 1, offset 0:4]
+program
+    stmts
+        stmt:exprStmt
+            expr:whileExpr
+                whileLoop
                     'while': while
-                    expr:literalExpr [line 1, offset 6:9]
-                        literal [line 1, offset 6:9]
+                    expr:literalExpr
+                        literal
                             BOOL_LIT: True
-                    block [line 1, offset 11:11]
+                    block
                         '{': {
-                        stmts [line 1, offset 13:17]
-                            stmt:exprStmt [line 1, offset 13:17]
-                                expr:breakExpr [line 1, offset 13:17]
+                        stmts
+                            stmt:exprStmt
+                                expr:breakExpr
                                     'break': break
                         '}': }
-        stmt:exprStmt [line 2, offset 21:23]
-            expr:forExpr [line 2, offset 21:23]
-                forLoop [line 2, offset 21:23]
+        stmt:exprStmt
+            expr:forExpr
+                forLoop
                     'for': for
-                    pattern [line 2, offset 25:25]
-                        simplePattern:wildcardPattern [line 2, offset 25:25]
+                    pattern
+                        simplePattern:wildcardPattern
                             '_': _
                     'in': in
-                    expr:pathExpr [line 2, offset 30:39]
-                        path [line 2, offset 30:39]
+                    expr:pathExpr
+                        path
                             IDENT: bulbulator
-                    block [line 2, offset 41:41]
+                    block
                         '{': {
-                        stmts [line 2, offset 43:50]
-                            stmt:exprStmt [line 2, offset 43:50]
-                                expr:continueExpr [line 2, offset 43:50]
+                        stmts
+                            stmt:exprStmt
+                                expr:continueExpr
                                     'continue': continue
                         '}': }
-        stmt:exprStmt [line 3, offset 54:57]
-            expr:loopExpr [line 3, offset 54:57]
-                loop [line 3, offset 54:57]
+        stmt:exprStmt
+            expr:loopExpr
+                loop
                     'loop': loop
-                    block [line 3, offset 59:59]
+                    block
                         '{': {
-                        stmts [line 3, offset 60:60]
+                        stmts
                         '}': }
-        stmt:assignStmt [line 5, offset 63:63]
-            pattern [line 5, offset 63:63]
-                simplePattern:wildcardPattern [line 5, offset 63:63]
+        stmt:assignStmt
+            pattern
+                simplePattern:wildcardPattern
                     '_': _
             '=': =
-            expr:loopExpr [line 5, offset 67:70]
-                loop [line 5, offset 67:70]
+            expr:loopExpr
+                loop
                     'loop': loop
-                    block [line 5, offset 72:72]
+                    block
                         '{': {
-                        stmts [line 6, offset 78:82]
-                            stmt:exprStmt [line 6, offset 78:82]
-                                expr:breakExpr [line 6, offset 78:82]
+                        stmts
+                            stmt:exprStmt
+                                expr:breakExpr
                                     'break': break
                         '}': }
     EOF: <EOF>

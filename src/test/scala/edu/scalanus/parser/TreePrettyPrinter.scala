@@ -39,17 +39,6 @@ class TreePrettyPrinter(private val parser: Parser) extends ParseTreeListener {
       builder.append(ctxName)
     }
 
-    val positionToken = ctx.getStart
-    if (positionToken != null) {
-      builder.append(" [line ")
-      builder.append(positionToken.getLine)
-      builder.append(", offset ")
-      builder.append(positionToken.getStartIndex)
-      builder.append(':')
-      builder.append(positionToken.getStopIndex)
-      builder.append("]")
-    }
-
     builder.append('\n')
   }
 

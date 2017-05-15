@@ -1,36 +1,36 @@
-program [line 1, offset 0:1]
-    stmts [line 1, offset 0:1]
-        stmt:itemStmt [line 1, offset 0:1]
-            item:fnItem [line 1, offset 0:1]
+program
+    stmts
+        stmt:itemStmt
+            item:fnItem
                 'fn': fn
                 IDENT: hello
                 '(': (
                 ')': )
-                block [line 1, offset 11:11]
+                block
                     '{': {
-                    stmts [line 2, offset 19:25]
-                        stmt:assignStmt [line 2, offset 19:25]
-                            pattern [line 2, offset 19:25]
-                                simplePattern:pathPattern [line 2, offset 19:25]
-                                    path [line 2, offset 19:25]
+                    stmts
+                        stmt:assignStmt
+                            pattern
+                                simplePattern:pathPattern
+                                    path
                                         IDENT: message
                             '=': =
-                            expr:literalExpr [line 2, offset 29:42]
-                                literal [line 2, offset 29:42]
+                            expr:literalExpr
+                                literal
                                     STRING_LIT: "Hello World!"
                         ';': ;
-                        stmt:exprStmt [line 3, offset 51:52]
-                            expr:fnCallExpr [line 3, offset 51:52]
-                                expr:memAccExpr [line 3, offset 51:52]
-                                    expr:pathExpr [line 3, offset 51:52]
-                                        path [line 3, offset 51:52]
+                        stmt:exprStmt
+                            expr:fnCallExpr
+                                expr:memAccExpr
+                                    expr:pathExpr
+                                        path
                                             IDENT: IO
                                     '.': .
                                     IDENT: println
                                 '(': (
-                                fnCallArgs [line 3, offset 62:75]
-                                    expr:literalExpr [line 3, offset 62:75]
-                                        literal [line 3, offset 62:75]
+                                fnCallArgs
+                                    expr:literalExpr
+                                        literal
                                             STRING_LIT: "Hello World!"
                                 ')': )
                     '}': }

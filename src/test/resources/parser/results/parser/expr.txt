@@ -1,162 +1,162 @@
-program [line 1, offset 0:0]
-    stmts [line 1, offset 0:0]
-        stmt:exprStmt [line 1, offset 0:0]
-            expr:subExpr [line 1, offset 0:0]
-                expr:addExpr [line 1, offset 0:0]
-                    expr:pathExpr [line 1, offset 0:0]
-                        path [line 1, offset 0:0]
+program
+    stmts
+        stmt:exprStmt
+            expr:subExpr
+                expr:addExpr
+                    expr:pathExpr
+                        path
                             IDENT: x
                     '+': +
-                    expr:pathExpr [line 1, offset 4:4]
-                        path [line 1, offset 4:4]
+                    expr:pathExpr
+                        path
                             IDENT: y
                 '-': -
-                expr:mulExpr [line 1, offset 8:8]
-                    expr:pathExpr [line 1, offset 8:8]
-                        path [line 1, offset 8:8]
+                expr:mulExpr
+                    expr:pathExpr
+                        path
                             IDENT: z
                     '*': *
-                    expr:literalExpr [line 1, offset 12:12]
-                        literal [line 1, offset 12:12]
+                    expr:literalExpr
+                        literal
                             INT_LIT: 0
         ';': ;
-        stmt:exprStmt [line 2, offset 15:15]
-            expr:mulExpr [line 2, offset 15:15]
-                expr:parenExpr [line 2, offset 15:15]
+        stmt:exprStmt
+            expr:mulExpr
+                expr:parenExpr
                     '(': (
-                    expr:addExpr [line 2, offset 16:16]
-                        expr:pathExpr [line 2, offset 16:16]
-                            path [line 2, offset 16:16]
+                    expr:addExpr
+                        expr:pathExpr
+                            path
                                 IDENT: x
                         '+': +
-                        expr:pathExpr [line 2, offset 20:20]
-                            path [line 2, offset 20:20]
+                        expr:pathExpr
+                            path
                                 IDENT: y
                     ')': )
                 '*': *
-                expr:pathExpr [line 2, offset 25:25]
-                    path [line 2, offset 25:25]
+                expr:pathExpr
+                    path
                         IDENT: z
         ';': ;
-        stmt:assignStmt [line 4, offset 29:29]
-            pattern [line 4, offset 29:29]
-                simplePattern:pathPattern [line 4, offset 29:29]
-                    path [line 4, offset 29:29]
+        stmt:assignStmt
+            pattern
+                simplePattern:pathPattern
+                    path
                         IDENT: t
             '=': =
-            expr:tupleExpr [line 4, offset 33:33]
-                tuple [line 4, offset 33:33]
+            expr:tupleExpr
+                tuple
                     '(': (
-                    expr:literalExpr [line 4, offset 34:34]
-                        literal [line 4, offset 34:34]
+                    expr:literalExpr
+                        literal
                             INT_LIT: 0
                     ',': ,
-                    expr:literalExpr [line 4, offset 37:37]
-                        literal [line 4, offset 37:37]
+                    expr:literalExpr
+                        literal
                             INT_LIT: 1
                     ',': ,
-                    expr:literalExpr [line 4, offset 40:40]
-                        literal [line 4, offset 40:40]
+                    expr:literalExpr
+                        literal
                             INT_LIT: 2
                     ')': )
         ';': ;
-        stmt:assignStmt [line 5, offset 44:44]
-            pattern [line 5, offset 44:44]
-                simplePattern:pathPattern [line 5, offset 44:44]
-                    path [line 5, offset 44:44]
+        stmt:assignStmt
+            pattern
+                simplePattern:pathPattern
+                    path
                         IDENT: t
             '=': =
-            expr:tupleExpr [line 5, offset 48:48]
-                tuple [line 5, offset 48:48]
+            expr:tupleExpr
+                tuple
                     '(': (
-                    expr:literalExpr [line 5, offset 49:49]
-                        literal [line 5, offset 49:49]
+                    expr:literalExpr
+                        literal
                             INT_LIT: 0
                     ',': ,
-                    expr:literalExpr [line 5, offset 52:52]
-                        literal [line 5, offset 52:52]
+                    expr:literalExpr
+                        literal
                             INT_LIT: 1
                     ',': ,
-                    expr:literalExpr [line 5, offset 55:55]
-                        literal [line 5, offset 55:55]
+                    expr:literalExpr
+                        literal
                             INT_LIT: 2
                     ',': ,
                     ')': )
         ';': ;
-        stmt:exprStmt [line 7, offset 61:61]
-            expr:memAccExpr [line 7, offset 61:61]
-                expr:pathExpr [line 7, offset 61:61]
-                    path [line 7, offset 61:61]
+        stmt:exprStmt
+            expr:memAccExpr
+                expr:pathExpr
+                    path
                         IDENT: t
                 '.': .
                 IDENT: a
         ';': ;
-        stmt:exprStmt [line 9, offset 67:67]
-            expr:fnCallExpr [line 9, offset 67:67]
-                expr:memAccExpr [line 9, offset 67:67]
-                    expr:pathExpr [line 9, offset 67:67]
-                        path [line 9, offset 67:67]
+        stmt:exprStmt
+            expr:fnCallExpr
+                expr:memAccExpr
+                    expr:pathExpr
+                        path
                             IDENT: f
                     '.': .
                     IDENT: m
                 '(': (
                 ')': )
         ';': ;
-        stmt:exprStmt [line 10, offset 74:74]
-            expr:fnCallExpr [line 10, offset 74:74]
-                expr:idxAccExpr [line 10, offset 74:74]
-                    expr:pathExpr [line 10, offset 74:74]
-                        path [line 10, offset 74:74]
+        stmt:exprStmt
+            expr:fnCallExpr
+                expr:idxAccExpr
+                    expr:pathExpr
+                        path
                             IDENT: f
                     '[': [
-                    expr:literalExpr [line 10, offset 76:78]
-                        literal [line 10, offset 76:78]
+                    expr:literalExpr
+                        literal
                             STRING_LIT: "m"
                     ']': ]
                 '(': (
                 ')': )
         ';': ;
-        stmt:exprStmt [line 12, offset 85:85]
-            expr:fnCallExpr [line 12, offset 85:85]
-                expr:pathExpr [line 12, offset 85:85]
-                    path [line 12, offset 85:85]
+        stmt:exprStmt
+            expr:fnCallExpr
+                expr:pathExpr
+                    path
                         IDENT: f
                 '(': (
                 ')': )
         ';': ;
-        stmt:assignStmt [line 14, offset 91:91]
-            pattern [line 14, offset 91:91]
-                simplePattern:pathPattern [line 14, offset 91:91]
-                    path [line 14, offset 91:91]
+        stmt:assignStmt
+            pattern
+                simplePattern:pathPattern
+                    path
                         IDENT: t
             '=': =
-            expr:literalExpr [line 14, offset 95:95]
-                literal [line 14, offset 95:95]
-                    unit [line 14, offset 95:95]
+            expr:literalExpr
+                literal
+                    unit
                         '(': (
                         ')': )
         ';': ;
-        stmt:itemStmt [line 16, offset 100:100]
-            item:blockItem [line 16, offset 100:100]
-                block [line 16, offset 100:100]
+        stmt:itemStmt
+            item:blockItem
+                block
                     '{': {
-                    stmts [line 16, offset 102:102]
+                    stmts
                     '}': }
-        stmt:itemStmt [line 18, offset 105:105]
-            item:blockItem [line 18, offset 105:105]
-                block [line 18, offset 105:105]
+        stmt:itemStmt
+            item:blockItem
+                block
                     '{': {
-                    stmts [line 19, offset 111:111]
-                        stmt:exprStmt [line 19, offset 111:111]
-                            expr:fnCallExpr [line 19, offset 111:111]
-                                expr:memAccExpr [line 19, offset 111:111]
-                                    expr:blockExpr [line 19, offset 111:111]
-                                        block [line 19, offset 111:111]
+                    stmts
+                        stmt:exprStmt
+                            expr:fnCallExpr
+                                expr:memAccExpr
+                                    expr:blockExpr
+                                        block
                                             '{': {
-                                            stmts [line 19, offset 112:113]
-                                                stmt:exprStmt [line 19, offset 112:113]
-                                                    expr:literalExpr [line 19, offset 112:113]
-                                                        literal [line 19, offset 112:113]
+                                            stmts
+                                                stmt:exprStmt
+                                                    expr:literalExpr
+                                                        literal
                                                             INT_LIT: 92
                                             '}': }
                                     '.': .
@@ -164,24 +164,24 @@ program [line 1, offset 0:0]
                                 '(': (
                                 ')': )
                     '}': }
-        stmt:exprStmt [line 22, offset 129:134]
-            expr:returnExpr [line 22, offset 129:134]
+        stmt:exprStmt
+            expr:returnExpr
                 'return': return
-                expr:addExpr [line 22, offset 136:136]
-                    expr:parenExpr [line 22, offset 136:136]
+                expr:addExpr
+                    expr:parenExpr
                         '(': (
-                        expr:eqExpr [line 22, offset 137:137]
-                            expr:pathExpr [line 22, offset 137:137]
-                                path [line 22, offset 137:137]
+                        expr:eqExpr
+                            expr:pathExpr
+                                path
                                     IDENT: x
                             '==': ==
-                            expr:pathExpr [line 22, offset 142:142]
-                                path [line 22, offset 142:142]
+                            expr:pathExpr
+                                path
                                     IDENT: y
                         ')': )
                     '+': +
-                    expr:literalExpr [line 23, offset 155:155]
-                        literal [line 23, offset 155:155]
+                    expr:literalExpr
+                        literal
                             INT_LIT: 1
         ';': ;
     EOF: <EOF>
