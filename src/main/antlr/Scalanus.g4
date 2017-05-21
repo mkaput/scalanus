@@ -37,6 +37,7 @@ stmt  : pattern '=' expr  # assignStmt
       | expr              # exprStmt
       ;
 
+// FIXME Splitting with new line (issue #1)
 stmts : ';'* ( stmt ( ';'* stmt)* )? ';'* ;
 
 

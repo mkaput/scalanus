@@ -17,43 +17,39 @@ Yet another scripting language. Basically [Janus](https://github.com/mkaput/janu
 |---------|:-------:|:---:|:-----------:|
 | Lexical structure       | 🎉 | - | 💔 |
 | | | | |
-| Declaration statements  | ⚙ | 💔 | 💔 |
+| Declaration statements  | ⚙️ | 💔 | 💔 |
 | | | | |
-| Patterns                | ⚙ | 💔 | 💔 |
-| - Wildcards             | ⚙ | 💔 | 💔 |
-| - Member access         | ⚙ | 💔 | 💔 |
-| - Paths                 | ⚙ | 💔 | 💔 |
-| - Values                | ⚙ | 💔 | 💔 |
+| Patterns                | ⚙️ | 💔 | 💔 |
+| - Wildcards             | ⚙️ | 💔 | 💔 |
+| - Member access         | ⚙️ | 💔 | 💔 |
+| - Paths                 | ⚙️ | 💔 | 💔 |
+| - Values                | ⚙️ | 💔 | 💔 |
 | | | | |
-| Functions               | ⚙ | 💔 | 💔 |
+| Functions               | ⚙️ | 💔 | 💔 |
 | | | | |
-| Op Expressions          | ⚙ | 💔 | 💔 |
-| - Unary/Binary          | ⚙ | 💔 | 💔 |
-| - Member access         | ⚙ | 💔 | 💔 |
-| - Function call         | ⚙ | 💔 | 💔 |
+| Op Expressions          | ⚙️ | 💔 | 💔 |
+| - Unary/Binary          | ⚙️ | 💔 | 💔 |
+| - Member access         | ⚙️ | 💔 | 💔 |
+| - Function call         | ⚙️ | 💔 | 💔 |
 | | | | |
-| Tuples                  | ⚙ | 💔 | 💔 |
-| Arrays                  | ⚙ | 💔 | 💔 |
-| Dictionaries            | ⚙ | 💔 | 💔 |
+| Tuples                  | ⚙️ | 💔 | 💔 |
+| Arrays                  | ⚙️ | 💔 | 💔 |
+| Dictionaries            | ⚙️ | 💔 | 💔 |
 | | | | |
-| If/else                 | ⚙ | 💔 | 💔 |
-| For loops               | ⚙ | 💔 | 💔 |
-| While loops             | ⚙ | 💔 | 💔 |
-| Infinite loops          | ⚙ | 💔 | 💔 |
-| Break/continue          | ⚙ | 💔 | 💔 |
-| Return                  | ⚙ | 💔 | 💔 |
-| | | | |
-| Iterators               | - | 💔 | 💔 |
+| If/else                 | ⚙️ | 💔 | 💔 |
+| For loops               | ⚙️ | 💔 | 💔 |
+| While loops             | ⚙️ | 💔 | 💔 |
+| Infinite loops          | ⚙️ | 💔 | 💔 |
+| Break/continue          | ⚙️ | 💔 | 💔 |
+| Return                  | ⚙️ | 💔 | 💔 |
 
 ### Miscellaneous
 
 | Feature          | Status |
 |------------------|:------:|
-| Script runner    | 💔 |
-| REPL             | 💔 |
+| CLI              | 💔 |
 | | | | |
 | Standard library | 💔 |
-| - Prelude        | 💔 |
 | | | | |
 | Lang Reference   | 🎉 |
 | Presentation     | 💔 |
