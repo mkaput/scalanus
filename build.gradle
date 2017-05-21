@@ -52,6 +52,10 @@ project(":cli") {
         compile 'org.scala-lang:scala-library:2.12.1'
 
         compile project(":")
+
+        compile 'org.jline:jline:3.3.0'
+//        compile 'org.jline:jline-terminal-jna:3.3.0'
+//        compile 'org.jline:jline-terminal-jansi:3.3.0'
     }
 
     jar {
