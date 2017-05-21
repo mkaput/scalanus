@@ -1,0 +1,308 @@
+program
+    stmts
+        stmt:assignStmt
+            pattern
+                simplePattern:pathPattern
+                    path
+                        IDENT: a
+            '=': =
+            expr:literalExpr
+                literal
+                    INT_LIT: 5
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:pathPattern
+                    path
+                        IDENT: b
+                ',': ,
+                simplePattern:pathPattern
+                    path
+                        IDENT: c
+            '=': =
+            expr:tupleExpr
+                tuple
+                    '(': (
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 1
+                    ',': ,
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 2
+                    ')': )
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:memAccPattern
+                    expr:pathExpr
+                        path
+                            IDENT: a
+                    '.': .
+                    IDENT: b
+                ',': ,
+                simplePattern:idxAccPattern
+                    expr:pathExpr
+                        path
+                            IDENT: a
+                    '[': [
+                    expr:literalExpr
+                        literal
+                            STRING_LIT: "b"
+                    ']': ]
+            '=': =
+            expr:pathExpr
+                path
+                    IDENT: x
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:memAccPattern
+                    expr:memAccExpr
+                        expr:pathExpr
+                            path
+                                IDENT: a
+                        '.': .
+                        IDENT: b
+                    '.': .
+                    IDENT: c
+                ',': ,
+                simplePattern:idxAccPattern
+                    expr:idxAccExpr
+                        expr:pathExpr
+                            path
+                                IDENT: a
+                        '[': [
+                        expr:literalExpr
+                            literal
+                                STRING_LIT: "b"
+                        ']': ]
+                    '[': [
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 4
+                    ']': ]
+            '=': =
+            expr:pathExpr
+                path
+                    IDENT: x
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:idxAccPattern
+                    expr:memAccExpr
+                        expr:memAccExpr
+                            expr:pathExpr
+                                path
+                                    IDENT: a
+                            '.': .
+                            IDENT: b
+                        '.': .
+                        IDENT: c
+                    '[': [
+                    expr:literalExpr
+                        literal
+                            STRING_LIT: "x"
+                    ']': ]
+                ',': ,
+                simplePattern:memAccPattern
+                    expr:idxAccExpr
+                        expr:idxAccExpr
+                            expr:pathExpr
+                                path
+                                    IDENT: a
+                            '[': [
+                            expr:literalExpr
+                                literal
+                                    STRING_LIT: "b"
+                            ']': ]
+                        '[': [
+                        expr:literalExpr
+                            literal
+                                INT_LIT: 4
+                        ']': ]
+                    '.': .
+                    IDENT: c
+            '=': =
+            expr:pathExpr
+                path
+                    IDENT: x
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:wildcardPattern
+                    '_': _
+            '=': =
+            expr:literalExpr
+                literal
+                    INT_LIT: 5
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:wildcardPattern
+                    '_': _
+                ',': ,
+                simplePattern:wildcardPattern
+                    '_': _
+            '=': =
+            expr:tupleExpr
+                tuple
+                    '(': (
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 7
+                    ',': ,
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 6
+                    ')': )
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:pathPattern
+                    path
+                        IDENT: a
+                ',': ,
+                simplePattern:wildcardPattern
+                    '_': _
+            '=': =
+            expr:tupleExpr
+                tuple
+                    '(': (
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 7
+                    ',': ,
+                    expr:pathExpr
+                        path
+                            IDENT: a
+                    ')': )
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:wildcardPattern
+                    '_': _
+                ',': ,
+                simplePattern:pathPattern
+                    path
+                        IDENT: a
+            '=': =
+            expr:tupleExpr
+                tuple
+                    '(': (
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 1
+                    ',': ,
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 3
+                    ')': )
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:valuePattern
+                    '^': ^
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 5
+            '=': =
+            expr:literalExpr
+                literal
+                    INT_LIT: 5
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:valuePattern
+                    '^': ^
+                    expr:addExpr
+                        expr:literalExpr
+                            literal
+                                INT_LIT: 5
+                        '+': +
+                        expr:literalExpr
+                            literal
+                                INT_LIT: 5
+            '=': =
+            expr:literalExpr
+                literal
+                    INT_LIT: 10
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:pathPattern
+                    path
+                        IDENT: a
+                ',': ,
+                simplePattern:valuePattern
+                    '^': ^
+                    expr:addExpr
+                        expr:literalExpr
+                            literal
+                                INT_LIT: 6
+                        '+': +
+                        expr:literalExpr
+                            literal
+                                INT_LIT: 4
+            '=': =
+            expr:tupleExpr
+                tuple
+                    '(': (
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 10
+                    ',': ,
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 10
+                    ')': )
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:valuePattern
+                    '^': ^
+                    expr:addExpr
+                        expr:literalExpr
+                            literal
+                                INT_LIT: 6
+                        '+': +
+                        expr:literalExpr
+                            literal
+                                INT_LIT: 4
+                ',': ,
+                simplePattern:pathPattern
+                    path
+                        IDENT: a
+            '=': =
+            expr:tupleExpr
+                tuple
+                    '(': (
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 10
+                    ',': ,
+                    expr:literalExpr
+                        literal
+                            INT_LIT: 10
+                    ')': )
+        ';': ;
+        stmt:assignStmt
+            pattern
+                simplePattern:valuePattern
+                    '^': ^
+                    expr:fnCallExpr
+                        expr:pathExpr
+                            path
+                                IDENT: f
+                        '(': (
+                        fnCallArgs
+                            expr:pathExpr
+                                path
+                                    IDENT: x
+                        ')': )
+            '=': =
+            expr:literalExpr
+                literal
+                    INT_LIT: 10
+        ';': ;
+    EOF: <EOF>
