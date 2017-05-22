@@ -2,13 +2,14 @@ package edu.scalanus.cli
 
 import javax.script.ScriptEngineManager
 
-import org.jline.reader.impl.DefaultHighlighter
 import org.jline.reader.{EndOfFileException, LineReaderBuilder, UserInterruptException}
 import org.jline.terminal.{Terminal, TerminalBuilder}
 
-object Shell {
+class Shell {
 
-  def shellMain(): Unit = {
+  private val engine = new ScriptEngineManager().getEngineByName("scalanus")
+
+  def main(): Unit = {
     println("Press ^D or ^C twice to exit.")
 
     val terminal = TerminalBuilder.builder().name("Scalanus")
@@ -20,10 +21,8 @@ object Shell {
     try {
       val lineReader = LineReaderBuilder.builder()
         .appName("Scalanus")
-        .highlighter(new DefaultHighlighter())
+        .highlighter(new CliHighlighter())
         .build()
-
-      val engine = new ScriptEngineManager().getEngineByName("scalanus")
 
       var sigint = false
 
@@ -51,7 +50,7 @@ object Shell {
     }
   }
 
-  def processLine(line: String): Unit = {
+  private def processLine(line: String): Unit = {
     println(line)
   }
 
