@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.misc.ParseCancellationException
 import org.antlr.v4.runtime.{BaseErrorListener, RecognitionException, Recognizer}
 
 object ThrowingErrorListener extends BaseErrorListener {
+
   @throws[ParseCancellationException]
   override def syntaxError(
     recognizer: Recognizer[_, _],
@@ -14,4 +15,5 @@ object ThrowingErrorListener extends BaseErrorListener {
     e: RecognitionException
   ): Unit =
     throw new ParseCancellationException(s"line $line:$charPositionInLine $msg")
+
 }

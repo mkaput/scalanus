@@ -48,7 +48,7 @@ Check out [issues](https://github.com/mkaput/scalanus/issues) for details on wha
 
 | Feature          | Status |
 |------------------|:------:|
-| CLI              | 💔 |
+| CLI              | 🎉 |
 | | | | |
 | Standard library | 💔 |
 | | | | |

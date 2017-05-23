@@ -3,6 +3,7 @@ package edu.scalanus.parser
 import org.antlr.v4.runtime.Token
 
 object ScalanusLexerUtil {
+
   private val _keywordTokens = Set(
     ScalanusLexer.AND,
     ScalanusLexer.AS,
@@ -50,4 +51,5 @@ object ScalanusLexerUtil {
   def isFloatLiteral(token: Token): Boolean = token.getType == ScalanusLexer.FLOAT_LIT
 
   def isIdentifier(token: Token): Boolean = token.getType == ScalanusLexer.IDENT
+ 
 }

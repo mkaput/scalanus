@@ -2,18 +2,16 @@ package edu.scalanus.cli
 
 import javax.script.ScriptEngineManager
 
-import edu.scalanus.ScalanusScriptEngine
 import org.jline.reader.{EndOfFileException, LineReaderBuilder, UserInterruptException}
 import org.jline.terminal.{Terminal, TerminalBuilder}
 
-import scala.util.Properties
+class Repl {
 
-class Shell {
+  private val engine = new ScriptEngineManager().getEngineByName("scalanus")
 
-  private val engine = new ScriptEngineManager().getEngineByName("scalanus").asInstanceOf[ScalanusScriptEngine]
-
-  def main(): Unit = {
-    welcome()
+  def main(config: ArgConfig): Unit = {
+    println("Welcome to " + detailedVersion(engine))
+    println("Press ^D or ^C twice to exit.")
 
     val terminal = TerminalBuilder.builder().name("Scalanus")
       .system(true)
@@ -24,7 +22,7 @@ class Shell {
     try {
       val lineReader = LineReaderBuilder.builder()
         .appName("Scalanus")
-        .highlighter(new CliHighlighter())
+        .highlighter(new ReplHighlighter())
         .build()
 
       var sigint = false
@@ -61,15 +59,6 @@ class Shell {
       case e: Exception =>
         e.printStackTrace(System.out)
     }
-  }
-
-  private def welcome(): Unit = {
-    val name = engine.factory.getEngineName
-    val version = engine.factory.getEngineVersion
-    val vmName = Properties.javaVmName
-    val javaVer = Properties.javaVersion
-    println(f"Welcome to $name $version ($vmName, Java $javaVer)")
-    println("Press ^D or ^C twice to exit.")
   }
 
 }

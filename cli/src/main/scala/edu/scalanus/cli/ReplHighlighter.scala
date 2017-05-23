@@ -7,7 +7,7 @@ import org.antlr.v4.runtime.{CharStreams, Token}
 import org.jline.reader.{Highlighter, LineReader}
 import org.jline.utils.{AttributedString, AttributedStringBuilder, AttributedStyle}
 
-class CliHighlighter extends Highlighter {
+class ReplHighlighter extends Highlighter {
   private val KEYWORD_STYLE = AttributedStyle.DEFAULT.foreground(AttributedStyle.BLUE | AttributedStyle.BRIGHT).bold()
   private val COMMENT_STYLE = AttributedStyle.DEFAULT.foreground(AttributedStyle.GREEN)
   private val STRING_STYLE = AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)
