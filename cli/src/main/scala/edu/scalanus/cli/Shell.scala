@@ -51,7 +51,13 @@ class Shell {
   }
 
   private def processLine(line: String): Unit = {
-    println(line)
+    try {
+      val result = engine.eval(line)
+      println(result)
+    } catch {
+      case e: Exception =>
+        e.printStackTrace(System.out)
+    }
   }
 
 }
