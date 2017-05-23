@@ -8,10 +8,10 @@ import org.jline.reader.{Highlighter, LineReader}
 import org.jline.utils.{AttributedString, AttributedStringBuilder, AttributedStyle}
 
 class CliHighlighter extends Highlighter {
-  private val KEYWORD_STYLE = AttributedStyle.DEFAULT.foreground(AttributedStyle.BLUE)
-  private val COMMENT_STYLE = AttributedStyle.DEFAULT.foreground(AttributedStyle.BLACK | AttributedStyle.BRIGHT)
-  private val STRING_STYLE = AttributedStyle.DEFAULT.foreground(AttributedStyle.GREEN)
-  private val NUMBER_STYLE = AttributedStyle.DEFAULT.foreground(AttributedStyle.RED | AttributedStyle.BRIGHT)
+  private val KEYWORD_STYLE = AttributedStyle.DEFAULT.foreground(AttributedStyle.BLUE | AttributedStyle.BRIGHT).bold()
+  private val COMMENT_STYLE = AttributedStyle.DEFAULT.foreground(AttributedStyle.GREEN)
+  private val STRING_STYLE = AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)
+  private val NUMBER_STYLE = AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW)
 
   override def highlight(reader: LineReader, buffer: String): AttributedString = {
     val lexer = new ScalanusLexer(CharStreams.fromString(buffer))
@@ -20,9 +20,8 @@ class CliHighlighter extends Highlighter {
 
     val asb = new AttributedStringBuilder()
 
-    var tok: Token = null
     try {
-      tok = lexer.nextToken
+      var tok = lexer.nextToken
       while (tok.getType != Token.EOF) {
         val style = if (isKeyword(tok) || isBoolLiteral(tok)) {
           KEYWORD_STYLE
@@ -33,7 +32,7 @@ class CliHighlighter extends Highlighter {
         } else if (isIntLiteral(tok) || isFloatLiteral(tok)) {
           NUMBER_STYLE
         } else {
-          AttributedStyle.DEFAULT.foregroundDefault()
+          AttributedStyle.DEFAULT
         }
 
         asb.append(tok.getText, style)
@@ -41,10 +40,8 @@ class CliHighlighter extends Highlighter {
         tok = lexer.nextToken
       }
     } catch {
-      // FIXME doens't work with string literals well
       case _: ParseCancellationException | _: StringIndexOutOfBoundsException =>
-        val offset = if (tok != null) tok.getStopIndex else 0
-        asb.append(buffer.substring(offset), AttributedStyle.DEFAULT.foregroundDefault())
+        asb.append(buffer.substring(asb.length()), AttributedStyle.DEFAULT)
     }
 
     asb.toAttributedString
