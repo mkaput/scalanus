@@ -11,13 +11,13 @@ class ScalanusScriptEngineFactory extends ScriptEngineFactory {
   private val MIME_TYPES = List("application/x-scalanus")
   private val NAMES = List("scalanus", "Scalanus")
 
-  override def getEngineName: String = "Scalanus Engine"
+  override def getEngineName: String = getLanguageName
 
-  override def getEngineVersion: String = "1.0"
+  override def getEngineVersion: String = getLanguageVersion
 
   override def getExtensions: JavaList[String] = EXTENSIONS.asJava
 
-  override def getLanguageName: String = "scalanus"
+  override def getLanguageName: String = "Scalanus"
 
   override def getLanguageVersion: String = "1.0"
 
