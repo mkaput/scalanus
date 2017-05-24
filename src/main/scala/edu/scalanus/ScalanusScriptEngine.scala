@@ -3,8 +3,9 @@ package edu.scalanus
 import java.io.Reader
 import javax.script._
 
-class ScalanusScriptEngine private[scalanus](val factory: ScalanusScriptEngineFactory)
-  extends AbstractScriptEngine with Compilable with Invocable {
+class ScalanusScriptEngine private[scalanus](
+  private val factory: ScalanusScriptEngineFactory
+) extends AbstractScriptEngine with Compilable with Invocable {
 
   @throws[ScriptException]
   override def compile(script: String): CompiledScript = ???
@@ -33,4 +34,5 @@ class ScalanusScriptEngine private[scalanus](val factory: ScalanusScriptEngineFa
   override def getInterface[T](returnType: Class[T]): T = ???
 
   override def getInterface[T](receiver: scala.Any, returnType: Class[T]): T = ???
+
 }

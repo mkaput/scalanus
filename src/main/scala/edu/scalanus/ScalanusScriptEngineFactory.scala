@@ -6,6 +6,7 @@ import javax.script.{ScriptEngine, ScriptEngineFactory}
 import scala.collection.JavaConverters._
 
 class ScalanusScriptEngineFactory extends ScriptEngineFactory {
+
   private val EXTENSIONS = List("scl")
   private val MIME_TYPES = List("application/x-scalanus")
   private val NAMES = List("scalanus", "Scalanus")
@@ -45,7 +46,8 @@ class ScalanusScriptEngineFactory extends ScriptEngineFactory {
     case _ => null
   }
 
-  override def getProgram(statements: String*): String = statements.mkString("", ";\n", ";")
+  override def getProgram(statements: String*): String = statements.mkString(";\n")
 
   override def getScriptEngine: ScriptEngine = new ScalanusScriptEngine(this)
+
 }
