@@ -11,3 +11,6 @@ trim_trailing_whitespace = true
 
 [*.scala]
 indent_size = 2
+
+[*.yml]
+indent_size = 2
