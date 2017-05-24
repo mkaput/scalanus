@@ -6,9 +6,9 @@ program
                     path
                         IDENT: a
             '=': =
-            expr:literalExpr
-                literal
-                    INT_LIT: 5
+            expr:pathExpr
+                path
+                    IDENT: x
         ';': ;
         stmt:assignStmt
             pattern
@@ -20,17 +20,9 @@ program
                     path
                         IDENT: c
             '=': =
-            expr:tupleExpr
-                tuple
-                    '(': (
-                    expr:literalExpr
-                        literal
-                            INT_LIT: 1
-                    ',': ,
-                    expr:literalExpr
-                        literal
-                            INT_LIT: 2
-                    ')': )
+            expr:pathExpr
+                path
+                    IDENT: x
         ';': ;
         stmt:assignStmt
             pattern
@@ -145,17 +137,9 @@ program
                 simplePattern:wildcardPattern
                     '_': _
             '=': =
-            expr:tupleExpr
-                tuple
-                    '(': (
-                    expr:literalExpr
-                        literal
-                            INT_LIT: 7
-                    ',': ,
-                    expr:literalExpr
-                        literal
-                            INT_LIT: 6
-                    ')': )
+            expr:pathExpr
+                path
+                    IDENT: x
         ';': ;
         stmt:assignStmt
             pattern
@@ -166,17 +150,9 @@ program
                 simplePattern:wildcardPattern
                     '_': _
             '=': =
-            expr:tupleExpr
-                tuple
-                    '(': (
-                    expr:literalExpr
-                        literal
-                            INT_LIT: 7
-                    ',': ,
-                    expr:pathExpr
-                        path
-                            IDENT: a
-                    ')': )
+            expr:pathExpr
+                path
+                    IDENT: x
         ';': ;
         stmt:assignStmt
             pattern
@@ -187,17 +163,9 @@ program
                     path
                         IDENT: a
             '=': =
-            expr:tupleExpr
-                tuple
-                    '(': (
-                    expr:literalExpr
-                        literal
-                            INT_LIT: 1
-                    ',': ,
-                    expr:literalExpr
-                        literal
-                            INT_LIT: 3
-                    ')': )
+            expr:pathExpr
+                path
+                    IDENT: x
         ';': ;
         stmt:assignStmt
             pattern
@@ -207,9 +175,9 @@ program
                         literal
                             INT_LIT: 5
             '=': =
-            expr:literalExpr
-                literal
-                    INT_LIT: 5
+            expr:pathExpr
+                path
+                    IDENT: x
         ';': ;
         stmt:assignStmt
             pattern
@@ -224,9 +192,9 @@ program
                             literal
                                 INT_LIT: 5
             '=': =
-            expr:literalExpr
-                literal
-                    INT_LIT: 10
+            expr:pathExpr
+                path
+                    IDENT: x
         ';': ;
         stmt:assignStmt
             pattern
@@ -245,17 +213,9 @@ program
                             literal
                                 INT_LIT: 4
             '=': =
-            expr:tupleExpr
-                tuple
-                    '(': (
-                    expr:literalExpr
-                        literal
-                            INT_LIT: 10
-                    ',': ,
-                    expr:literalExpr
-                        literal
-                            INT_LIT: 10
-                    ')': )
+            expr:pathExpr
+                path
+                    IDENT: x
         ';': ;
         stmt:assignStmt
             pattern
@@ -274,17 +234,9 @@ program
                     path
                         IDENT: a
             '=': =
-            expr:tupleExpr
-                tuple
-                    '(': (
-                    expr:literalExpr
-                        literal
-                            INT_LIT: 10
-                    ',': ,
-                    expr:literalExpr
-                        literal
-                            INT_LIT: 10
-                    ')': )
+            expr:pathExpr
+                path
+                    IDENT: x
         ';': ;
         stmt:assignStmt
             pattern
@@ -301,8 +253,8 @@ program
                                     IDENT: x
                         ')': )
             '=': =
-            expr:literalExpr
-                literal
-                    INT_LIT: 10
+            expr:pathExpr
+                path
+                    IDENT: x
         ';': ;
     EOF: <EOF>
