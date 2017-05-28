@@ -2,9 +2,11 @@ package edu.scalanus.util
 
 import org.scalatest.{FlatSpec, GivenWhenThen, Matchers}
 
-class LocationTest extends FlatSpec with GivenWhenThen with Matchers {
+class LocationSpec extends FlatSpec with GivenWhenThen with Matchers {
 
-  "Location" should "generate nice toString" in {
+  behavior of "Location"
+
+  it should "generate nice toString" in {
     Given("only line number")
     Location(1).toString shouldBe "line 1"
 
@@ -20,12 +22,12 @@ class LocationTest extends FlatSpec with GivenWhenThen with Matchers {
 
   it should "throw IllegalArgumentException" in {
     Given("negative line number")
-    a[IllegalArgumentException] should be thrownBy {
+    an[IllegalArgumentException] should be thrownBy {
       Location(-1)
     }
 
     Given("column number less than -1")
-    a[IllegalArgumentException] should be thrownBy {
+    an[IllegalArgumentException] should be thrownBy {
       Location(10, -2)
     }
   }
