@@ -25,8 +25,10 @@ class CompilerParserErrorListener extends BaseErrorListener {
     msg: String,
     e: RecognitionException
   ): Unit = {
-    var sourceName = recognizer.getInputStream.getSourceName
-    if (sourceName == IntStream.UNKNOWN_SOURCE_NAME) sourceName = null
+    val sourceName = recognizer.getInputStream.getSourceName match {
+      case IntStream.UNKNOWN_SOURCE_NAME => null
+      case s => s
+    }
     errors += ((Location(line, charPositionInLine, sourceName), msg))
   }
 
