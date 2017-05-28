@@ -16,33 +16,33 @@ Check out [issues](https://github.com/mkaput/scalanus/issues) for details on wha
 
 | Feature | Grammar | IR  | Interpreter |
 |---------|:-------:|:---:|:-----------:|
-| Lexical structure       | 🎉 | - | 💔 |
+| Lexical structure       | 🎉 | - | - |
 | | | | |
-| Declaration statements  | 🎉 | 💔 | 💔 |
+| Declaration statements  | 🎉 | ⚙️ | 💔 |
 | | | | |
-| Patterns                | 🎉 | 💔 | 💔 |
-| - Wildcards             | 🎉 | 💔 | 💔 |
-| - Member access         | 🎉 | 💔 | 💔 |
-| - Paths                 | 🎉 | 💔 | 💔 |
-| - Values                | 🎉 | 💔 | 💔 |
+| Patterns                | 🎉 | ⚙️ | 💔 |
+| - Wildcards             | 🎉 | ⚙️ | 💔 |
+| - Member access         | 🎉 | ⚙️ | 💔 |
+| - Paths                 | 🎉 | ⚙️ | 💔 |
+| - Values                | 🎉 | ⚙️ | 💔 |
 | | | | |
-| Functions               | 🎉 | 💔 | 💔 |
+| Functions               | 🎉 | ⚙️ | 💔 |
 | | | | |
-| Op Expressions          | 🎉 | 💔 | 💔 |
-| - Unary/Binary          | 🎉 | 💔 | 💔 |
-| - Member access         | 🎉 | 💔 | 💔 |
-| - Function call         | 🎉 | 💔 | 💔 |
+| Op Expressions          | 🎉 | ⚙️ | 💔 |
+| - Unary/Binary          | 🎉 | ⚙️ | 💔 |
+| - Member access         | 🎉 | ⚙️ | 💔 |
+| - Function call         | 🎉 | ⚙️ | 💔 |
 | | | | |
-| Tuples                  | 🎉 | 💔 | 💔 |
-| Arrays                  | 🎉 | 💔 | 💔 |
-| Dictionaries            | 🎉 | 💔 | 💔 |
+| Tuples                  | 🎉 | ⚙️ | 💔 |
+| Arrays                  | 🎉 | ⚙️ | 💔 |
+| Dictionaries            | 🎉 | ⚙️ | 💔 |
 | | | | |
-| If/else                 | 🎉 | 💔 | 💔 |
-| For loops               | 🎉 | 💔 | 💔 |
-| While loops             | 🎉 | 💔 | 💔 |
-| Infinite loops          | 🎉 | 💔 | 💔 |
-| Break/continue          | 🎉 | 💔 | 💔 |
-| Return                  | 🎉 | 💔 | 💔 |
+| If/else                 | 🎉 | ⚙️ | 💔 |
+| For loops               | 🎉 | ⚙️ | 💔 |
+| While loops             | 🎉 | ⚙️ | 💔 |
+| Infinite loops          | 🎉 | ⚙️ | 💔 |
+| Break/continue          | 🎉 | ⚙️ | 💔 |
+| Return                  | 🎉 | ⚙️ | 💔 |
 
 ### Miscellaneous
 
