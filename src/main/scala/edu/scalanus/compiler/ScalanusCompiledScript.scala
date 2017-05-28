@@ -8,6 +8,6 @@ class ScalanusCompiledScript(
 
   override def getEngine: ScriptEngine = engine
 
-  override def eval(context: ScriptContext): Any = ???
+  override def eval(context: ScriptContext): AnyRef = ???
 
 }

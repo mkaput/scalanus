@@ -4,6 +4,7 @@ import java.io.Reader
 import javax.script._
 
 import edu.scalanus.compiler.ScalanusCompiler
+import edu.scalanus.errors.ScalanusException
 
 class ScalanusScriptEngine private[scalanus](
   private val factory: ScalanusScriptEngineFactory
@@ -15,8 +16,8 @@ class ScalanusScriptEngine private[scalanus](
   override def compile(script: String): CompiledScript = try {
     compiler.compile(script, getScriptName(context))
   } catch {
+    case e: ScalanusException => throw e.toScriptException
     case e: ScriptException => throw e
-    case e: ScalanusException => throw e.intoScriptException()
     case e: RuntimeException => throw e
     case e: Exception => throw new ScriptException(e)
   }
@@ -25,8 +26,8 @@ class ScalanusScriptEngine private[scalanus](
   override def compile(script: Reader): CompiledScript = try {
     compiler.compile(script, getScriptName(context))
   } catch {
+    case e: ScalanusException => throw e.toScriptException
     case e: ScriptException => throw e
-    case e: ScalanusException => throw e.intoScriptException()
     case e: RuntimeException => throw e
     case e: Exception => throw new ScriptException(e)
   }
@@ -35,8 +36,8 @@ class ScalanusScriptEngine private[scalanus](
   override def eval(script: String, context: ScriptContext): AnyRef = try {
     compile(script).eval(context)
   } catch {
+    case e: ScalanusException => throw e.toScriptException
     case e: ScriptException => throw e
-    case e: ScalanusException => throw e.intoScriptException()
     case e: RuntimeException => throw e
     case e: Exception => throw new ScriptException(e)
   }
@@ -45,8 +46,8 @@ class ScalanusScriptEngine private[scalanus](
   override def eval(script: Reader, context: ScriptContext): AnyRef = try {
     compile(script).eval(context)
   } catch {
+    case e: ScalanusException => throw e.toScriptException
     case e: ScriptException => throw e
-    case e: ScalanusException => throw e.intoScriptException()
     case e: RuntimeException => throw e
     case e: Exception => throw new ScriptException(e)
   }
@@ -57,13 +58,13 @@ class ScalanusScriptEngine private[scalanus](
 
   @throws[ScriptException]
   @throws[NoSuchMethodException]
-  override def invokeMethod(receiver: scala.Any, name: String, args: AnyRef*): AnyRef = try {
+  override def invokeMethod(receiver: Any, name: String, args: AnyRef*): AnyRef = try {
     ???
   } catch {
+    case e: ScalanusException => throw e.toScriptException
     case e: ScriptException => throw e
-    case e: ScalanusException => throw e.intoScriptException()
-    case e: RuntimeException => throw e
     case e: NoSuchElementException => throw e
+    case e: RuntimeException => throw e
     case e: Exception => throw new ScriptException(e)
   }
 
@@ -73,19 +74,20 @@ class ScalanusScriptEngine private[scalanus](
     ???
   } catch {
     case e: ScriptException => throw e
-    case e: ScalanusException => throw e.intoScriptException()
-    case e: RuntimeException => throw e
+    case e: ScalanusException => throw e.toScriptException
     case e: NoSuchElementException => throw e
+    case e: RuntimeException => throw e
     case e: Exception => throw new ScriptException(e)
   }
 
   override def getInterface[T](returnType: Class[T]): T = ???
 
-  override def getInterface[T](receiver: scala.Any, returnType: Class[T]): T = ???
+  override def getInterface[T](receiver: Any, returnType: Class[T]): T = ???
 
-  private def getScriptName(ctx: ScriptContext): String =
-    Option(ctx.getAttribute(ScriptEngine.FILENAME))
-      .map(_.toString)
-      .getOrElse("<eval>")
+  private def getScriptName(ctx: ScriptContext): String = {
+    val attr = ctx.getAttribute(ScriptEngine.FILENAME)
+    if (attr == null) return null
+    attr.toString
+  }
 
 }
