@@ -17,7 +17,7 @@ class ScalanusCompilerSpec extends FlatSpec with GivenWhenThen with Matchers wit
   it should "fail on invalid syntax" in {
     When("source name wasn't provided")
     val ex = the[ScalanusParseException] thrownBy {
-      createEngine.compile("println(\"Hello World!\"\0]")
+      createEngine.compile("println(\"Hello World!\"\u0000]")
     }
     ex.getMessage should not be empty
 
@@ -25,7 +25,7 @@ class ScalanusCompilerSpec extends FlatSpec with GivenWhenThen with Matchers wit
     val ex2 = the[ScalanusParseException] thrownBy {
       val eng = createEngine
       eng.getContext.setAttribute(ScriptEngine.FILENAME, "foobar.scl", ScriptContext.ENGINE_SCOPE)
-      eng.compile("println(\"Hello World!\"\0]")
+      eng.compile("println(\"Hello World!\"\u0000]")
     }
     ex2.getMessage should include("foobar.scl")
   }
