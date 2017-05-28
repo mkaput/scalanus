@@ -36,12 +36,9 @@ class Repl {
           processLine(line)
         } catch {
           case _: UserInterruptException =>
-            if (!sigint) {
-              println("Press ^C again to exit...")
-              sigint = true
-            } else {
-              return
-            }
+            if (sigint) return
+            println("Press ^C again to exit...")
+            sigint = true
 
           case _: EndOfFileException => return
         }
