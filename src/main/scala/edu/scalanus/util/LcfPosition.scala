@@ -1,6 +1,9 @@
 package edu.scalanus.util
 
-case class Location(
+/**
+  * Line-column-file name position in source text.
+  */
+case class LcfPosition(
   lineNumber: Int,
   columnNumber: Int = -1,
   fileName: String = null

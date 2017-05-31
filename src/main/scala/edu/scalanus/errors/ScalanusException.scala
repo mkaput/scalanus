@@ -2,7 +2,7 @@ package edu.scalanus.errors
 
 import javax.script.ScriptException
 
-import edu.scalanus.util.Location
+import edu.scalanus.util.LcfPosition
 
 sealed trait ScalanusException extends Exception {
   def toScriptException: ScriptException
@@ -10,7 +10,7 @@ sealed trait ScalanusException extends Exception {
 
 case class ScalanusScriptException(
   message: String,
-  location: Location = null,
+  location: LcfPosition = null,
   cause: Throwable = null
 ) extends ScriptException(
   message,
@@ -26,7 +26,7 @@ case class ScalanusScriptException(
 }
 
 case class ScalanusParseException(
-  errors: Array[(Location, String)]
+  errors: Array[(LcfPosition, String)]
 ) extends ScriptException(
   errors.headOption.map(_._2).orNull,
   errors.headOption.map(_._1.fileName).orNull,
@@ -35,7 +35,7 @@ case class ScalanusParseException(
 ) with ScalanusException {
 
   override def getMessage: String =
-    errors.map { case (loc, msg) => f"$msg ($loc)" }.mkString("\n")
+    errors.map { case (loc, msg) => s"$msg ($loc)" }.mkString("\n")
 
   override def toScriptException: ScriptException = this
 
