@@ -1,8 +1,6 @@
 package edu.scalanus.util
 
-/**
-  * Line-column-file name position in source text.
-  */
+/** Line-column-file name position in source text. */
 case class LcfPosition(
   lineNumber: Int,
   columnNumber: Int = -1,

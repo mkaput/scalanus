@@ -3,6 +3,7 @@ package edu.scalanus.compiler
 import java.io.Reader
 
 import edu.scalanus.ScalanusScriptEngine
+import edu.scalanus.ir.IrNode
 import edu.scalanus.parser.{ScalanusLexer, ScalanusParser}
 import org.antlr.v4.runtime.{CharStream, CharStreams, CommonTokenStream}
 
@@ -15,6 +16,12 @@ class ScalanusCompiler(val engine: ScalanusScriptEngine) {
     compile(CharStreams.fromReader(reader, name))
 
   private def compile(charStream: CharStream): ScalanusCompiledScript = {
+    val program = parseProgram(charStream)
+    val ir = compileProgram(program)
+    new ScalanusCompiledScript(ir, engine)
+  }
+
+  private def parseProgram(charStream: CharStream): ScalanusParser.ProgramContext = {
     val errorListener = new CompilerParserErrorListener
 
     val lexer = new ScalanusLexer(charStream)
@@ -31,7 +38,12 @@ class ScalanusCompiler(val engine: ScalanusScriptEngine) {
 
     errorListener.validate()
 
-    ???
+    program
+  }
+
+  private def compileProgram(program: ScalanusParser.ProgramContext): IrNode = {
+    val visitor = new CompilerVisitor()
+    visitor.visitProgram(program)
   }
 
 }

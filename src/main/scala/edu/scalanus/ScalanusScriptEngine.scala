@@ -73,8 +73,8 @@ class ScalanusScriptEngine private[scalanus](
   override def invokeFunction(name: String, args: AnyRef*): AnyRef = try {
     ???
   } catch {
-    case e: ScriptException => throw e
     case e: ScalanusException => throw e.toScriptException
+    case e: ScriptException => throw e
     case e: NoSuchElementException => throw e
     case e: RuntimeException => throw e
     case e: Exception => throw new ScriptException(e)
@@ -86,8 +86,7 @@ class ScalanusScriptEngine private[scalanus](
 
   private def getScriptName(ctx: ScriptContext): String = {
     val attr = ctx.getAttribute(ScriptEngine.FILENAME)
-    if (attr == null) return null
-    attr.toString
+    if (attr == null) null else attr.toString
   }
 
 }
