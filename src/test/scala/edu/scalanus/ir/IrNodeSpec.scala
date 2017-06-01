@@ -1,9 +1,10 @@
 package edu.scalanus.ir
 
 import edu.scalanus.util.LcfPosition
+import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.{FlatSpec, Matchers}
 
-class IrNodeSpec extends FlatSpec with Matchers {
+class IrNodeSpec extends FlatSpec with Matchers with TableDrivenPropertyChecks {
 
   "IrNode" should "be comparable by children, but not by metadata" in {
     val node1 = IrValue(123)(LcfPosition(1, 2))
@@ -22,6 +23,19 @@ class IrNodeSpec extends FlatSpec with Matchers {
     val stmts = Array(IrValue(1)(p), IrValue(2)(p))
     val node = IrProgram(stmts)(p)
     node.childrenNodes should contain theSameElementsAs stmts
+  }
+
+  val tostrings = Table(
+    ("node", "toString"),
+    (IrProgram(Array[IrStmt]())(LcfPosition(1, 2)), "IrProgram(line 1:2)"),
+    (IrValue(123)(LcfPosition(1, 2)), "IrValue(line 1:2)"),
+    (IrValue(123)(null), "IrValue(<unknown position>)")
+  )
+
+  "IrNode.toString" should "produce human readable string including node class name and location" in {
+    forAll(tostrings) { (node, str) =>
+      node.toString shouldBe str
+    }
   }
 
 }

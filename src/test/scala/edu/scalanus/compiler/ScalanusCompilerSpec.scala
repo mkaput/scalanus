@@ -4,9 +4,9 @@ import javax.script.{ScriptContext, ScriptEngine}
 
 import edu.scalanus.EngineTest
 import edu.scalanus.errors.ScalanusParseException
-import org.scalatest.{FlatSpec, GivenWhenThen, Matchers}
+import org.scalatest.{FlatSpec, Matchers}
 
-class ScalanusCompilerSpec extends FlatSpec with GivenWhenThen with Matchers with EngineTest {
+class ScalanusCompilerSpec extends FlatSpec with Matchers with EngineTest {
 
   behavior of "Scalanus AST -> IR Compiler"
 
@@ -14,14 +14,14 @@ class ScalanusCompilerSpec extends FlatSpec with GivenWhenThen with Matchers wit
     createEngine.compile("println(\"Hello World!\")")
   }
 
-  it should "fail on invalid syntax" in {
-    When("source name wasn't provided")
+  it should "fail on invalid syntax with source name not provided" in {
     val ex = the[ScalanusParseException] thrownBy {
       createEngine.compile("println(\"Hello World!\"\u0000]")
     }
     ex.getMessage should not be empty
+  }
 
-    Given("source name")
+  it should "fail on invalid syntax with source name provided" in {
     val ex2 = the[ScalanusParseException] thrownBy {
       val eng = createEngine
       eng.getContext.setAttribute(ScriptEngine.FILENAME, "foobar.scl", ScriptContext.ENGINE_SCOPE)

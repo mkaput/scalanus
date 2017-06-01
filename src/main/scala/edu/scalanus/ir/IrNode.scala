@@ -6,6 +6,7 @@ import edu.scalanus.util.LcfPosition
   *
   * @param position Start position of the IR node in context of source file.
   *                 Used to generate stack traces and for debugging purposes.
+  *                 Can be null.
   */
 sealed abstract class IrNode(val position: LcfPosition) extends Product {
 
@@ -18,7 +19,8 @@ sealed abstract class IrNode(val position: LcfPosition) extends Product {
       }
       .toTraversable
 
-  override def toString: String = s"${getClass.getSimpleName}($position)"
+  override def toString: String =
+    s"${getClass.getSimpleName}(${if (position != null) position else "<unknown position>"})"
 
 }
 
