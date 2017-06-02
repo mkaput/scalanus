@@ -3,7 +3,6 @@ package edu.scalanus.compiler
 import java.io.Reader
 
 import edu.scalanus.ScalanusScriptEngine
-import edu.scalanus.ir.IrNode
 import edu.scalanus.parser.{ScalanusLexer, ScalanusParser}
 import org.antlr.v4.runtime.{CharStream, CharStreams, CommonTokenStream}
 
@@ -16,34 +15,34 @@ class ScalanusCompiler(val engine: ScalanusScriptEngine) {
     compile(CharStreams.fromReader(reader, name))
 
   private def compile(charStream: CharStream): ScalanusCompiledScript = {
-    val program = parseProgram(charStream)
-    val ir = compileProgram(program)
-    new ScalanusCompiledScript(ir, engine)
-  }
-
-  private def parseProgram(charStream: CharStream): ScalanusParser.ProgramContext = {
-    val errorListener = new CompilerParserErrorListener
+    val parserErrorListener = new ParserErrorListener
 
     val lexer = new ScalanusLexer(charStream)
     lexer.removeErrorListeners()
-    lexer.addErrorListener(errorListener)
+    lexer.addErrorListener(parserErrorListener)
 
     val commonTokenStream = new CommonTokenStream(lexer)
 
     val parser = new ScalanusParser(commonTokenStream)
     parser.removeErrorListeners()
-    parser.addErrorListener(errorListener)
+    parser.addErrorListener(parserErrorListener)
 
     val program = parser.program()
 
+    parserErrorListener.validate()
+
+    val errorListener = new CompilerErrorListener
+    val visitor = new CompilerVisitor(errorListener)
+
+    val maybeIr = visitor.visitProgram(program)
+
     errorListener.validate()
 
-    program
-  }
+    // If there were no compilation errors,
+    // then we must have some generated IR.
+    val ir = maybeIr.get
 
-  private def compileProgram(program: ScalanusParser.ProgramContext): IrNode = {
-    val visitor = new CompilerVisitor()
-    visitor.visitProgram(program)
+    new ScalanusCompiledScript(ir, engine)
   }
 
 }

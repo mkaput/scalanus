@@ -4,18 +4,7 @@ import edu.scalanus.errors.ScalanusParseException
 import edu.scalanus.util.LcfPosition
 import org.antlr.v4.runtime.{BaseErrorListener, IntStream, RecognitionException, Recognizer}
 
-import scala.collection.mutable.ArrayBuffer
-
-class CompilerParserErrorListener extends BaseErrorListener {
-
-  private val errors: ArrayBuffer[(LcfPosition, String)] = ArrayBuffer()
-
-  def foundErrrors: Array[(LcfPosition, String)] = errors.toArray
-
-  @throws[ScalanusParseException]
-  def validate(): Unit = {
-    if (errors.nonEmpty) throw ScalanusParseException(errors.toArray)
-  }
+class ParserErrorListener extends BaseErrorListener with ErrorListenerBase[ScalanusParseException] {
 
   override def syntaxError(
     recognizer: Recognizer[_, _],
@@ -29,7 +18,7 @@ class CompilerParserErrorListener extends BaseErrorListener {
       case IntStream.UNKNOWN_SOURCE_NAME => null
       case s => s
     }
-    errors += ((LcfPosition(line, charPositionInLine, sourceName), msg))
+    report(ScalanusParseException(msg, LcfPosition(line, charPositionInLine, sourceName)))
   }
 
 }

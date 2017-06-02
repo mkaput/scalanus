@@ -3,40 +3,54 @@ package edu.scalanus.errors
 import javax.script.ScriptException
 
 import edu.scalanus.util.LcfPosition
+import org.antlr.v4.runtime.{IntStream, ParserRuleContext}
 
-sealed trait ScalanusException extends Exception {
-  def toScriptException: ScriptException
-}
-
-case class ScalanusScriptException(
-  message: String,
-  location: LcfPosition = null,
+sealed abstract class ScalanusException(
   cause: Throwable = null
-) extends ScriptException(
-  message,
-  if (location != null) location.fileName else null,
-  if (location != null) location.lineNumber else -1,
-  if (location != null) location.columnNumber else -1
-) with ScalanusException {
+) extends ScriptException(null: String) {
 
   if (cause != null) initCause(cause)
 
-  override def toScriptException: ScriptException = this
+  val detailMessage: String
+
+  val position: LcfPosition
+
+  override def getMessage: String = s"$position: $detailMessage"
+
+  override def getLineNumber: Int = position.lineNumber
+
+  override def getColumnNumber: Int = position.columnNumber
+
+  override def getFileName: String = position.fileName
+
+  def toScriptException: ScriptException = this
 
 }
 
-case class ScalanusParseException(
-  errors: Array[(LcfPosition, String)]
-) extends ScriptException(
-  errors.headOption.map(_._2).orNull,
-  errors.headOption.map(_._1.fileName).orNull,
-  errors.headOption.map(_._1.lineNumber).getOrElse(-1),
-  errors.headOption.map(_._1.columnNumber).getOrElse(-1)
-) with ScalanusException {
 
-  override def getMessage: String =
-    errors.map { case (loc, msg) => s"$msg ($loc)" }.mkString("\n")
+case class ScalanusParseException(detailMessage: String, position: LcfPosition) extends ScalanusException
 
-  override def toScriptException: ScriptException = this
+case class ScalanusCompileException(detailMessage: String, ctx: ParserRuleContext) extends ScalanusException {
+  override val position: LcfPosition = {
+    val line = ctx.getStart.getLine
+    val column = ctx.getStart.getCharPositionInLine
+    val fileName = ctx.getStart.getInputStream.getSourceName match {
+      case IntStream.UNKNOWN_SOURCE_NAME => null
+      case s => s
+    }
+    LcfPosition(line, column, fileName)
+  }
+}
+
+
+case class ScalanusMultiException(exceptions: ScalanusException*) extends ScalanusException {
+
+  require(exceptions.nonEmpty)
+
+  override lazy val detailMessage: String = exceptions.map(_.getMessage).mkString("\n")
+
+  override val position: LcfPosition = exceptions.head.position
+
+  override def getMessage: String = detailMessage
 
 }
