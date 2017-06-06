@@ -5,17 +5,20 @@ import javax.script.ScriptException
 import edu.scalanus.util.LcfPosition
 import org.antlr.v4.runtime.ParserRuleContext
 
-sealed abstract class ScalanusException(
+sealed class ScalanusException(
+  val detailMessage: String,
+  var position: LcfPosition = null,
   cause: Throwable = null
 ) extends ScriptException(null: String) {
 
   if (cause != null) initCause(cause)
 
-  val detailMessage: String
-
-  val position: LcfPosition
-
-  override def getMessage: String = s"$position: $detailMessage"
+  override def getMessage: String =
+    if (position != null) {
+      s"$position: $detailMessage"
+    } else {
+      detailMessage
+    }
 
   override def getLineNumber: Int = position.lineNumber
 
@@ -28,20 +31,30 @@ sealed abstract class ScalanusException(
 }
 
 
-case class ScalanusParseException(detailMessage: String, position: LcfPosition) extends ScalanusException
+sealed class ScalanusParseException(
+  detailMessage: String,
+  position: LcfPosition
+) extends ScalanusException(
+  detailMessage,
+  position
+)
 
-case class ScalanusCompileException(detailMessage: String, ctx: ParserRuleContext) extends ScalanusException {
-  override val position: LcfPosition = LcfPosition(ctx)
-}
+
+sealed class ScalanusCompileException(
+  detailMessage: String,
+  ctx: ParserRuleContext
+) extends ScalanusException(
+  detailMessage,
+  LcfPosition(ctx)
+)
 
 
-case class ScalanusMultiException(exceptions: ScalanusException*) extends ScalanusException {
-
-  require(exceptions.nonEmpty)
-
-  override lazy val detailMessage: String = exceptions.map(_.getMessage).mkString("\n")
-
-  override val position: LcfPosition = exceptions.head.position
+sealed class ScalanusMultiException(
+  val exceptions: ScalanusException*
+) extends ScalanusException(
+  exceptions.map(_.getMessage).mkString("\n"),
+  exceptions.head.position
+) {
 
   override def getMessage: String = detailMessage
 

@@ -31,7 +31,7 @@ class ScalanusCompiler(val engine: ScalanusScriptEngine) {
 
     parserErrorListener.validate()
 
-    val errorListener = new CompilerErrorListener
+    val errorListener = ScalanusErrorListener()
     val visitor = new CompilerVisitor(errorListener)
 
     val maybeIr = visitor.visitProgram(program)

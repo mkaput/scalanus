@@ -4,9 +4,9 @@ import edu.scalanus.errors.{ScalanusException, ScalanusMultiException}
 
 import scala.collection.mutable.ArrayBuffer
 
-trait ErrorListenerBase[T <: ScalanusException] {
+trait ScalanusErrorListener {
 
-  private val errors: ArrayBuffer[T] = ArrayBuffer()
+  private val errors: ArrayBuffer[ScalanusException] = ArrayBuffer()
 
   def hasErrors: Boolean =
     errors.nonEmpty
@@ -14,11 +14,15 @@ trait ErrorListenerBase[T <: ScalanusException] {
   @throws[ScalanusException]
   def validate(): Unit = {
     if (errors.nonEmpty) {
-      throw ScalanusMultiException(errors: _*)
+      throw new ScalanusMultiException(errors: _*)
     }
   }
 
-  def report(exception: T): Unit =
+  def report(exception: ScalanusException): Unit =
     errors += exception
 
+}
+
+object ScalanusErrorListener {
+  def apply(): ScalanusErrorListener = new ScalanusErrorListener {}
 }
