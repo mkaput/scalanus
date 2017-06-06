@@ -26,17 +26,17 @@ class CompilerVisitor(private val errors: CompilerErrorListener) extends Scalanu
 
   /** Overriden to automatically throw not implemented ICE */
   override def visitChildren(node: RuleNode): Option[IrNode] = node.getRuleContext match {
-    case ctx: ParserRuleContext => ????(ctx)
+    case ctx: ParserRuleContext => notImplemented(ctx)
     case _ => super.visitChildren(node)
   }
 
-  private def raise(message: String, ctx: ParserRuleContext): Option[IrNode] = {
+  private def ?!(message: String, ctx: ParserRuleContext): Option[IrNode] = {
     errors.report(ScalanusCompileException(message, ctx))
     None
   }
 
-  private def ????(ctx: ParserRuleContext): Option[IrNode] =
-    raise("not implemented yet", ctx)
+  private def notImplemented(ctx: ParserRuleContext): Option[IrNode] =
+    ?!(s"ICE: not implemented yet, ${ctx.getClass.getSimpleName.stripSuffix("Context")}", ctx)
 
   private object compile {
     def apply(f: => LcfPosition => IrNode): compile = new compile(f)
