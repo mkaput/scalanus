@@ -3,7 +3,7 @@ package edu.scalanus.errors
 import javax.script.ScriptException
 
 import edu.scalanus.util.LcfPosition
-import org.antlr.v4.runtime.{IntStream, ParserRuleContext}
+import org.antlr.v4.runtime.ParserRuleContext
 
 sealed abstract class ScalanusException(
   cause: Throwable = null
@@ -31,15 +31,7 @@ sealed abstract class ScalanusException(
 case class ScalanusParseException(detailMessage: String, position: LcfPosition) extends ScalanusException
 
 case class ScalanusCompileException(detailMessage: String, ctx: ParserRuleContext) extends ScalanusException {
-  override val position: LcfPosition = {
-    val line = ctx.getStart.getLine
-    val column = ctx.getStart.getCharPositionInLine
-    val fileName = ctx.getStart.getInputStream.getSourceName match {
-      case IntStream.UNKNOWN_SOURCE_NAME => null
-      case s => s
-    }
-    LcfPosition(line, column, fileName)
-  }
+  override val position: LcfPosition = LcfPosition(ctx)
 }
 
 

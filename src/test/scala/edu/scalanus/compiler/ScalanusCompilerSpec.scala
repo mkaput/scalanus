@@ -10,7 +10,9 @@ class ScalanusCompilerSpec extends FlatSpec with Matchers with EngineTest {
   behavior of "Scalanus AST -> IR Compiler"
 
   it should "not fail on valid program" in {
-    createEngine.compile("println(\"Hello World!\")")
+    // This funny program source comes from the
+    // iterating nature of compiler development ;)
+    createEngine.compile("1; 2; 3; 4")
   }
 
   it should "fail on invalid syntax with source name not provided" in {

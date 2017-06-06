@@ -13,7 +13,8 @@ sealed abstract class IrNode(val position: LcfPosition) extends Product {
   def childrenNodes: Traversable[IrNode] =
     productIterator
       .flatMap {
-        case collection: Array[IrNode] => collection
+        // FIXME this generates compiler warning
+        case collection: IndexedSeq[IrNode] => collection
         case node: IrNode => Array(node)
         case _ => Nil
       }
@@ -24,7 +25,8 @@ sealed abstract class IrNode(val position: LcfPosition) extends Product {
 
 }
 
-case class IrProgram(stmts: Array[_ <: IrStmt])(position: LcfPosition) extends IrNode(position)
+
+case class IrProgram(stmts: IndexedSeq[IrNode])(position: LcfPosition) extends IrNode(position)
 
 
 //
