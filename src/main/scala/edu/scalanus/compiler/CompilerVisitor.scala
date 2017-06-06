@@ -14,20 +14,20 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
   override def visitExprStmt(ctx: ScalanusParser.ExprStmtContext): Option[IrNode] =
     ctx.expr().accept(this)
 
-  override def visitLiteral(ctx: ScalanusParser.LiteralContext): Option[IrNode] = compile {
+  override def visitLiteral(ctx: ScalanusParser.LiteralContext): Option[IrNode] = compile(ctx) {
     IrValue(LiteralParser.parse(ctx))
-  } of ctx
+  }
 
   override def visitLiteralExpr(ctx: ScalanusParser.LiteralExprContext): Option[IrNode] =
     ctx.literal().accept(this)
 
-  override def visitProgram(ctx: ScalanusParser.ProgramContext): Option[IrNode] = compile {
+  override def visitProgram(ctx: ScalanusParser.ProgramContext): Option[IrNode] = compile(ctx) {
     IrProgram(
       ctx.stmts().stmt().asScala
         .map(_.accept(this).orNull)
         .toIndexedSeq
     )
-  } of ctx
+  }
 
 
   /*
@@ -48,24 +48,19 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
   private def notImplemented(ctx: ParserRuleContext): Option[IrNode] =
     ?!(s"ICE: not implemented yet, ${ctx.getClass.getSimpleName.stripSuffix("Context")}", ctx)
 
-  private object compile {
-    def apply(f: => LcfPosition => IrNode): compile = new compile(f)
-  }
-
-  private class compile(f: => (LcfPosition) => IrNode) {
-    def of(ctx: ParserRuleContext): Option[IrNode] =
+  private def compile(ctx: ParserRuleContext)(f: => (LcfPosition) => IrNode): Option[IrNode] =
+    try {
+      val node = f(LcfPosition(ctx))
       if (!errors.hasErrors) {
-        try {
-          Some(f(LcfPosition(ctx)))
-        } catch {
-          case ex: ScalanusException =>
-            if (ex.position == null) ex.position = LcfPosition(ctx)
-            errors.report(ex)
-            None
-        }
+        Some(node)
       } else {
         None
       }
-  }
+    } catch {
+      case ex: ScalanusException =>
+        if (ex.position == null) ex.position = LcfPosition(ctx)
+        errors.report(ex)
+        None
+    }
 
 }
