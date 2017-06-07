@@ -33,7 +33,7 @@ class IrNodeSpec extends FlatSpec with Matchers with TableDrivenPropertyChecks {
   )
 
   "IrNode.toString" should "produce human readable string including node class name and location" in {
-    forAll(tostrings) { (node, str) =>
+    forEvery(tostrings) { (node, str) =>
       node.toString shouldBe str
     }
   }

@@ -7,16 +7,16 @@ class LcfPositionSpec extends FlatSpec with TableDrivenPropertyChecks with Match
 
   behavior of "LcfPosition"
 
-  val tostrings = Table(
-    ("position", "toString"),
-    (LcfPosition(1), "line 1"),
-    (LcfPosition(1, 1), "line 1:1"),
-    (LcfPosition(1, fileName = "file.txt"), "file.txt:1"),
-    (LcfPosition(1, 1, "file.txt"), "file.txt:1:1")
-  )
-
   it should "generate nice toString" in {
-    forAll(tostrings) { (pos, str) =>
+    val data = Table(
+      ("position", "toString"),
+      (LcfPosition(1), "line 1"),
+      (LcfPosition(1, 1), "line 1:1"),
+      (LcfPosition(1, fileName = "file.txt"), "file.txt:1"),
+      (LcfPosition(1, 1, "file.txt"), "file.txt:1:1")
+    )
+
+    forEvery(data) { (pos, str) =>
       pos.toString shouldBe str
     }
   }
