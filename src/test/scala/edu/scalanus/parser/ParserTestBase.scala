@@ -13,7 +13,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
 
-abstract class ParserSpecBase extends FunSuite with Matchers with TestDataPathWithResult {
+abstract class ParserTestBase extends FunSuite with Matchers with TestDataPathWithResult {
 
   protected def createCommonTokenStream(stream: CharStream): CommonTokenStream
 
