@@ -44,4 +44,6 @@ sealed trait IrStmt extends IrNode
 
 sealed trait IrExpr extends IrNode with IrStmt
 
-case class IrValue(value: Any)(position: LcfPosition) extends IrNode(position) with IrExpr
+case class IrValue(value: Any)(position: LcfPosition) extends IrNode(position) with IrExpr {
+  override def toString: String = s"${super.toString} = $value"
+}

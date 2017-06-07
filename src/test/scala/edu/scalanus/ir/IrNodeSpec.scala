@@ -28,8 +28,8 @@ class IrNodeSpec extends FlatSpec with Matchers with TableDrivenPropertyChecks {
   val tostrings = Table(
     ("node", "toString"),
     (IrProgram(Array[IrStmt]())(LcfPosition(1, 2)), "IrProgram(line 1:2)"),
-    (IrValue(123)(LcfPosition(1, 2)), "IrValue(line 1:2)"),
-    (IrValue(123)(null), "IrValue(<unknown position>)")
+    (IrValue(123)(LcfPosition(1, 2)), "IrValue(line 1:2) = 123"),
+    (IrValue(123)(null), "IrValue(<unknown position>) = 123")
   )
 
   "IrNode.toString" should "produce human readable string including node class name and location" in {
