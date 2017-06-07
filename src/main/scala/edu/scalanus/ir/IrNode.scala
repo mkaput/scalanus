@@ -20,8 +20,10 @@ sealed abstract class IrNode(val position: LcfPosition) extends Product {
       }
       .toTraversable
 
-  override def toString: String =
-    s"${getClass.getSimpleName}(${if (position != null) position else "<unknown position>"})"
+  override def toString: String = {
+    val positionStr = if (position != null) position else "<unknown position>"
+    s"${getClass.getSimpleName}($positionStr)"
+  }
 
 }
 

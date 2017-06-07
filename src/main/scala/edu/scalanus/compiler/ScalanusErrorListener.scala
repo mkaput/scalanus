@@ -8,8 +8,7 @@ trait ScalanusErrorListener {
 
   private val errors: ArrayBuffer[ScalanusException] = ArrayBuffer()
 
-  def hasErrors: Boolean =
-    errors.nonEmpty
+  def hasErrors: Boolean = errors.nonEmpty
 
   @throws[ScalanusException]
   def validate(): Unit = {
@@ -18,8 +17,9 @@ trait ScalanusErrorListener {
     }
   }
 
-  def report(exception: ScalanusException): Unit =
+  def report(exception: ScalanusException): Unit = {
     errors += exception
+  }
 
 }
 
