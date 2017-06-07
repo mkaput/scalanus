@@ -10,7 +10,7 @@ class ScalanusCompilerTest extends FunSuite with Matchers with FileFixtureTest w
 
   override protected def basePath: String = "compiler/fixtures"
 
-  fixtures foreach (f => {
+  fixtures foreach { f =>
     test(getFixtureName(f)) {
       val engine = createEngine
       val compiled = engine.compile(Source.fromFile(f).reader()).asInstanceOf[ScalanusCompiledScript]
@@ -18,6 +18,6 @@ class ScalanusCompilerTest extends FunSuite with Matchers with FileFixtureTest w
       val results = getOrCreateResults(f, actual)
       actual shouldEqual results
     }
-  })
+  }
 
 }

@@ -19,7 +19,7 @@ abstract class ParserTestBase extends FunSuite with Matchers with FileFixtureTes
 
   protected override def fixtureExtensions = Array("lex", EXT)
 
-  fixtures foreach (f => {
+  fixtures foreach { f =>
     val isLex = f.getName endsWith ".lex"
 
     test(getFixtureName(f)) {
@@ -29,7 +29,7 @@ abstract class ParserTestBase extends FunSuite with Matchers with FileFixtureTes
         doTestParser(f)
       }
     }
-  })
+  }
 
   private def doTestLex(f: File) {
     val stream = CharStreams.fromPath(f.toPath)
