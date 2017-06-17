@@ -2,13 +2,18 @@ package edu.scalanus.ir
 
 import edu.scalanus.util.LcfPosition
 
-/** Root class in the IR class hierarchy.
+/** Represents IR node context information
   *
   * @param position Start position of the IR node in context of source file.
   *                 Used to generate stack traces and for debugging purposes.
   *                 Can be null.
   */
-sealed abstract class IrNode(val position: LcfPosition) extends Product {
+sealed case class IrCtx(position: LcfPosition) {
+  override def toString: String = if (position != null) position.toString else "<unknown position>"
+}
+
+/** Root class in the IR class hierarchy */
+sealed abstract class IrNode(val ctx: IrCtx) extends Product {
 
   def childrenNodes: Traversable[IrNode] =
     productIterator
@@ -20,15 +25,12 @@ sealed abstract class IrNode(val position: LcfPosition) extends Product {
       }
       .toTraversable
 
-  override def toString: String = {
-    val positionStr = if (position != null) position else "<unknown position>"
-    s"${getClass.getSimpleName}($positionStr)"
-  }
+  override def toString: String = s"${getClass.getSimpleName}($ctx)"
 
 }
 
 
-case class IrProgram(stmts: IndexedSeq[IrNode])(position: LcfPosition) extends IrNode(position)
+case class IrProgram(stmts: IndexedSeq[IrNode])(ctx: IrCtx) extends IrNode(ctx)
 
 
 //
@@ -44,6 +46,6 @@ sealed trait IrStmt extends IrNode
 
 sealed trait IrExpr extends IrNode with IrStmt
 
-case class IrValue(value: Any)(position: LcfPosition) extends IrNode(position) with IrExpr {
+case class IrValue(value: Any)(ctx: IrCtx) extends IrNode(ctx) with IrExpr {
   override def toString: String = s"${super.toString} = $value"
 }

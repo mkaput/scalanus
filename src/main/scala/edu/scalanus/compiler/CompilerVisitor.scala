@@ -1,7 +1,7 @@
 package edu.scalanus.compiler
 
 import edu.scalanus.errors.{ScalanusCompileException, ScalanusException}
-import edu.scalanus.ir.{IrNode, IrProgram, IrValue}
+import edu.scalanus.ir.{IrCtx, IrNode, IrProgram, IrValue}
 import edu.scalanus.parser.{ScalanusBaseVisitor, ScalanusParser}
 import edu.scalanus.util.LcfPosition
 import org.antlr.v4.runtime.ParserRuleContext
@@ -48,9 +48,9 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
   private def notImplemented(ctx: ParserRuleContext): Option[IrNode] =
     ?!(s"ICE: not implemented yet, ${ctx.getClass.getSimpleName.stripSuffix("Context")}", ctx)
 
-  private def compile(ctx: ParserRuleContext)(f: => (LcfPosition) => IrNode): Option[IrNode] =
+  private def compile(ctx: ParserRuleContext)(f: => (IrCtx) => IrNode): Option[IrNode] =
     try {
-      val node = f(LcfPosition(ctx))
+      val node = f(IrCtx(LcfPosition(ctx)))
       if (!errors.hasErrors) {
         Some(node)
       } else {
