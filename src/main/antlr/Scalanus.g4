@@ -56,7 +56,6 @@ simplePattern : '_'                # wildcardPattern
 // Items
 
 item : 'fn' IDENT '(' pattern? ')' block  # fnItem
-     | block                              # blockItem
      ;
 
 
