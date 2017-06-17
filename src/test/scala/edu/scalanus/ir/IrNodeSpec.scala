@@ -6,9 +6,11 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class IrNodeSpec extends FlatSpec with Matchers with TableDrivenPropertyChecks {
 
-  def mock(f: => (IrCtx) => IrNode): IrNode = mockCfg(LcfPosition(1, 2))(f)
+  def mock[T <: IrNode](f: => (IrCtx) => T): T =
+    mockCfg(LcfPosition(1, 2))(f)
 
-  def mockCfg(position: LcfPosition)(f: => (IrCtx) => IrNode): IrNode = f(IrCtx(position))
+  def mockCfg[T <: IrNode](position: LcfPosition)(f: => (IrCtx) => T): T =
+    f(IrCtx(position))
 
   "IrNode" should "be comparable by children, but not by metadata" in {
     val node1 = mock(IrValue(123))

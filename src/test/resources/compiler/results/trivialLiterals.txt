@@ -1,0 +1,14 @@
+IrProgram(line 1:0)
+    IrValue(line 1:0) = 1
+    IrValue(line 1:3) = 2
+    IrRefExpr(line 2:0)
+        IrPath(line 2:0): a
+    IrRefExpr(line 2:3)
+        IrPath(line 2:3): b
+    IrValue(line 3:0) = abra
+    IrValue(line 3:8) = kababra
+    IrValue(line 4:0) = a
+    IrValue(line 4:5) = b
+    IrValue(line 5:0) = ()
+    IrValue(line 6:0) = true
+    IrValue(line 6:6) = false

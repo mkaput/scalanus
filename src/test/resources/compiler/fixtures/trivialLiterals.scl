@@ -1,0 +1,6 @@
+1; 2
+a; b
+"abra"; "kababra"
+'a'; 'b';
+()
+True; False
