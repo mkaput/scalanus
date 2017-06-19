@@ -9,41 +9,35 @@ import org.antlr.v4.runtime.tree.RuleNode
 
 import scala.collection.JavaConverters._
 
-class CompilerVisitor(private val errors: ScalanusErrorListener)
-  extends ScalanusBaseVisitor[Option[IrNode]] {
+class CompilerVisitor(private val errors: ScalanusErrorListener) extends ScalanusBaseVisitor[Option[IrNode]] {
 
-  override def visitAssignStmt(ctx: ScalanusParser.AssignStmtContext): Option[IrNode] = compileF(ctx) {
-    for (
-      pattern <- ctx.pattern().accept(this);
-      expr <- ctx.expr().accept(this)
-    )
-      yield IrAssignStmt(pattern.asInstanceOf[IrPattern], expr.asInstanceOf[IrExpr])
+  override def visitAssignStmt(ctx: ScalanusParser.AssignStmtContext): Option[IrNode] = compileM(ctx) {
+    for {
+      pattern <- accept[IrPattern](ctx.pattern)
+      expr <- accept[IrExpr](ctx.expr)
+    } yield IrAssignStmt(pattern, expr)
   }
 
   override def visitBlock(ctx: ScalanusParser.BlockContext): Option[IrNode] = compile(ctx) {
     IrBlock(
       ctx.stmts.stmt.asScala
-        .flatMap(_.accept(this))
-        .map(_.asInstanceOf[IrStmt])
+        .flatMap(accept[IrStmt])
         .toIndexedSeq
     )
   }
 
-  override def visitBlockExpr(ctx: ScalanusParser.BlockExprContext): Option[IrNode] =
-    ctx.block().accept(this)
+  override def visitBlockExpr(ctx: ScalanusParser.BlockExprContext): Option[IrNode] = accept(ctx.block)
 
-  override def visitExprStmt(ctx: ScalanusParser.ExprStmtContext): Option[IrNode] =
-    ctx.expr.accept(this)
+  override def visitExprStmt(ctx: ScalanusParser.ExprStmtContext): Option[IrNode] = accept(ctx.expr)
 
-  override def visitIdxAccPattern(ctx: ScalanusParser.IdxAccPatternContext): Option[IrNode] = compileF(ctx) {
-    for (
-      recv <- ctx.expr(0).accept(this);
-      idx <- ctx.expr(1).accept(this);
+  override def visitIdxAccPattern(ctx: ScalanusParser.IdxAccPatternContext): Option[IrNode] = compileM(ctx) {
+    for {
+      recv <- accept[IrExpr](ctx.expr(0))
+      idx <- accept[IrExpr](ctx.expr(1))
       idxAcc <- compile(ctx) {
-        IrIdxAcc(recv.asInstanceOf[IrExpr], idx.asInstanceOf[IrExpr])
+        IrIdxAcc(recv, idx)
       }
-    ) yield
-      IrRefPattern(idxAcc.asInstanceOf[IrIdxAcc])
+    } yield IrRefPattern(idxAcc)
   }
 
 
@@ -51,33 +45,29 @@ class CompilerVisitor(private val errors: ScalanusErrorListener)
     IrValue(LiteralParser.parse(ctx))
   }
 
-  override def visitLiteralExpr(ctx: ScalanusParser.LiteralExprContext): Option[IrNode] =
-    ctx.literal.accept(this)
+  override def visitLiteralExpr(ctx: ScalanusParser.LiteralExprContext): Option[IrNode] = accept(ctx.literal)
 
-  override def visitMemAccPattern(ctx: ScalanusParser.MemAccPatternContext): Option[IrNode] = compileF(ctx) {
-    for (
-      recv <- ctx.expr().accept(this);
+  override def visitMemAccPattern(ctx: ScalanusParser.MemAccPatternContext): Option[IrNode] = compileM(ctx) {
+    for {
+      recv <- accept[IrExpr](ctx.expr)
       memAcc <- compile(ctx) {
-        IrMemAcc(recv.asInstanceOf[IrExpr], ctx.IDENT().getText)
+        IrMemAcc(recv, ctx.IDENT.getText)
       }
-    ) yield
-      IrRefPattern(memAcc.asInstanceOf[IrMemAcc])
+    } yield IrRefPattern(memAcc)
   }
 
   override def visitPath(ctx: ScalanusParser.PathContext): Option[IrNode] = compile(ctx) {
     IrPath(ctx.IDENT.getText)
   }
 
-  override def visitPathExpr(ctx: ScalanusParser.PathExprContext): Option[IrNode] = compileF(ctx) {
-    for (path <- ctx.path().accept(this))
-      yield IrRefExpr(path.asInstanceOf[IrRef])
+  override def visitPathExpr(ctx: ScalanusParser.PathExprContext): Option[IrNode] = compileM(ctx) {
+    for (path <- accept[IrRef](ctx.path)) yield IrRefExpr(path)
   }
 
   override def visitPattern(ctx: ScalanusParser.PatternContext): Option[IrNode] = compile(ctx) {
     IrPattern(
       ctx.simplePattern.asScala
-        .flatMap(_.accept(this))
-        .map(_.asInstanceOf[IrSimplePattern])
+        .flatMap(accept[IrSimplePattern])
         .toIndexedSeq
     )
   }
@@ -86,21 +76,18 @@ class CompilerVisitor(private val errors: ScalanusErrorListener)
     IrWildcardPattern()
   }
 
-  override def visitPathPattern(ctx: ScalanusParser.PathPatternContext): Option[IrNode] = compileF(ctx) {
-    for (path <- ctx.path().accept(this))
-      yield IrRefPattern(path.asInstanceOf[IrRef])
+  override def visitPathPattern(ctx: ScalanusParser.PathPatternContext): Option[IrNode] = compileM(ctx) {
+    for (path <- accept[IrRef](ctx.path)) yield IrRefPattern(path)
   }
 
-  override def visitValuePattern(ctx: ScalanusParser.ValuePatternContext): Option[IrNode] = compileF(ctx) {
-    for (expr <- ctx.expr().accept(this))
-      yield IrValuePattern(expr.asInstanceOf[IrExpr])
+  override def visitValuePattern(ctx: ScalanusParser.ValuePatternContext): Option[IrNode] = compileM(ctx) {
+    for (expr <- accept[IrExpr](ctx.expr)) yield IrValuePattern(expr)
   }
 
   override def visitProgram(ctx: ScalanusParser.ProgramContext): Option[IrNode] = compile(ctx) {
     IrProgram(
       ctx.stmts.stmt.asScala
-        .flatMap(_.accept(this))
-        .map(_.asInstanceOf[IrStmt])
+        .flatMap(accept[IrStmt])
         .toIndexedSeq
     )
   }
@@ -124,12 +111,11 @@ class CompilerVisitor(private val errors: ScalanusErrorListener)
   private def notImplemented(ctx: ParserRuleContext): Option[IrNode] =
     ?!(s"ICE: not implemented yet, ${ctx.getClass.getSimpleName.stripSuffix("Context")}", ctx)
 
-  private def compile(ctx: ParserRuleContext)(f: => (IrCtx) => IrNode): Option[IrNode] = compileF(ctx) {
+  private def compile[T <: IrNode](ctx: ParserRuleContext)(f: => (IrCtx) => T): Option[T] = compileM(ctx) {
     Some(f)
   }
 
-
-  private def compileF(ctx: ParserRuleContext)(f: => Option[(IrCtx) => IrNode]): Option[IrNode] =
+  private def compileM[T <: IrNode](ctx: ParserRuleContext)(f: => Option[(IrCtx) => T]): Option[T] =
     try {
       val node = f.map(_.apply(IrCtx(ctx)))
       if (!errors.hasErrors) {
@@ -143,5 +129,8 @@ class CompilerVisitor(private val errors: ScalanusErrorListener)
         errors.report(ex)
         None
     }
+
+  private def accept[T <: IrNode](ctx: ParserRuleContext): Option[T] =
+    ctx.accept(this).map(_.asInstanceOf[T])
 
 }
