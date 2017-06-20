@@ -11,7 +11,7 @@ IrProgram(line 1:0)
     IrAssignStmt(line 2:0)
         IrPattern(line 2:0)
             IrRefPattern(line 2:0)
-                IrMemAcc(line 2:0)
+                IrMemAcc(line 2:0) .f
                     IrRefExpr(line 2:0)
                         IrPath(line 2:0): e
             IrRefPattern(line 2:5)

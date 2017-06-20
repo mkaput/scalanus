@@ -33,7 +33,9 @@ case class IrPath(ident: String)(ctx: IrCtx) extends IrNode(ctx) with IrRef {
   override def toString: String = s"${super.toString}: $ident"
 }
 
-case class IrMemAcc(recv: IrExpr, member: String)(ctx: IrCtx) extends IrNode(ctx) with IrRef
+case class IrMemAcc(recv: IrExpr, member: String)(ctx: IrCtx) extends IrNode(ctx) with IrRef {
+  override def toString = s"${super.toString} .$member"
+}
 
 case class IrIdxAcc(recv: IrExpr, idx: IrExpr)(ctx: IrCtx) extends IrNode(ctx) with IrRef
 

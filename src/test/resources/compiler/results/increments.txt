@@ -25,8 +25,8 @@ IrProgram(line 1:0)
                 IrValue(line 7:4) = 10
     IrIncrExpr(line 8:0): x--
         IrRefExpr(line 8:0)
-            IrMemAcc(line 8:0)
+            IrMemAcc(line 8:0) .c
                 IrRefExpr(line 8:0)
-                    IrMemAcc(line 8:0)
+                    IrMemAcc(line 8:0) .b
                         IrRefExpr(line 8:0)
                             IrPath(line 8:0): a
