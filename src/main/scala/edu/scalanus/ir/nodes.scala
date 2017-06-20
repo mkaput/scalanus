@@ -73,3 +73,15 @@ case class IrRefExpr(ref: IrRef)(ctx: IrCtx) extends IrNode(ctx) with IrExpr
 case class IrValue(value: Any)(ctx: IrCtx) extends IrNode(ctx) with IrExpr {
   override def toString: String = s"${super.toString} = $value"
 }
+
+case class IrUnaryExpr(op: IrUnaryOp, expr: IrExpr)(ctx: IrCtx) extends IrNode(ctx) with IrExpr {
+  override def toString = s"${super.toString}: $op"
+}
+
+case class IrIncrExpr(op: IrIncrOp, ref: IrRefExpr)(ctx: IrCtx) extends IrNode(ctx) with IrExpr {
+  override def toString = s"${super.toString}: $op"
+}
+
+case class IrBinaryExpr(op: IrBinaryOp, left: IrExpr, right: IrExpr)(ctx: IrCtx) extends IrNode(ctx) with IrExpr {
+  override def toString = s"${super.toString}: $op"
+}

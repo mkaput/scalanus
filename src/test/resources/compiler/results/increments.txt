@@ -1,0 +1,32 @@
+IrProgram(line 1:0)
+    IrIncrExpr(line 1:0): ++x
+        IrRefExpr(line 1:2)
+            IrPath(line 1:2): x
+    IrIncrExpr(line 2:0): --x
+        IrRefExpr(line 2:2)
+            IrPath(line 2:2): x
+    IrIncrExpr(line 3:0): x++
+        IrRefExpr(line 3:0)
+            IrPath(line 3:0): x
+    IrIncrExpr(line 4:0): x--
+        IrRefExpr(line 4:0)
+            IrPath(line 4:0): x
+    IrIncrExpr(line 5:0): x++
+        IrRefExpr(line 5:1)
+            IrPath(line 5:1): x
+    IrIncrExpr(line 6:0): x++
+        IrRefExpr(line 6:3)
+            IrPath(line 6:3): x
+    IrIncrExpr(line 7:0): ++x
+        IrRefExpr(line 7:2)
+            IrIdxAcc(line 7:2)
+                IrRefExpr(line 7:2)
+                    IrPath(line 7:2): a
+                IrValue(line 7:4) = 10
+    IrIncrExpr(line 8:0): x--
+        IrRefExpr(line 8:0)
+            IrMemAcc(line 8:0)
+                IrRefExpr(line 8:0)
+                    IrMemAcc(line 8:0)
+                        IrRefExpr(line 8:0)
+                            IrPath(line 8:0): a

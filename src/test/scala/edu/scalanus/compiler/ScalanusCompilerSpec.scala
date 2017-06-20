@@ -31,4 +31,15 @@ class ScalanusCompilerSpec extends FlatSpec with Matchers with EngineTest {
     ex.getMessage should include("foobar.scl")
   }
 
+
+  behavior of "Scalanus AST -> IR Compiler Errors"
+
+  it should "raise \"expected reference expression\" when trying to increment non reference expression" in {
+    val ex = the[ScriptException] thrownBy {
+      createEngine.compile("++5")
+    }
+
+    ex.getMessage should include("reference")
+  }
+
 }

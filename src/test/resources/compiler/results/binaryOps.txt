@@ -1,0 +1,20 @@
+IrProgram(line 1:0)
+    IrBinaryExpr(line 1:0): *
+        IrBinaryExpr(line 1:1): +
+            IrRefExpr(line 1:1)
+                IrPath(line 1:1): a
+            IrRefExpr(line 1:5)
+                IrPath(line 1:5): b
+        IrRefExpr(line 1:10)
+            IrPath(line 1:10): c
+    IrBinaryExpr(line 2:0): and
+        IrBinaryExpr(line 2:0): ==
+            IrRefExpr(line 2:0)
+                IrPath(line 2:0): a
+            IrRefExpr(line 2:5)
+                IrPath(line 2:5): c
+        IrBinaryExpr(line 2:11): ==
+            IrRefExpr(line 2:11)
+                IrPath(line 2:11): z
+            IrRefExpr(line 2:16)
+                IrPath(line 2:16): d
