@@ -94,7 +94,7 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
 
   override def visitExprStmt(ctx: ExprStmtContext): Option[IrNode] = accept(ctx.expr)
 
-  override def visitFnCallExpr(ctx: FnCallExprContext): Option[IrFnCallExpr] = compileM(ctx) {
+  override def visitFnCallExpr(ctx: FnCallExprContext): Option[IrNode] = compileM(ctx) {
     for {
       fnExpr <- accept[IrExpr](ctx.expr)
     } yield {
@@ -110,7 +110,7 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
     }
   }
 
-  override def visitFnItem(ctx: FnItemContext): Option[IrFnItem] = compileM(ctx) {
+  override def visitFnItem(ctx: FnItemContext): Option[IrNode] = compileM(ctx) {
     for {
       params <- acceptOptional[IrPattern](ctx.pattern)
       routine <- accept[IrExpr](ctx.block)
@@ -120,7 +120,7 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
     }
   }
 
-  override def visitForExpr(ctx: ForExprContext): Option[IrForExpr] = compileM(ctx) {
+  override def visitForExpr(ctx: ForExprContext): Option[IrNode] = compileM(ctx) {
     val loop = ctx.forLoop
     for {
       pattern <- accept[IrPattern](loop.pattern)
@@ -129,7 +129,7 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
     } yield IrForExpr(pattern, producer, routine)
   }
 
-  override def visitIdxAccExpr(ctx: IdxAccExprContext): Option[IrRefExpr] = compileM(ctx) {
+  override def visitIdxAccExpr(ctx: IdxAccExprContext): Option[IrNode] = compileM(ctx) {
     for {
       recv <- accept[IrExpr](ctx.expr(0))
       idx <- accept[IrExpr](ctx.expr(1))
@@ -178,7 +178,7 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
     for (routine <- accept[IrExpr](ctx.loop.block)) yield IrLoopExpr(routine)
   }
 
-  override def visitMemAccExpr(ctx: MemAccExprContext): Option[IrRefExpr] = compileM(ctx) {
+  override def visitMemAccExpr(ctx: MemAccExprContext): Option[IrNode] = compileM(ctx) {
     for {
       recv <- accept[IrExpr](ctx.expr)
       memAcc <- compile(ctx) {
@@ -269,7 +269,7 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
 
   override def visitUnaryPlusExpr(ctx: UnaryPlusExprContext): Option[IrNode] = compileUnary(IrPlusOp, ctx)
 
-  private def compileUnary(op: IrUnaryOp, ctx: ExprContext): Option[IrUnaryExpr] = compileM(ctx) {
+  private def compileUnary(op: IrUnaryOp, ctx: ExprContext): Option[IrNode] = compileM(ctx) {
     val exprCtx = ctx.getRuleContext[ExprContext](classOf[ExprContext], 0)
     for (expr <- accept[IrExpr](exprCtx)) yield IrUnaryExpr(op, expr)
   }
@@ -287,7 +287,7 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
 
   override def visitPrefixIncrExpr(ctx: PrefixIncrExprContext): Option[IrNode] = compileIncr(IrPrefixIncrOp, ctx)
 
-  private def compileIncr(op: IrIncrOp, ctx: ExprContext): Option[IrIncrExpr] = compileM(ctx) {
+  private def compileIncr(op: IrIncrOp, ctx: ExprContext): Option[IrNode] = compileM(ctx) {
     val exprCtx = ctx.getRuleContext[ExprContext](classOf[ExprContext], 0)
     for (expr <- accept[IrExpr](exprCtx))
       yield expr match {
@@ -339,7 +339,7 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
 
   override def visitXorExpr(ctx: XorExprContext): Option[IrNode] = compileBinary(IrXorOp, ctx)
 
-  def compileBinary(op: IrBinaryOp, ctx: ExprContext): Option[IrBinaryExpr] = compileM(ctx) {
+  def compileBinary(op: IrBinaryOp, ctx: ExprContext): Option[IrNode] = compileM(ctx) {
     val leftCtx = ctx.getRuleContext[ExprContext](classOf[ExprContext], 0)
     val rightCtx = ctx.getRuleContext[ExprContext](classOf[ExprContext], 1)
     for {
