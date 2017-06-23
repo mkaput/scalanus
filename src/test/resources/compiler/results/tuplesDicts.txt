@@ -1,0 +1,36 @@
+IrProgram(line 1:0)
+    IrAssignStmt(line 1:0)
+        IrPattern(line 1:0)
+            IrRefPattern(line 1:0)
+                IrPath(line 1:0): a
+            IrRefPattern(line 1:3)
+                IrPath(line 1:3): b
+            IrRefPattern(line 1:6)
+                IrPath(line 1:6): c
+            IrWildcardPattern(line 1:9)
+        IrTuple(line 1:13)
+            IrRefExpr(line 1:14)
+                IrPath(line 1:14): x
+            IrValue(line 1:17) = 123
+            IrBinaryExpr(line 1:22): +
+                IrValue(line 1:22) = 2
+                IrBinaryExpr(line 1:26): *
+                    IrValue(line 1:26) = 2
+                    IrFnCallExpr(line 1:30)
+                        IrRefExpr(line 1:30)
+                            IrPath(line 1:30): foo
+            IrValue(line 1:37) = ()
+    IrAssignStmt(line 3:0)
+        IrPattern(line 3:0)
+            IrRefPattern(line 3:0)
+                IrPath(line 3:0): d
+        IrDict(line 3:4)
+            IrDictElem(line 4:4)
+                IrValue(line 4:4) = a
+                IrValue(line 4:10) = 1
+            IrDictElem(line 5:4)
+                IrDict(line 5:4)
+                    IrDictElem(line 5:7)
+                        IrValue(line 5:7) = x
+                        IrValue(line 5:13) = 1
+                IrDict(line 5:19)

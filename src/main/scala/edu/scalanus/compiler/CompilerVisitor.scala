@@ -13,7 +13,7 @@ import scala.collection.JavaConverters._
 class CompilerVisitor(private val errors: ScalanusErrorListener) extends ScalanusBaseVisitor[Option[IrNode]] {
 
   //
-  // Compile monad
+  // Compile "monad"
   //
 
   private def compile[T <: IrNode](ctx: ParserRuleContext)(f: => (IrCtx) => T): Option[T] = compileM(ctx) {
@@ -74,6 +74,23 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
   override def visitContinueExpr(ctx: ContinueExprContext): Option[IrNode] = compile(ctx) {
     IrContinue()
   }
+
+  override def visitDict(ctx: DictContext): Option[IrNode] = compile(ctx) {
+    IrDict(
+      ctx.dictElem.asScala
+        .flatMap(accept[IrDictElem])
+        .toIndexedSeq
+    )
+  }
+
+  override def visitDictElem(ctx: DictElemContext): Option[IrNode] = compileM(ctx) {
+    for {
+      key <- accept[IrExpr](ctx.expr(0))
+      value <- accept[IrExpr](ctx.expr(1))
+    } yield IrDictElem(key, value)
+  }
+
+  override def visitDictExpr(ctx: DictExprContext): Option[IrNode] = accept(ctx.dict)
 
   override def visitExprStmt(ctx: ExprStmtContext): Option[IrNode] = accept(ctx.expr)
 
@@ -212,6 +229,16 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
   override def visitReturnExpr(ctx: ReturnExprContext): Option[IrNode] = compileM(ctx) {
     for (value <- accept[IrExpr](ctx.expr)) yield IrReturn(value)
   }
+
+  override def visitTuple(ctx: TupleContext): Option[IrNode] = compile(ctx) {
+    IrTuple(
+      ctx.expr.asScala
+        .flatMap(accept[IrExpr])
+        .toIndexedSeq
+    )
+  }
+
+  override def visitTupleExpr(ctx: TupleExprContext): Option[IrNode] = accept(ctx.tuple)
 
   override def visitWildcardPattern(ctx: WildcardPatternContext): Option[IrNode] = compile(ctx) {
     IrWildcardPattern()

@@ -116,3 +116,9 @@ case class IrBreak()(ctx: IrCtx) extends IrNode(ctx) with IrExpr
 case class IrContinue()(ctx: IrCtx) extends IrNode(ctx) with IrExpr
 
 case class IrReturn(value: IrExpr)(ctx: IrCtx) extends IrNode(ctx) with IrExpr
+
+case class IrTuple(values: IndexedSeq[IrExpr])(ctx: IrCtx) extends IrNode(ctx) with IrExpr
+
+case class IrDict(elements: IndexedSeq[IrDictElem])(ctx: IrCtx) extends IrNode(ctx) with IrExpr
+
+case class IrDictElem(key: IrExpr, value: IrExpr)(ctx: IrCtx) extends IrNode(ctx)
