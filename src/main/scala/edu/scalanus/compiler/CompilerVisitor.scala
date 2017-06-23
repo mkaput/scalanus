@@ -273,6 +273,20 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
 
 
   //
+  // Unused visitor methods
+  //
+
+  override def visitUnit(ctx: UnitContext): Option[IrNode] = unreachable(ctx)
+
+  override def visitStmts(ctx: StmtsContext): Option[IrNode] = unreachable(ctx)
+
+  override def visitFnCallArgs(ctx: FnCallArgsContext): Option[IrNode] = unreachable(ctx)
+
+  private def unreachable(ctx: ParserRuleContext): Option[IrNode] =
+    ?!(s"ICE: unused AST visitor method ${ctx.getClass.getSimpleName.stripSuffix("Context")}", ctx)
+
+
+  //
   // Utilities
   //
 
