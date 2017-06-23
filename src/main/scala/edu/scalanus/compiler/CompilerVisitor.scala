@@ -57,6 +57,10 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
     } yield IrAssignStmt(pattern, expr)
   }
 
+  override def visitBreakExpr(ctx: BreakExprContext): Option[IrNode] = compile(ctx) {
+    IrBreak()
+  }
+
   override def visitBlock(ctx: BlockContext): Option[IrNode] = compile(ctx) {
     IrBlock(
       ctx.stmts.stmt.asScala
@@ -66,6 +70,10 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
   }
 
   override def visitBlockExpr(ctx: BlockExprContext): Option[IrNode] = accept(ctx.block)
+
+  override def visitContinueExpr(ctx: ContinueExprContext): Option[IrNode] = compile(ctx) {
+    IrContinue()
+  }
 
   override def visitExprStmt(ctx: ExprStmtContext): Option[IrNode] = accept(ctx.expr)
 
@@ -95,6 +103,15 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
     }
   }
 
+  override def visitForExpr(ctx: ForExprContext): Option[IrForExpr] = compileM(ctx) {
+    val loop = ctx.forLoop
+    for {
+      pattern <- accept[IrPattern](loop.pattern)
+      producer <- accept[IrExpr](loop.expr)
+      routine <- accept[IrExpr](loop.block)
+    } yield IrForExpr(pattern, producer, routine)
+  }
+
   override def visitIdxAccExpr(ctx: IdxAccExprContext): Option[IrRefExpr] = compileM(ctx) {
     for {
       recv <- accept[IrExpr](ctx.expr(0))
@@ -115,6 +132,23 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
     } yield IrRefPattern(idxAcc)
   }
 
+  override def visitElseTail(ctx: ElseTailContext): Option[IrNode] =
+    if (ctx.ifCond != null) {
+      accept(ctx.ifCond)
+    } else {
+      accept(ctx.block)
+    }
+
+  override def visitIfCond(ctx: IfCondContext): Option[IrNode] = compileM(ctx) {
+    for {
+      cond <- accept[IrExpr](ctx.expr)
+      ifBranch <- accept[IrExpr](ctx.block)
+      elseBranch <- acceptOptional[IrExpr](ctx.elseTail)
+    } yield IrIfExpr(cond, ifBranch, elseBranch)
+  }
+
+  override def visitIfExpr(ctx: IfExprContext): Option[IrNode] = accept(ctx.ifCond)
+
   override def visitItemStmt(ctx: ItemStmtContext): Option[IrNode] = accept(ctx.item)
 
   override def visitLiteral(ctx: LiteralContext): Option[IrNode] = compile(ctx) {
@@ -122,6 +156,10 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
   }
 
   override def visitLiteralExpr(ctx: LiteralExprContext): Option[IrNode] = accept(ctx.literal)
+
+  override def visitLoopExpr(ctx: LoopExprContext): Option[IrNode] = compileM(ctx) {
+    for (routine <- accept[IrExpr](ctx.loop.block)) yield IrLoopExpr(routine)
+  }
 
   override def visitMemAccExpr(ctx: MemAccExprContext): Option[IrRefExpr] = compileM(ctx) {
     for {
@@ -171,8 +209,20 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
     )
   }
 
+  override def visitReturnExpr(ctx: ReturnExprContext): Option[IrNode] = compileM(ctx) {
+    for (value <- accept[IrExpr](ctx.expr)) yield IrReturn(value)
+  }
+
   override def visitWildcardPattern(ctx: WildcardPatternContext): Option[IrNode] = compile(ctx) {
     IrWildcardPattern()
+  }
+
+  override def visitWhileExpr(ctx: WhileExprContext): Option[IrNode] = compileM(ctx) {
+    val loop = ctx.whileLoop
+    for {
+      cond <- accept[IrExpr](loop.expr)
+      routine <- accept[IrExpr](loop.block)
+    } yield IrWhileExpr(cond, routine)
   }
 
   override def visitValuePattern(ctx: ValuePatternContext): Option[IrNode] = compileM(ctx) {
@@ -276,11 +326,17 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
   // Unused visitor methods
   //
 
-  override def visitUnit(ctx: UnitContext): Option[IrNode] = unreachable(ctx)
+  override def visitFnCallArgs(ctx: FnCallArgsContext): Option[IrNode] = unreachable(ctx)
+
+  override def visitForLoop(ctx: ForLoopContext): Option[IrNode] = unreachable(ctx)
+
+  override def visitLoop(ctx: LoopContext): Option[IrNode] = unreachable(ctx)
 
   override def visitStmts(ctx: StmtsContext): Option[IrNode] = unreachable(ctx)
 
-  override def visitFnCallArgs(ctx: FnCallArgsContext): Option[IrNode] = unreachable(ctx)
+  override def visitUnit(ctx: UnitContext): Option[IrNode] = unreachable(ctx)
+
+  override def visitWhileLoop(ctx: WhileLoopContext): Option[IrNode] = unreachable(ctx)
 
   private def unreachable(ctx: ParserRuleContext): Option[IrNode] =
     ?!(s"ICE: unused AST visitor method ${ctx.getClass.getSimpleName.stripSuffix("Context")}", ctx)

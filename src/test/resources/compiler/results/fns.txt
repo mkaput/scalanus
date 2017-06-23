@@ -1,32 +1,40 @@
 IrProgram(line 1:0)
     IrFnItem(line 1:0): void
         IrBlock(line 1:10)
-    IrFnItem(line 3:0): foo
-        IrPattern(line 3:7)
-            IrRefPattern(line 3:7)
-                IrPath(line 3:7): a
-            IrRefPattern(line 3:10)
-                IrPath(line 3:10): b
-            IrWildcardPattern(line 3:13)
-            IrValuePattern(line 3:16)
-                IrValue(line 3:17) = 123
-        IrBlock(line 3:22)
-            IrBinaryExpr(line 4:4): +
-                IrBinaryExpr(line 4:4): *
-                    IrRefExpr(line 4:4)
-                        IrPath(line 4:4): a
-                    IrRefExpr(line 4:8)
-                        IrPath(line 4:8): b
-                IrFnCallExpr(line 4:12)
-                    IrRefExpr(line 4:12)
-                        IrPath(line 4:12): bar
-                    IrRefExpr(line 4:16)
-                        IrPath(line 4:16): foo
-                    IrRefExpr(line 4:21)
-                        IrPath(line 4:21): a
-                    IrBinaryExpr(line 4:24): +
-                        IrValue(line 4:24) = 12
-                        IrValue(line 4:29) = 4
-            IrFnCallExpr(line 5:4)
-                IrRefExpr(line 5:4)
-                    IrPath(line 5:4): void
+    IrFnItem(line 3:0): alsoVoid
+        IrBlock(line 3:14)
+            IrReturn(line 3:16)
+                IrValue(line 3:23) = ()
+    IrFnItem(line 5:0): foo
+        IrPattern(line 5:7)
+            IrRefPattern(line 5:7)
+                IrPath(line 5:7): a
+            IrRefPattern(line 5:10)
+                IrPath(line 5:10): b
+            IrWildcardPattern(line 5:13)
+            IrValuePattern(line 5:16)
+                IrValue(line 5:17) = 123
+        IrBlock(line 5:22)
+            IrBinaryExpr(line 6:4): +
+                IrBinaryExpr(line 6:4): *
+                    IrRefExpr(line 6:4)
+                        IrPath(line 6:4): a
+                    IrRefExpr(line 6:8)
+                        IrPath(line 6:8): b
+                IrFnCallExpr(line 6:12)
+                    IrRefExpr(line 6:12)
+                        IrPath(line 6:12): bar
+                    IrRefExpr(line 6:16)
+                        IrPath(line 6:16): foo
+                    IrRefExpr(line 6:21)
+                        IrPath(line 6:21): a
+                    IrBinaryExpr(line 6:24): +
+                        IrValue(line 6:24) = 12
+                        IrValue(line 6:29) = 4
+            IrFnCallExpr(line 7:4)
+                IrRefExpr(line 7:4)
+                    IrPath(line 7:4): void
+            IrReturn(line 8:4)
+                IrBinaryExpr(line 8:11): *
+                    IrValue(line 8:11) = 12
+                    IrValue(line 8:16) = 4

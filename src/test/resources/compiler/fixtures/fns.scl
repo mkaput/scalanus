@@ -1,6 +1,9 @@
 fn void() {}
 
+fn alsoVoid() { return () }
+
 fn foo(a, b, _, ^123) {
-    a * b + bar(foo, a, 12 + 4);
+    a * b + bar(foo, a, 12 + 4)
     void()
+    return 12 * 4
 }

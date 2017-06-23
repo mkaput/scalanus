@@ -102,3 +102,17 @@ case class IrBinaryExpr(op: IrBinaryOp, left: IrExpr, right: IrExpr)(ctx: IrCtx)
 }
 
 case class IrFnCallExpr(fnExpr: IrExpr, args: IndexedSeq[IrExpr])(ctx: IrCtx) extends IrNode(ctx) with IrExpr
+
+case class IrForExpr(pattern: IrPattern, producer: IrExpr, routine: IrExpr)(ctx: IrCtx) extends IrNode(ctx) with IrExpr
+
+case class IrWhileExpr(cond: IrExpr, routine: IrExpr)(ctx: IrCtx) extends IrNode(ctx) with IrExpr
+
+case class IrLoopExpr(routine: IrExpr)(ctx: IrCtx) extends IrNode(ctx) with IrExpr
+
+case class IrIfExpr(cond: IrExpr, ifBranch: IrExpr, elseBranch: Option[IrExpr])(ctx: IrCtx) extends IrNode(ctx) with IrExpr
+
+case class IrBreak()(ctx: IrCtx) extends IrNode(ctx) with IrExpr
+
+case class IrContinue()(ctx: IrCtx) extends IrNode(ctx) with IrExpr
+
+case class IrReturn(value: IrExpr)(ctx: IrCtx) extends IrNode(ctx) with IrExpr
