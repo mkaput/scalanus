@@ -38,6 +38,13 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
   private def accept[T <: IrNode](ctx: ParserRuleContext): Option[T] =
     ctx.accept(this).map(_.asInstanceOf[T])
 
+  private def acceptOptional[T <: IrNode](ctx: ParserRuleContext): Option[Option[T]] =
+    if (ctx == null) {
+      Some(None)
+    } else {
+      ctx.accept(this).map { n => Some(n.asInstanceOf[T]) }
+    }
+
 
   //
   // General AST nodes
@@ -62,6 +69,32 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
 
   override def visitExprStmt(ctx: ExprStmtContext): Option[IrNode] = accept(ctx.expr)
 
+  override def visitFnCallExpr(ctx: FnCallExprContext): Option[IrFnCallExpr] = compileM(ctx) {
+    for {
+      fnExpr <- accept[IrExpr](ctx.expr)
+    } yield {
+      val args = Option(ctx.fnCallArgs).map {
+        _.expr.asScala
+          .flatMap(accept[IrExpr])
+          .toIndexedSeq
+      }.getOrElse {
+        IndexedSeq.empty
+      }
+
+      IrFnCallExpr(fnExpr, args)
+    }
+  }
+
+  override def visitFnItem(ctx: FnItemContext): Option[IrFnItem] = compileM(ctx) {
+    for {
+      params <- acceptOptional[IrPattern](ctx.pattern)
+      routine <- accept[IrExpr](ctx.block)
+    } yield {
+      val name = ctx.IDENT.getText
+      IrFnItem(name, params, routine)
+    }
+  }
+
   override def visitIdxAccExpr(ctx: IdxAccExprContext): Option[IrRefExpr] = compileM(ctx) {
     for {
       recv <- accept[IrExpr](ctx.expr(0))
@@ -81,6 +114,8 @@ class CompilerVisitor(private val errors: ScalanusErrorListener) extends Scalanu
       }
     } yield IrRefPattern(idxAcc)
   }
+
+  override def visitItemStmt(ctx: ItemStmtContext): Option[IrNode] = accept(ctx.item)
 
   override def visitLiteral(ctx: LiteralContext): Option[IrNode] = compile(ctx) {
     IrValue(LiteralParser.parse(ctx))

@@ -8,6 +8,8 @@ sealed abstract class IrNode(val ctx: IrCtx) extends Product {
       .flatMap {
         case collection: Traversable[_] =>
           collection.collect { case n: IrNode => n }
+        case opt: Option[_] =>
+          opt.collect { case n: IrNode => n }
         case node: IrNode => Array(node)
         case _ => Nil
       }
@@ -65,6 +67,17 @@ case class IrValuePattern(expr: IrExpr)(ctx: IrCtx) extends IrNode(ctx) with IrS
 
 
 //
+// Items
+//
+
+sealed trait IrItem extends IrStmt
+
+case class IrFnItem(name: String, params: Option[IrPattern], routine: IrExpr)(ctx: IrCtx) extends IrNode(ctx) with IrItem {
+  override def toString = s"${super.toString}: $name"
+}
+
+
+//
 // Expressions
 //
 
@@ -87,3 +100,5 @@ case class IrIncrExpr(op: IrIncrOp, ref: IrRefExpr)(ctx: IrCtx) extends IrNode(c
 case class IrBinaryExpr(op: IrBinaryOp, left: IrExpr, right: IrExpr)(ctx: IrCtx) extends IrNode(ctx) with IrExpr {
   override def toString = s"${super.toString}: $op"
 }
+
+case class IrFnCallExpr(fnExpr: IrExpr, args: IndexedSeq[IrExpr])(ctx: IrCtx) extends IrNode(ctx) with IrExpr
