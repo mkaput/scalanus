@@ -12,22 +12,19 @@ program
                         '(': (
                         ')': )
         ';': ;
-        stmt:itemStmt
-            item:blockItem
-                block
-                    '{': {
-                    stmts
-                        stmt:exprStmt
-                            expr:pathExpr
-                                path
-                                    IDENT: foo
-                    '}': }
         stmt:exprStmt
-            expr:literalExpr
-                literal
-                    unit
-                        '(': (
-                        ')': )
+            expr:fnCallExpr
+                expr:blockExpr
+                    block
+                        '{': {
+                        stmts
+                            stmt:exprStmt
+                                expr:pathExpr
+                                    path
+                                        IDENT: foo
+                        '}': }
+                '(': (
+                ')': )
         ';': ;
         stmt:assignStmt
             pattern

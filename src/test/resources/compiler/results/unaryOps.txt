@@ -1,0 +1,29 @@
+IrProgram(line 1:0)
+    IrUnaryExpr(line 1:0): !
+        IrRefExpr(line 1:1)
+            IrPath(line 1:1): x
+    IrUnaryExpr(line 2:0): ~
+        IrRefExpr(line 2:1)
+            IrPath(line 2:1): x
+    IrUnaryExpr(line 3:0): -
+        IrRefExpr(line 3:1)
+            IrPath(line 3:1): x
+    IrUnaryExpr(line 4:0): +
+        IrRefExpr(line 4:1)
+            IrPath(line 4:1): x
+    IrUnaryExpr(line 5:0): !
+        IrUnaryExpr(line 5:1): !
+            IrRefExpr(line 5:2)
+                IrPath(line 5:2): x
+    IrUnaryExpr(line 6:0): ~
+        IrUnaryExpr(line 6:1): ~
+            IrRefExpr(line 6:2)
+                IrPath(line 6:2): x
+    IrUnaryExpr(line 7:0): -
+        IrUnaryExpr(line 7:2): -
+            IrRefExpr(line 7:3)
+                IrPath(line 7:3): x
+    IrUnaryExpr(line 8:0): +
+        IrUnaryExpr(line 8:2): +
+            IrRefExpr(line 8:3)
+                IrPath(line 8:3): x

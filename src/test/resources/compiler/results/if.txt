@@ -1,0 +1,23 @@
+IrProgram(line 1:0)
+    IrIfExpr(line 1:0)
+        IrBinaryExpr(line 1:3): ==
+            IrBinaryExpr(line 1:3): +
+                IrValue(line 1:3) = 2
+                IrValue(line 1:7) = 2
+            IrValue(line 1:12) = 4
+        IrBlock(line 1:14)
+            IrValue(line 2:4) = if without else
+    IrIfExpr(line 5:0)
+        IrValue(line 5:3) = false
+        IrBlock(line 5:9)
+            IrValue(line 5:11) = if
+        IrIfExpr(line 5:23)
+            IrValue(line 5:26) = false
+            IrBlock(line 5:32)
+                IrValue(line 5:34) = else if#1
+            IrIfExpr(line 5:53)
+                IrValue(line 5:56) = false
+                IrBlock(line 5:62)
+                    IrValue(line 5:64) = else if#2
+                IrBlock(line 5:83)
+                    IrValue(line 5:85) = else

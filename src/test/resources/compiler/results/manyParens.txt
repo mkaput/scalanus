@@ -1,0 +1,3 @@
+IrProgram(line 1:0)
+    IrRefExpr(line 2:0)
+        IrPath(line 2:0): a

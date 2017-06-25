@@ -1,0 +1,4 @@
+loop { break }
+for x in someRange { continue }
+for a, b, c in someOtherRange(2 + 2) { "for with pattern" }
+while(True) { "while body" }

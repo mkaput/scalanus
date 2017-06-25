@@ -1,6 +1,6 @@
 package edu.scalanus.cli
 
-import javax.script.ScriptEngineManager
+import javax.script.{ScriptEngineManager, ScriptException}
 
 import org.jline.reader.{EndOfFileException, LineReaderBuilder, UserInterruptException}
 import org.jline.terminal.{Terminal, TerminalBuilder}
@@ -53,8 +53,8 @@ class Repl {
       val result = engine.eval(line)
       println(result)
     } catch {
-      case e: Exception =>
-        e.printStackTrace(System.out)
+      case e: ScriptException => println(e.getMessage)
+      case e: Exception => e.printStackTrace(System.out)
     }
   }
 

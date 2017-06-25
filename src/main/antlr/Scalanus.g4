@@ -56,7 +56,6 @@ simplePattern : '_'                # wildcardPattern
 // Items
 
 item : 'fn' IDENT '(' pattern? ')' block  # fnItem
-     | block                              # blockItem
      ;
 
 
@@ -245,18 +244,18 @@ UNICODE_ESCAPE_INNER : HEX_DIGIT HEX_DIGIT? HEX_DIGIT? HEX_DIGIT? HEX_DIGIT? HEX
 
 // Number literals
 
-INT_LIT      : '0b' ( '1' | '0' | '_' )+
-             | '0o' ( OCT_DIGIT | '_' )+
-             | '0x' ( HEX_DIGIT | '_' )+
-             |      ( DEC_DIGIT | '_' )+
+INT_LIT      : '0b'           ( '1' | '0' | '_' )+
+             | '0o'           ( OCT_DIGIT | '_' )+
+             | '0x'           ( HEX_DIGIT | '_' )+
+             |      DEC_DIGIT ( DEC_DIGIT | '_' )*
              ;
 
-FLOAT_LIT    : ( DEC_DIGIT | '_' )* FLOAT_SUFFIX ;
+FLOAT_LIT    : DEC_DIGIT ( DEC_DIGIT | '_' )* ( FLOAT_SUFFIX | EXPONENT )
+             | FLOAT_SUFFIX
+             ;
 
 fragment
-FLOAT_SUFFIX : '.' ( DEC_DIGIT | '_' )+ EXPONENT?
-             | EXPONENT
-             ;
+FLOAT_SUFFIX : '.' ( DEC_DIGIT | '_' )+ EXPONENT? ;
 
 fragment
 EXPONENT     : [Ee] [\-+]? ( DEC_DIGIT | '_' )+ ;

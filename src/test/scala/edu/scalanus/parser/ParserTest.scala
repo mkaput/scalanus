@@ -5,7 +5,7 @@ import java.io.File
 import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.{CharStream, CommonTokenStream, Parser}
 
-class ParserSpec extends ParserSpecBase {
+class ParserTest extends ParserTestBase {
   override def basePath: String = "parser/fixtures"
 
   override protected def lexIncludeHiddenTokens(f: File): Boolean = Array(

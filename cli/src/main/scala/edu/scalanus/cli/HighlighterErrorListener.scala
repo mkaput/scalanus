@@ -1,9 +1,9 @@
-package edu.scalanus.parser
+package edu.scalanus.cli
 
 import org.antlr.v4.runtime.misc.ParseCancellationException
 import org.antlr.v4.runtime.{BaseErrorListener, RecognitionException, Recognizer}
 
-object ThrowingErrorListener extends BaseErrorListener {
+object HighlighterErrorListener extends BaseErrorListener {
 
   @throws[ParseCancellationException]
   override def syntaxError(

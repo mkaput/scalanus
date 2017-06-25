@@ -1,0 +1,19 @@
+IrProgram(line 1:0)
+    IrBlock(line 1:0)
+        IrValue(line 1:2) = 123
+    IrBlock(line 2:0)
+        IrValue(line 2:2) = 1
+        IrValue(line 2:5) = 2
+        IrValue(line 2:8) = 3
+        IrValue(line 2:11) = 4
+    IrBlock(line 3:0)
+        IrValue(line 3:2) = 1
+        IrValue(line 3:5) = 2
+        IrValue(line 3:8) = 3
+        IrValue(line 3:11) = 4
+    IrAssignStmt(line 4:0)
+        IrPattern(line 4:0)
+            IrRefPattern(line 4:0)
+                IrPath(line 4:0): a
+        IrBlock(line 4:4)
+            IrValue(line 4:6) = 1

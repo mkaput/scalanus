@@ -1,7 +1,7 @@
 package edu.scalanus.cli
 
+import edu.scalanus.parser.ScalanusLexer
 import edu.scalanus.parser.ScalanusLexerUtil._
-import edu.scalanus.parser.{ScalanusLexer, ThrowingErrorListener}
 import org.antlr.v4.runtime.misc.ParseCancellationException
 import org.antlr.v4.runtime.{CharStreams, Token}
 import org.jline.reader.{Highlighter, LineReader}
@@ -16,7 +16,7 @@ class ReplHighlighter extends Highlighter {
   override def highlight(reader: LineReader, buffer: String): AttributedString = {
     val lexer = new ScalanusLexer(CharStreams.fromString(buffer))
     lexer.removeErrorListeners()
-    lexer.addErrorListener(ThrowingErrorListener)
+    lexer.addErrorListener(HighlighterErrorListener)
 
     val asb = new AttributedStringBuilder()
 
