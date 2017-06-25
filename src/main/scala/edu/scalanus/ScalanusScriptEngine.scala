@@ -5,12 +5,14 @@ import javax.script._
 
 import edu.scalanus.compiler.ScalanusCompiler
 import edu.scalanus.errors.ScalanusException
+import edu.scalanus.interpreter.ScalanusScriptContext
 
 class ScalanusScriptEngine private[scalanus](
   private val factory: ScalanusScriptEngineFactory
 ) extends AbstractScriptEngine with Compilable with Invocable {
 
   private val compiler = new ScalanusCompiler(this)
+  context = new ScalanusScriptContext
 
   @throws[ScriptException]
   override def compile(script: String): CompiledScript = try {
