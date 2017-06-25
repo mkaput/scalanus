@@ -12,7 +12,7 @@ class ScalanusScriptEngine private[scalanus](
 ) extends AbstractScriptEngine with Compilable with Invocable {
 
   private val compiler = new ScalanusCompiler(this)
-  context = new ScalanusScriptContext
+  //context = new ScalanusScriptContext
 
   @throws[ScriptException]
   override def compile(script: String): CompiledScript = try {
