@@ -14,6 +14,6 @@ class ScalanusCompiledScript(
 
   override def getEngine: ScriptEngine = engine
 
-  override def eval(context: ScriptContext): AnyRef = ???
+  override def eval(context: ScriptContext): AnyRef = interpreter.eval(ir,context)
 
 }
