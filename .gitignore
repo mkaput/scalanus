@@ -8,10 +8,7 @@ project/plugins/project/
 .cache
 .lib/
 *.iml
-.idea/*.xml
-.idea/modules/
-.idea/libraries/
-.idea/inspectionProfiles/
+.idea
 .gradle
 /build/
 gradle-app.setting
