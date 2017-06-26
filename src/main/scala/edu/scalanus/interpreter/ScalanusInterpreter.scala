@@ -33,18 +33,32 @@ object ScalanusInterpreter {
     case irIdxAcc: IrIdxAcc => evalIdxAcc(irIdxAcc, context, scope)
   }
 
+  def setRef(irRef: IrRef, context: ScalanusScriptContext, scope: Int, value: Any): Any = irRef match {
+    case irPath: IrPath => setPath(irPath, context, scope, value)
+    case irMemAcc: IrMemAcc => setMemAcc(irMemAcc, context, scope, value)
+    case irIdxAcc: IrIdxAcc => setIdxAcc(irIdxAcc, context, scope, value)
+  }
+
   def evalPath(irPath: IrPath, context: ScalanusScriptContext, scope: Int): Any =
     context.getAttribute(irPath.ident, scope)
 
+  def setPath(irPath: IrPath, context: ScalanusScriptContext, scope: Int, value: Any): Any =
+    context.setAttribute(irPath.ident, value, scope)
+
   def evalMemAcc(irMemAcc: IrMemAcc, context: ScalanusScriptContext, scope: Int): Any = {
-    val recv = evalExpr(irMemAcc.recv, context, scope).getClass
-    val method = recv.getMethods.filter(p => p.getName.equals(irMemAcc.member))
+    val recv = evalExpr(irMemAcc.recv, context, scope)
+    val cls = recv.getClass
+    val method = cls.getMethods.filter(p => p.getName.equals(irMemAcc.member))
     if(method.nonEmpty){
-      method(0)
+      method(0).invoke(recv,_)
     }
-    else{
-      recv.getField(irMemAcc.member)
-    }
+    else cls.getField(irMemAcc.member).get(recv)
+  }
+
+  def setMemAcc(irMemAcc: IrMemAcc, context: ScalanusScriptContext, scope: Int, value: Any): Any = {
+    val recv = evalExpr(irMemAcc.recv, context, scope)
+    val cls = recv.getClass
+    cls.getField(irMemAcc.member).set(recv,value)
   }
 
   def evalIdxAcc(irIdxAcc: IrIdxAcc, context: ScalanusScriptContext, scope: Int): Any = {
@@ -52,7 +66,16 @@ object ScalanusInterpreter {
     val idx = evalExpr(irIdxAcc.idx, context, scope)
     recv match {
       case seq: Seq[Any] => seq(idx)
-      case map: Map[Any,Any] => map.get(idx)
+      case map: Map[Any,Any] => map(idx)
+    }
+  }
+
+  def setIdxAcc(irIdxAcc: IrIdxAcc, context: ScalanusScriptContext, scope: Int, value: Any): Any = {
+    val recv = evalExpr(irIdxAcc.recv, context, scope)
+    val idx = evalExpr(irIdxAcc.idx, context, scope)
+    recv match {
+      case seq: Seq[Any] => seq(idx) = value
+      case map: Map[Any,Any] => map(idx) = value
     }
   }
 
