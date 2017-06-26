@@ -10,10 +10,8 @@ class ScalanusCompiledScript(
   private val engine: ScriptEngine
 ) extends CompiledScript {
 
-  val interpreter = new ScalanusInterpreter
-
   override def getEngine: ScriptEngine = engine
 
-  override def eval(context: ScriptContext): AnyRef = interpreter.eval(ir,context)
+  override def eval(context: ScriptContext): AnyRef = ScalanusInterpreter.eval(ir,context)
 
 }

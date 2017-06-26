@@ -4,7 +4,7 @@ import javax.script.ScriptContext
 
 import edu.scalanus.ir._
 
-class ScalanusInterpreter {
+object ScalanusInterpreter {
 
   def eval(ir: IrNode, context: ScriptContext): AnyRef = {
     context match {
