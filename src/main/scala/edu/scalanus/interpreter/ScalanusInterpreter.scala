@@ -33,11 +33,28 @@ object ScalanusInterpreter {
     case irIdxAcc: IrIdxAcc => evalIdxAcc(irIdxAcc, context, scope)
   }
 
-  def evalPath(irPath: IrPath, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalPath(irPath: IrPath, context: ScalanusScriptContext, scope: Int): Any =
+    context.getAttribute(irPath.ident, scope)
 
-  def evalMemAcc(irMemAcc: IrMemAcc, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalMemAcc(irMemAcc: IrMemAcc, context: ScalanusScriptContext, scope: Int): Any = {
+    val recv = evalExpr(irMemAcc.recv, context, scope).getClass
+    val method = recv.getMethods.filter(p => p.getName.equals(irMemAcc.member))
+    if(method.nonEmpty){
+      method(0)
+    }
+    else{
+      recv.getField(irMemAcc.member)
+    }
+  }
 
-  def evalIdxAcc(irIdxAcc: IrIdxAcc, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalIdxAcc(irIdxAcc: IrIdxAcc, context: ScalanusScriptContext, scope: Int): Any = {
+    val recv = evalExpr(irIdxAcc.recv, context, scope)
+    val idx = evalExpr(irIdxAcc.idx, context, scope)
+    recv match {
+      case seq: Seq[Any] => seq(idx)
+      case map: Map[Any,Any] => map.get(idx)
+    }
+  }
 
 
   //
