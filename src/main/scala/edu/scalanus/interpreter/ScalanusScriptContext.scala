@@ -1,13 +1,19 @@
 package edu.scalanus.interpreter
 
 import java.util.Objects
-import javax.script.{ScriptContext, SimpleBindings, SimpleScriptContext}
+import javax.script.{ScriptContext, SimpleScriptContext}
 
 import scala.collection.mutable.ArrayBuffer
 
-class ScalanusScriptContext() extends SimpleScriptContext {
+class ScalanusScriptContext(context: ScriptContext) extends SimpleScriptContext {
 
-  val PROGRAM_SCOPE:Int = ScriptContext.GLOBAL_SCOPE+1
+  setBindings(context.getBindings(ScriptContext.GLOBAL_SCOPE), ScriptContext.GLOBAL_SCOPE)
+  setBindings(context.getBindings(ScriptContext.ENGINE_SCOPE), ScriptContext.ENGINE_SCOPE)
+  setWriter(context.getWriter)
+  setReader(context.getReader)
+  setErrorWriter(context.getErrorWriter)
+
+  val PROGRAM_SCOPE: Int = ScriptContext.GLOBAL_SCOPE+1
   private var scalanusScopes = ArrayBuffer.empty[ScalanusScope]
   addScope()
 
@@ -18,18 +24,18 @@ class ScalanusScriptContext() extends SimpleScriptContext {
       return
     }
     scalanusScopes(scopeId) match{
-      case _:HardScope =>
-        scalanusScopes(scopeId).put(name,value)
-      case _:SoftScope =>
+      case _: HardScope =>
+        scalanusScopes(scopeId).put(name, value)
+      case _: SoftScope =>
         val scope = scalanusScopes
-          .slice(0,scopeId+1)
+          .slice(0, scopeId+1)
           .reverseIterator
           .collectFirst{
             case s if s.containsKey(name) => s
             case _:HardScope => scalanusScopes(scopeId)
           }
           .get // globalScope is HardScope
-        scope.put(name,value)
+        scope.put(name, value)
     }
   }
 
@@ -37,14 +43,11 @@ class ScalanusScriptContext() extends SimpleScriptContext {
     checkName(name)
     val scopeId = scope - PROGRAM_SCOPE
     if(scope < PROGRAM_SCOPE || scopeId >= scalanusScopes.length)
-      return super.getAttribute(name,scope)
+      return super.getAttribute(name, scope)
     scalanusScopes(scopeId) match{
-      case s if s.containsKey(name) || scopeId == 0 =>
-        s.get(name)
-      case _:HardScope =>
-        getAttribute(name,PROGRAM_SCOPE)
-      case _:SoftScope =>
-        getAttribute(name,scope-1)
+      case s if s.containsKey(name) || scopeId == 0 => s.get(name)
+      case _: HardScope => getAttribute(name, PROGRAM_SCOPE)
+      case _: SoftScope => getAttribute(name, scope-1)
     }
   }
 
@@ -52,7 +55,7 @@ class ScalanusScriptContext() extends SimpleScriptContext {
     checkName(name)
     val scopeId = scope - PROGRAM_SCOPE
     if(scope < PROGRAM_SCOPE || scopeId >= scalanusScopes.length)
-      super.removeAttribute(name,scope)
+      super.removeAttribute(name, scope)
     else
       scalanusScopes(scopeId).remove(name)
   }
@@ -77,10 +80,6 @@ class ScalanusScriptContext() extends SimpleScriptContext {
 
 }
 
-sealed class ScalanusScope extends SimpleBindings
-
-class SoftScope() extends ScalanusScope
-
-class HardScope() extends ScalanusScope
-
-
+object ScalanusScriptContext{
+  def apply() = new ScalanusScriptContext(new SimpleScriptContext)
+}
