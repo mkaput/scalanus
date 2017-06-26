@@ -17,6 +17,7 @@ object ScalanusInterpreter {
     case irStmt: IrStmt => evalStmt(irStmt, context, scope)
     case irPattern: IrPattern => evalPattern(irPattern, context, scope)
     case irSimplePattern: IrSimplePattern => evalSimplePattern(irSimplePattern, context, scope)
+    case irDictElem: IrDictElem => evalDictElem(irDictElem,context,scope)
   }
 
   def evalProgram(irProgram: IrProgram, context: ScalanusScriptContext, scope: Int): Any =
@@ -50,7 +51,7 @@ object ScalanusInterpreter {
     val cls = recv.getClass
     val method = cls.getMethods.filter(p => p.getName.equals(irMemAcc.member))
     if(method.nonEmpty){
-      method(0).invoke(recv,_)
+      (args: Seq[AnyRef]) => method(0).invoke(recv, args :_*)
     }
     else cls.getField(irMemAcc.member).get(recv)
   }
@@ -65,8 +66,9 @@ object ScalanusInterpreter {
     val recv = evalExpr(irIdxAcc.recv, context, scope)
     val idx = evalExpr(irIdxAcc.idx, context, scope)
     recv match {
-      case seq: Seq[Any] => seq(idx)
-      case map: Map[Any,Any] => map(idx)
+      case map: collection.mutable.Map[_,_] =>
+        map.asInstanceOf[collection.mutable.Map[Any,Any]](idx)
+      case seq: Seq[Any] => seq(idx.asInstanceOf[Int])
     }
   }
 
@@ -74,8 +76,10 @@ object ScalanusInterpreter {
     val recv = evalExpr(irIdxAcc.recv, context, scope)
     val idx = evalExpr(irIdxAcc.idx, context, scope)
     recv match {
-      case seq: Seq[Any] => seq(idx) = value
-      case map: Map[Any,Any] => map(idx) = value
+      case map: collection.mutable.Map[_,_] =>
+        map.asInstanceOf[collection.mutable.Map[Any,Any]] += (idx -> value)
+      case seq: collection.mutable.Seq[_] =>
+        seq.asInstanceOf[collection.mutable.Seq[Any]](idx.asInstanceOf[Int]) = value
     }
   }
 
@@ -146,7 +150,6 @@ object ScalanusInterpreter {
       case irReturn: IrReturn => eval(irReturn, context, scope)
       case irTuple: IrTuple => evalTuple(irTuple, context, scope)
       case irDict: IrDict => evalDict(irDict, context, scope)
-      case irDictElem: IrDictElem => evalDictElem(irDictElem, context, scope)
     }
   }
 
@@ -179,6 +182,6 @@ object ScalanusInterpreter {
 
   def evalDict(irDict: IrDict, context: ScalanusScriptContext, scope: Int): Any = ???
 
-  def evalDictElem(irDictElem: IrExpr with IrDictElem, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalDictElem(irDictElem: IrDictElem with IrDictElem, context: ScalanusScriptContext, scope: Int): Any = ???
 
 }
