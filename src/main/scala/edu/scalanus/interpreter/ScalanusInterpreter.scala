@@ -21,7 +21,7 @@ object ScalanusInterpreter {
   }
 
   def evalProgram(irProgram: IrProgram, context: ScalanusScriptContext, scope: Int): Any =
-    irProgram.stmts.foldLeft[Any] (Unit) { (_, stmt) => evalStmt(stmt, context, scope) }
+    irProgram.stmts.foldLeft[Any](Unit) { (_, stmt) => evalStmt(stmt, context, scope) }
 
 
   //
@@ -34,16 +34,16 @@ object ScalanusInterpreter {
     case irIdxAcc: IrIdxAcc => evalIdxAcc(irIdxAcc, context, scope)
   }
 
-  def setRef(irRef: IrRef, context: ScalanusScriptContext, scope: Int, value: Any): Any = irRef match {
-    case irPath: IrPath => setPath(irPath, context, scope, value)
-    case irMemAcc: IrMemAcc => setMemAcc(irMemAcc, context, scope, value)
-    case irIdxAcc: IrIdxAcc => setIdxAcc(irIdxAcc, context, scope, value)
+  def setRef(irRef: IrRef, value: Any, context: ScalanusScriptContext, scope: Int): Any = irRef match {
+    case irPath: IrPath => setPath(irPath,value, context, scope)
+    case irMemAcc: IrMemAcc => setMemAcc(irMemAcc, value, context, scope)
+    case irIdxAcc: IrIdxAcc => setIdxAcc(irIdxAcc, value, context, scope)
   }
 
   def evalPath(irPath: IrPath, context: ScalanusScriptContext, scope: Int): Any =
     context.getAttribute(irPath.ident, scope)
 
-  def setPath(irPath: IrPath, context: ScalanusScriptContext, scope: Int, value: Any): Any =
+  def setPath(irPath: IrPath, value: Any, context: ScalanusScriptContext, scope: Int): Any =
     context.setAttribute(irPath.ident, value, scope)
 
   def evalMemAcc(irMemAcc: IrMemAcc, context: ScalanusScriptContext, scope: Int): Any = {
@@ -56,7 +56,7 @@ object ScalanusInterpreter {
     else cls.getField(irMemAcc.member).get(recv)
   }
 
-  def setMemAcc(irMemAcc: IrMemAcc, context: ScalanusScriptContext, scope: Int, value: Any): Any = {
+  def setMemAcc(irMemAcc: IrMemAcc, value: Any, context: ScalanusScriptContext, scope: Int): Any = {
     val recv = evalExpr(irMemAcc.recv, context, scope)
     val cls = recv.getClass
     cls.getField(irMemAcc.member).set(recv,value)
@@ -72,7 +72,7 @@ object ScalanusInterpreter {
     }
   }
 
-  def setIdxAcc(irIdxAcc: IrIdxAcc, context: ScalanusScriptContext, scope: Int, value: Any): Any = {
+  def setIdxAcc(irIdxAcc: IrIdxAcc, value: Any, context: ScalanusScriptContext, scope: Int): Any = {
     val recv = evalExpr(irIdxAcc.recv, context, scope)
     val idx = evalExpr(irIdxAcc.idx, context, scope)
     recv match {
@@ -156,7 +156,8 @@ object ScalanusInterpreter {
   def evalBlock(irBlock: IrBlock, context: ScalanusScriptContext, scope: Int): Any =
     irBlock.stmts.foldLeft[Any] (Unit) { (_, stmt) => evalStmt(stmt, context, scope) }
 
-  def evalRefExpr(irRefExpr: IrRefExpr, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalRefExpr(irRefExpr: IrRefExpr, context: ScalanusScriptContext, scope: Int): Any =
+    evalRef(irRefExpr.ref, context, scope)
 
   def evalValue(irValue: IrValue, context: ScalanusScriptContext, scope: Int): Any = ???
 

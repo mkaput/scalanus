@@ -4,6 +4,6 @@ import javax.script.SimpleBindings
 
 sealed abstract class ScalanusScope extends SimpleBindings
 
-class SoftScope() extends ScalanusScope
+case class SoftScope() extends ScalanusScope
 
-class HardScope() extends ScalanusScope
+case class HardScope() extends ScalanusScope

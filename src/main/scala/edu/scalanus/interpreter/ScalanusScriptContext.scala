@@ -15,7 +15,7 @@ class ScalanusScriptContext(context: ScriptContext) extends SimpleScriptContext 
 
   val PROGRAM_SCOPE: Int = ScriptContext.GLOBAL_SCOPE+1
   private var scalanusScopes = ArrayBuffer.empty[ScalanusScope]
-  addScope()
+  addHardScope()
 
   override def setAttribute(name: String, value: scala.Any, scope: Int): Unit = {
     val scopeId = scope - PROGRAM_SCOPE
@@ -66,10 +66,14 @@ class ScalanusScriptContext(context: ScriptContext) extends SimpleScriptContext 
       throw new IllegalArgumentException("name cannot be empty")
   }
 
-  def addScope(hardScope:Boolean=true):Int = {
-    scalanusScopes += (if(hardScope) new HardScope() else new SoftScope())
+  private def addScope(scope: ScalanusScope):Int = {
+    scalanusScopes += scope
     scalanusScopes.length + PROGRAM_SCOPE -1
   }
+
+  def addSoftScope(): Int = addScope(SoftScope())
+
+  def addHardScope(): Int = addScope(HardScope())
 
   def deleteScope(scope: Int): Unit = {
     val scopeId = scope - PROGRAM_SCOPE
