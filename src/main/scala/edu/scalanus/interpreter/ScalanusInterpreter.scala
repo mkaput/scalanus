@@ -159,13 +159,38 @@ object ScalanusInterpreter {
   def evalRefExpr(irRefExpr: IrRefExpr, context: ScalanusScriptContext, scope: Int): Any =
     evalRef(irRefExpr.ref, context, scope)
 
-  def evalValue(irValue: IrValue, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalValue(irValue: IrValue, context: ScalanusScriptContext, scope: Int): Any = irValue.value
 
-  def evalUnaryExpr(irUnaryExpr: IrUnaryExpr, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalUnaryExpr(irUnaryExpr: IrUnaryExpr, context: ScalanusScriptContext, scope: Int): Any = {
+    val value = evalExpr(irUnaryExpr.expr, context, scope)
+    value.getClass.getMethod("unary_" + irUnaryExpr.op.rep).invoke(value)
+  }
 
-  def evalIncrExpr(irIncrExpr: IrIncrExpr, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalIncrExpr(irIncrExpr: IrIncrExpr, context: ScalanusScriptContext, scope: Int): Any = {
+    val value = evalRefExpr(irIncrExpr.ref, context, scope)
+    irIncrExpr.op match{
+      case IrPostfixDecrOp =>
+        setRef(irIncrExpr.ref.ref, value.getClass.getMethod("-").invoke(value,1), context, scope)
+        value
+      case IrPostfixIncrOp =>
+        setRef(irIncrExpr.ref.ref, value.getClass.getMethod("+").invoke(value,1), context, scope)
+        value
+      case IrPrefixDecrOp =>
+        val newValue = value.getClass.getMethod("-").invoke(value,1)
+        setRef(irIncrExpr.ref.ref, newValue, context, scope)
+        newValue
+      case IrPrefixIncrOp =>
+        val newValue = value.getClass.getMethod("+").invoke(value,1)
+        setRef(irIncrExpr.ref.ref, newValue, context, scope)
+        newValue
+    }
+  }
 
-  def evalBinaryExpr(irBinaryExpr: IrBinaryExpr, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalBinaryExpr(irBinaryExpr: IrBinaryExpr, context: ScalanusScriptContext, scope: Int): Any = {
+    val leftValue = evalExpr(irBinaryExpr.left, context, scope)
+    val rightValue = evalExpr(irBinaryExpr.right, context, scope)
+    leftValue.getClass.getMethod(irBinaryExpr.op.rep).invoke(leftValue,rightValue)
+  }
 
   def evalFnCallExpr(irFnCallExpr: IrFnCallExpr, context: ScalanusScriptContext, scope: Int): Any = ???
 
