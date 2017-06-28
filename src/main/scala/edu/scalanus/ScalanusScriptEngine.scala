@@ -7,6 +7,7 @@ import edu.scalanus.compiler.ScalanusCompiler
 import edu.scalanus.errors.ScalanusException
 import edu.scalanus.interpreter.{ScalanusInterpreter, ScalanusMethod, ScalanusScriptContext}
 import edu.scalanus.ir.{IrCtx, IrFnCallExpr, IrValue}
+import edu.scalanus.stdlib.ScalanusStdLib
 import edu.scalanus.util.LcfPosition
 
 class ScalanusScriptEngine private[scalanus](
@@ -15,6 +16,7 @@ class ScalanusScriptEngine private[scalanus](
 
   private val compiler = new ScalanusCompiler(this)
   context = new ScalanusScriptContext(context) // override default context
+  ScalanusStdLib.addStdLib(context.asInstanceOf[ScalanusScriptContext])
 
   @throws[ScriptException]
   override def compile(script: String): CompiledScript = try {
