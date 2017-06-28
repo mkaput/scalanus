@@ -75,7 +75,7 @@ object ScalanusInterpreter {
     recv match {
       case map: collection.mutable.Map[_,_] =>
         map.asInstanceOf[collection.mutable.Map[Any,Any]](idx)
-      case seq: Seq[Any] => seq(idx.asInstanceOf[Int])
+      case seq: IndexedSeq[Any] => seq(idx.asInstanceOf[Int])
       case _ => throw new ScalanusEvalException("Unreachable Code",irIdxAcc.ctx)
     }
   }

@@ -9,8 +9,18 @@ object ScalanusStdLib {
   }
 }
 
-class ScalanusArray{
-  def of(args: Any*): Array[Any] = {
-    Array(args:_*)
+trait ScalanusLib{
+  def eval(methodName: String, args: Seq[Any], context: ScalanusScriptContext, scope: Int): Any
+}
+
+class ScalanusArray extends ScalanusLib{
+  def of(args: Any*): collection.mutable.IndexedSeq[Any] = {
+    collection.mutable.ResizableArray(args:_*)
   }
+
+  override def eval(methodName: String, args: Seq[Any], context: ScalanusScriptContext, scope: Int): Any =
+    methodName match{
+      case "of" => of(args:_*)
+    }
+
 }
