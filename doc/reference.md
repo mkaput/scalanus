@@ -415,7 +415,7 @@ following precedence table:
 |            | `... >> ...`      | left-to-right | Bitwise right shift |
 | 11         | `... & ...`       | left-to-right | Bitwise AND |
 | 10         | `... ^ ...`       | left-to-right | Bitwise XOR |
-| 9          | `... | ...`       | left-to-right | Bitwise OR |
+| 9          | `... ∣ ...`       | left-to-right | Bitwise OR |
 | 8          | `... == ...`      | left-to-right | Equality |
 |            | `... != ...`      | left-to-right | Inequality |
 |            | `... < ...`       | left-to-right | Less than |
