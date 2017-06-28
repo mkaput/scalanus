@@ -5,7 +5,9 @@ import javax.script._
 
 import edu.scalanus.compiler.ScalanusCompiler
 import edu.scalanus.errors.ScalanusException
-import edu.scalanus.interpreter.ScalanusScriptContext
+import edu.scalanus.interpreter.{ScalanusInterpreter, ScalanusMethod, ScalanusScriptContext}
+import edu.scalanus.ir.{IrCtx, IrFnCallExpr, IrValue}
+import edu.scalanus.util.LcfPosition
 
 class ScalanusScriptEngine private[scalanus](
   private val factory: ScalanusScriptEngineFactory
@@ -61,7 +63,10 @@ class ScalanusScriptEngine private[scalanus](
   @throws[ScriptException]
   @throws[NoSuchMethodException]
   override def invokeMethod(receiver: Any, name: String, args: AnyRef*): AnyRef = try {
-    ???
+    val scalanusScriptContext = context.asInstanceOf[ScalanusScriptContext]
+    ScalanusMethod(receiver, name)
+      .eval(args, scalanusScriptContext, scalanusScriptContext.PROGRAM_SCOPE)
+      .asInstanceOf[AnyRef]
   } catch {
     case e: ScalanusException => throw e.toScriptException
     case e: ScriptException => throw e
@@ -73,7 +78,9 @@ class ScalanusScriptEngine private[scalanus](
   @throws[ScriptException]
   @throws[NoSuchMethodException]
   override def invokeFunction(name: String, args: AnyRef*): AnyRef = try {
-    ???
+    val ctx = IrCtx(LcfPosition(0))
+    val node = IrFnCallExpr(IrValue(name)(ctx), args.map(arg=> IrValue(arg)(ctx)).toIndexedSeq)(ctx)
+    ScalanusInterpreter.eval(node, context)
   } catch {
     case e: ScalanusException => throw e.toScriptException
     case e: ScriptException => throw e
@@ -82,9 +89,9 @@ class ScalanusScriptEngine private[scalanus](
     case e: Exception => throw new ScriptException(e)
   }
 
-  override def getInterface[T](returnType: Class[T]): T = ???
+  override def getInterface[T](returnType: Class[T]): T = ??? // No idea
 
-  override def getInterface[T](receiver: Any, returnType: Class[T]): T = ???
+  override def getInterface[T](receiver: Any, returnType: Class[T]): T = ??? // No idea
 
   private def getScriptName(ctx: ScriptContext): String = {
     val attr = ctx.getAttribute(ScriptEngine.FILENAME)
