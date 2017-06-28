@@ -76,7 +76,7 @@ object ScalanusInterpreter {
       case map: collection.mutable.Map[_,_] =>
         map.asInstanceOf[collection.mutable.Map[Any,Any]](idx)
       case seq: IndexedSeq[Any] => seq(idx.asInstanceOf[Int])
-      case _ => throw new ScalanusEvalException("Unreachable Code",irIdxAcc.ctx)
+      case _ => throw new ScalanusEvalException("Get Value Error",irIdxAcc.ctx)
     }
   }
 
@@ -89,7 +89,7 @@ object ScalanusInterpreter {
       case seq: collection.mutable.Seq[_] =>
         seq.asInstanceOf[collection.mutable.Seq[Any]](idx.asInstanceOf[Int]) = value
       case _ =>
-        throw new ScalanusEvalException("Unreachable Code",irIdxAcc.ctx)
+        throw new ScalanusEvalException("Set Value Error",irIdxAcc.ctx)
     }
   }
 
@@ -439,7 +439,7 @@ object ScalanusInterpreter {
     throw ScalanusReturn(irReturn.value)
 
   def evalTuple(irTuple: IrTuple, context: ScalanusScriptContext, scope: Int): Any =
-    irTuple.values.map(value => evalExpr(value, context, scope)).asInstanceOf[Array[Any]]
+    irTuple.values.map(value => evalExpr(value, context, scope))
 
   def evalDict(irDict: IrDict, context: ScalanusScriptContext, scope: Int): Any = {
     val dict = collection.mutable.Map.empty[Any,Any]
