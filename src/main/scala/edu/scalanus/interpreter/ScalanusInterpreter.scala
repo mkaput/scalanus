@@ -146,15 +146,20 @@ object ScalanusInterpreter {
       case irLoopExpr: IrLoopExpr => evalLoopExpr(irLoopExpr, context, scope)
       case irIfExpr: IrIfExpr => evalIfExpr(irIfExpr, context, scope)
       case irBreak: IrBreak => evalBreak(irBreak, context, scope)
-      case irContinue: IrContinue => eval(irContinue, context, scope)
-      case irReturn: IrReturn => eval(irReturn, context, scope)
+      case irContinue: IrContinue => evalContinue(irContinue, context, scope)
+      case irReturn: IrReturn => evalReturn(irReturn, context, scope)
       case irTuple: IrTuple => evalTuple(irTuple, context, scope)
       case irDict: IrDict => evalDict(irDict, context, scope)
     }
   }
 
-  def evalBlock(irBlock: IrBlock, context: ScalanusScriptContext, scope: Int): Any =
-    irBlock.stmts.foldLeft[Any] (Unit) { (_, stmt) => evalStmt(stmt, context, scope) }
+  def evalBlock(irBlock: IrBlock, context: ScalanusScriptContext, scope: Int): Any ={
+    val newScope = context.addSoftScope()
+    val value = irBlock.stmts.foldLeft[Any] (Unit) { (_, stmt) => evalStmt(stmt, context, newScope) }
+    context.deleteScope(newScope)
+    value
+  }
+
 
   def evalRefExpr(irRefExpr: IrRefExpr, context: ScalanusScriptContext, scope: Int): Any =
     evalRef(irRefExpr.ref, context, scope)
@@ -170,17 +175,17 @@ object ScalanusInterpreter {
     val value = evalRefExpr(irIncrExpr.ref, context, scope)
     irIncrExpr.op match{
       case IrPostfixDecrOp =>
-        setRef(irIncrExpr.ref.ref, value.getClass.getMethod("-").invoke(value,1), context, scope)
+        setRef(irIncrExpr.ref.ref, value.getClass.getMethod("-").invoke(value,1.asInstanceOf[AnyRef]), context, scope)
         value
       case IrPostfixIncrOp =>
-        setRef(irIncrExpr.ref.ref, value.getClass.getMethod("+").invoke(value,1), context, scope)
+        setRef(irIncrExpr.ref.ref, value.getClass.getMethod("+").invoke(value,1.asInstanceOf[AnyRef]), context, scope)
         value
       case IrPrefixDecrOp =>
-        val newValue = value.getClass.getMethod("-").invoke(value,1)
+        val newValue = value.getClass.getMethod("-").invoke(value,1.asInstanceOf[AnyRef])
         setRef(irIncrExpr.ref.ref, newValue, context, scope)
         newValue
       case IrPrefixIncrOp =>
-        val newValue = value.getClass.getMethod("+").invoke(value,1)
+        val newValue = value.getClass.getMethod("+").invoke(value,1.asInstanceOf[AnyRef])
         setRef(irIncrExpr.ref.ref, newValue, context, scope)
         newValue
     }
@@ -189,25 +194,75 @@ object ScalanusInterpreter {
   def evalBinaryExpr(irBinaryExpr: IrBinaryExpr, context: ScalanusScriptContext, scope: Int): Any = {
     val leftValue = evalExpr(irBinaryExpr.left, context, scope)
     val rightValue = evalExpr(irBinaryExpr.right, context, scope)
-    leftValue.getClass.getMethod(irBinaryExpr.op.rep).invoke(leftValue,rightValue)
+    leftValue.getClass.getMethod(irBinaryExpr.op.rep).invoke(leftValue, rightValue.asInstanceOf[AnyRef])
   }
 
   def evalFnCallExpr(irFnCallExpr: IrFnCallExpr, context: ScalanusScriptContext, scope: Int): Any = ???
 
-  def evalForExpr(irForExpr: IrForExpr, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalForExpr(irForExpr: IrForExpr, context: ScalanusScriptContext, scope: Int): Unit = {
+    val newScope = context.addSoftScope()
+    val it = evalExpr(irForExpr.producer, context, newScope).asInstanceOf[Iterable].iterator
+    while(it.hasNext){
+      evalAssignStmt(IrAssignStmt(irForExpr.pattern, IrValue(it.next())(irForExpr.ctx))(irForExpr.ctx),
+        context,
+        newScope)
+      try {
+        evalExpr(irForExpr.routine, context, newScope)
+      } catch {
+        case _: ScalanusBreak => return
+        case _: ScalanusContinue => // do nothing
+      }
+    }
+    context.deleteScope(newScope)
+  }
 
-  def evalWhileExpr(irWhileExpr: IrWhileExpr, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalWhileExpr(irWhileExpr: IrWhileExpr, context: ScalanusScriptContext, scope: Int): Unit = {
+    while(evalExpr(irWhileExpr.cond, context, scope).equals(true)){
+      try {
+        evalExpr(irWhileExpr.routine, context, scope)
+      } catch {
+        case _: ScalanusBreak => return
+        case _: ScalanusContinue => // do nothing
+      }
+    }
+  }
 
-  def evalLoopExpr(irLoopExpr: IrLoopExpr, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalLoopExpr(irLoopExpr: IrLoopExpr, context: ScalanusScriptContext, scope: Int): Unit = {
+    while(true){
+      try {
+        evalExpr(irLoopExpr.routine, context, scope)
+      } catch {
+        case _: ScalanusBreak => return
+        case _: ScalanusContinue => // do nothing
+      }
+    }
 
-  def evalIfExpr(irIfExpr: IrIfExpr, context: ScalanusScriptContext, scope: Int): Any = ???
+  }
 
-  def evalBreak(irBreak: IrBreak, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalIfExpr(irIfExpr: IrIfExpr, context: ScalanusScriptContext, scope: Int): Any = {
+    if(eval(irIfExpr.cond, context, scope).equals(true))
+      evalExpr(irIfExpr.ifBranch, context, scope)
+    else if(irIfExpr.elseBranch.nonEmpty)
+      evalExpr(irIfExpr.ifBranch, context, scope)
+  }
 
-  def evalTuple(irTuple: IrTuple, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalBreak(irBreak: IrBreak, context: ScalanusScriptContext, scope: Int): Any = throw ScalanusBreak()
 
-  def evalDict(irDict: IrDict, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalContinue(irContinue: IrContinue, context: ScalanusScriptContext, scope: Int): Any = throw ScalanusContinue()
 
-  def evalDictElem(irDictElem: IrDictElem with IrDictElem, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalReturn(irReturn: IrReturn, context: ScalanusScriptContext, scope: Int): Any = throw ScalanusReturn()
+
+  def evalTuple(irTuple: IrTuple, context: ScalanusScriptContext, scope: Int): Any =
+    irTuple.values.map(value => evalExpr(value, context, scope)).asInstanceOf[Array[Any]]
+
+  def evalDict(irDict: IrDict, context: ScalanusScriptContext, scope: Int): Any = {
+    val dict = collection.mutable.Map.empty[Any,Any]
+    irDict.elements.foreach(
+      elem => dict.put(evalExpr(elem.key, context, scope), evalExpr(elem.value, context, scope))
+    )
+    dict
+  }
+
+  def evalDictElem(irDictElem: IrDictElem, context: ScalanusScriptContext, scope: Int): Any = ???
 
 }
