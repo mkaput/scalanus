@@ -2,6 +2,7 @@ package edu.scalanus.errors
 
 import javax.script.ScriptException
 
+import edu.scalanus.ir.IrCtx
 import edu.scalanus.util.LcfPosition
 import org.antlr.v4.runtime.ParserRuleContext
 
@@ -59,3 +60,6 @@ sealed class ScalanusMultiException(
   override def getMessage: String = detailMessage
 
 }
+
+sealed class ScalanusEvalException(detailMessage: String, ctx: IrCtx)
+  extends ScalanusException(detailMessage, ctx.position)
