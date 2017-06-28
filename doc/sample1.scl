@@ -1,0 +1,21 @@
+numbers = #{"foo" = 1, "bar" = 2, "moo" = 3}
+
+numbers["moo"] = 5	// średniki są opcjonalne
+
+fn funnyPrint(name, number) {
+	IO.println(name + " = " + number)
+}
+
+for (name, number) in numbers {
+	funnyPrint(
+		// prawie wszystko jest wyrażeniem
+		if number mod 2 == 0 {
+			name.toUpperCase()
+		} else {
+			name
+		},
+		number
+	)
+}
+
+
