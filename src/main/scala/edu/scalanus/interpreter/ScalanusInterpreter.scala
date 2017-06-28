@@ -197,7 +197,6 @@ object ScalanusInterpreter {
           case double: Double => double.unary_+
         }
     }
-    //value.getClass.getMethod("unary_" + irUnaryExpr.op.rep).invoke(value)
   }
 
   def evalIncrExpr(irIncrExpr: IrIncrExpr, context: ScalanusScriptContext, scope: Int): Any = {
@@ -222,7 +221,150 @@ object ScalanusInterpreter {
   def evalBinaryExpr(irBinaryExpr: IrBinaryExpr, context: ScalanusScriptContext, scope: Int): Any = {
     val leftValue = evalExpr(irBinaryExpr.left, context, scope)
     val rightValue = evalExpr(irBinaryExpr.right, context, scope)
-    leftValue.getClass.getMethod(irBinaryExpr.op.rep).invoke(leftValue, rightValue.asInstanceOf[AnyRef])
+    irBinaryExpr.op match {
+      case IrAddOp =>
+        (leftValue,rightValue) match{
+          case (left: Int,right: Int) => left + right
+          case (left: Int,right: Double) => left + right
+          case (left: Int,right: String) => left + right
+
+          case (left: Double,right: Int) => left + right
+          case (left: Double,right: Double) => left + right
+          case (left: Double,right: String) => left + right
+
+          case (left: String,right: Any) => left + right
+
+          case (left: Any,right: String) => left + right
+        }
+      case IrAndOp =>
+        (leftValue,rightValue) match{
+          case (left: Boolean,right: Boolean) => left && right
+        }
+      case IrBandOp =>
+        (leftValue,rightValue) match{
+          case (left: Boolean,right: Boolean) => left & right
+
+          case (left: Int,right: Int) => left & right
+        }
+      case IrBitshiftLeftOp =>
+        (leftValue,rightValue) match{
+          case (left: Int,right: Int) => left << right
+        }
+      case IrBitshiftRightOp =>
+        (leftValue,rightValue) match{
+          case (left: Int,right: Int) => left >> right
+        }
+      case IrBorOp =>
+        (leftValue,rightValue) match{
+          case (left: Boolean,right: Boolean) => left | right
+
+          case (left: Int,right: Int) => left | right
+        }
+      case IrDivOp =>
+        (leftValue,rightValue) match{
+          case (left: Int,right: Int) => left / right
+          case (left: Int,right: Double) => left / right
+
+          case (left: Double,right: Int) => left / right
+          case (left: Double,right: Double) => left / right
+        }
+      case IrEqOp =>
+        leftValue == rightValue
+      case IrGteqOp =>
+        (leftValue,rightValue) match{
+          case (left: Boolean,right: Boolean) => left >= right
+
+          case (left: Int,right: Int) => left >= right
+          case (left: Int,right: Double) => left >= right
+
+          case (left: Double,right: Int) => left >= right
+          case (left: Double,right: Double) => left >= right
+
+          case (left: String,right: String) => left >= right
+        }
+      case IrGtOp =>
+        (leftValue,rightValue) match{
+          case (left: Boolean,right: Boolean) => left > right
+
+          case (left: Int,right: Int) => left > right
+          case (left: Int,right: Double) => left > right
+
+          case (left: Double,right: Int) => left > right
+          case (left: Double,right: Double) => left > right
+
+          case (left: String,right: String) => left > right
+        }
+      case IrLteqOp =>
+        (leftValue,rightValue) match{
+          case (left: Boolean,right: Boolean) => left <= right
+
+          case (left: Int,right: Int) => left <= right
+          case (left: Int,right: Double) => left <= right
+
+          case (left: Double,right: Int) => left <= right
+          case (left: Double,right: Double) => left <= right
+
+          case (left: String,right: String) => left <= right
+        }
+      case IrLtOp =>
+        (leftValue,rightValue) match{
+          case (left: Boolean,right: Boolean) => left < right
+
+          case (left: Int,right: Int) => left < right
+          case (left: Int,right: Double) => left < right
+
+          case (left: Double,right: Int) => left < right
+          case (left: Double,right: Double) => left < right
+
+          case (left: String,right: String) => left < right
+        }
+      case IrModOp =>
+        (leftValue,rightValue) match{
+          case (left: Int,right: Int) => left % right
+          case (left: Int,right: Double) => left % right
+
+          case (left: Double,right: Int) => left % right
+          case (left: Double,right: Double) => left % right
+        }
+      case IrMulOp =>
+        (leftValue,rightValue) match{
+          case (left: Int,right: Int) => left * right
+          case (left: Int,right: Double) => left * right
+
+          case (left: Double,right: Int) => left * right
+          case (left: Double,right: Double) => left * right
+
+          case (left: String,right: Int) => left * right
+        }
+      case IrNeqOp =>
+        leftValue != rightValue
+      case IrOrOp =>
+        (leftValue,rightValue) match{
+          case (left: Boolean,right: Boolean) => left || right
+        }
+      case IrPowOp =>
+        (leftValue,rightValue) match{
+          case (left: Int,right: Int) => scala.math.pow(left, right)
+          case (left: Int,right: Double) => scala.math.pow(left, right)
+
+          case (left: Double,right: Int) => scala.math.pow(left, right)
+          case (left: Double,right: Double) => scala.math.pow(left, right)
+        }
+      case IrSubOp =>
+        (leftValue,rightValue) match{
+          case (left: Int,right: Int) => left - right
+          case (left: Int,right: Double) => left - right
+
+          case (left: Double,right: Int) => left - right
+          case (left: Double,right: Double) => left - right
+        }
+      case IrXorOp =>
+        (leftValue,rightValue) match{
+          case (left: Boolean,right: Boolean) => left ^ right
+
+          case (left: Int,right: Int) => left ^ right
+        }
+    }
   }
 
   def evalFnCallExpr(irFnCallExpr: IrFnCallExpr, context: ScalanusScriptContext, scope: Int): Any = {
