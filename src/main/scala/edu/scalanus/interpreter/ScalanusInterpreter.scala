@@ -4,6 +4,8 @@ import javax.script.ScriptContext
 
 import edu.scalanus.ir._
 
+import scala.collection.GenIterable
+
 object ScalanusInterpreter {
 
   def eval(ir: IrNode, context: ScriptContext): AnyRef = context match {
@@ -94,7 +96,30 @@ object ScalanusInterpreter {
     case irExpr: IrExpr => evalExpr(irExpr, context, scope)
   }
 
-  def evalAssignStmt(irAssignStmt: IrAssignStmt, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalAssignStmt(irAssignStmt: IrAssignStmt, context: ScalanusScriptContext, scope: Int): Any ={
+    val value = evalExpr(irAssignStmt.expr, context, scope)
+    val list: Iterable[(IrSimplePattern,Any)] =
+      if(irAssignStmt.pattern.patterns.size == 1){
+        Array((irAssignStmt.pattern.patterns(0),value))
+      } else{
+        val values: GenIterable[Any] =
+          value match {
+            case iterable: GenIterable[Any] => iterable
+            case _ => Array(value)
+          }
+        irAssignStmt.pattern.patterns.zip(values)
+      }
+    list.foreach((p:(IrSimplePattern,Any)) => {
+      p._1 match {
+        case _: IrWildcardPattern => // do nothing
+        case irValuePattern: IrValuePattern =>
+          if(evalExpr(irValuePattern.expr, context, scope) != p._2) throw new MatchError() // todo
+        case irRefPattern: IrRefPattern =>
+          setRef(irRefPattern.ref, p._2, context, scope)
+      }
+    })
+  }
+
 
 
   //
@@ -103,18 +128,7 @@ object ScalanusInterpreter {
 
   def evalPattern(irPattern: IrPattern, context: ScalanusScriptContext, scope: Int): Any = ???
 
-  def evalSimplePattern(irSimplePattern: IrSimplePattern, context: ScalanusScriptContext, scope: Int): Any =
-    irSimplePattern match {
-      case irWildcardPattern: IrWildcardPattern => evalWildcardPattern(irWildcardPattern, context, scope)
-      case irRefPattern: IrRefPattern => evalRefPattern(irRefPattern, context, scope)
-      case irValuePattern: IrValuePattern => evalValuePattern(irValuePattern, context, scope)
-    }
-
-  def evalWildcardPattern(irWildcardPattern: IrWildcardPattern, context: ScalanusScriptContext, scope: Int): Any = ???
-
-  def evalRefPattern(irRefPattern: IrRefPattern, context: ScalanusScriptContext, scope: Int): Any = ???
-
-  def evalValuePattern(irValuePattern: IrValuePattern, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalSimplePattern(irSimplePattern: IrSimplePattern, context: ScalanusScriptContext, scope: Int): Any = ???
 
 
   //
@@ -125,7 +139,8 @@ object ScalanusInterpreter {
     case irFnItem: IrFnItem => evalFnItem(irFnItem, context, scope)
   }
 
-  def evalFnItem(irFnItem: IrFnItem, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalFnItem(irFnItem: IrFnItem, context: ScalanusScriptContext, scope: Int): Any =
+    context.setAttribute(irFnItem.name, irFnItem, scope)
 
 
   //
@@ -197,11 +212,31 @@ object ScalanusInterpreter {
     leftValue.getClass.getMethod(irBinaryExpr.op.rep).invoke(leftValue, rightValue.asInstanceOf[AnyRef])
   }
 
-  def evalFnCallExpr(irFnCallExpr: IrFnCallExpr, context: ScalanusScriptContext, scope: Int): Any = ???
+  def evalFnCallExpr(irFnCallExpr: IrFnCallExpr, context: ScalanusScriptContext, scope: Int): Any = {
+    val args = irFnCallExpr.args.map(arg => evalExpr(arg, context, scope))
+    evalExpr(irFnCallExpr.fnExpr, context, scope) match {
+      case irFnItem: IrFnItem =>
+        val newScope = context.addHardScope()
+        if(irFnItem.params.nonEmpty){
+          evalAssignStmt(IrAssignStmt(irFnItem.params.get, IrValue(args)(irFnItem.ctx))(irFnItem.ctx),
+            context,
+            newScope)
+        }
+        var value: Any = Unit
+        try{
+          value = evalExpr(irFnItem.routine, context, newScope)
+        } catch {
+          case scalanusReturn: ScalanusReturn => value = scalanusReturn.value
+        }
+        context.deleteScope(newScope)
+        value
+      case fun: (Seq[Any] => Any) => fun(args)
+    }
+  }
 
   def evalForExpr(irForExpr: IrForExpr, context: ScalanusScriptContext, scope: Int): Unit = {
     val newScope = context.addSoftScope()
-    val it = evalExpr(irForExpr.producer, context, newScope).asInstanceOf[Iterable].iterator
+    val it = evalExpr(irForExpr.producer, context, newScope).asInstanceOf[Iterable[Any]].iterator
     while(it.hasNext){
       evalAssignStmt(IrAssignStmt(irForExpr.pattern, IrValue(it.next())(irForExpr.ctx))(irForExpr.ctx),
         context,
@@ -250,7 +285,8 @@ object ScalanusInterpreter {
 
   def evalContinue(irContinue: IrContinue, context: ScalanusScriptContext, scope: Int): Any = throw ScalanusContinue()
 
-  def evalReturn(irReturn: IrReturn, context: ScalanusScriptContext, scope: Int): Any = throw ScalanusReturn()
+  def evalReturn(irReturn: IrReturn, context: ScalanusScriptContext, scope: Int): Any =
+    throw ScalanusReturn(irReturn.value)
 
   def evalTuple(irTuple: IrTuple, context: ScalanusScriptContext, scope: Int): Any =
     irTuple.values.map(value => evalExpr(value, context, scope)).asInstanceOf[Array[Any]]
