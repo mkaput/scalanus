@@ -183,26 +183,39 @@ object ScalanusInterpreter {
 
   def evalUnaryExpr(irUnaryExpr: IrUnaryExpr, context: ScalanusScriptContext, scope: Int): Any = {
     val value = evalExpr(irUnaryExpr.expr, context, scope)
-    value.getClass.getMethod("unary_" + irUnaryExpr.op.rep).invoke(value)
+    irUnaryExpr.op match{
+      case IrBNotOp => value.asInstanceOf[Int].unary_~
+      case IrNotOp => value.asInstanceOf[Boolean].unary_!
+      case IrMinusOp =>
+        value match{
+          case int: Int => int.unary_-
+          case double: Double => double.unary_-
+        }
+      case IrPlusOp =>
+        value match{
+          case int: Int => int.unary_+
+          case double: Double => double.unary_+
+        }
+    }
+    //value.getClass.getMethod("unary_" + irUnaryExpr.op.rep).invoke(value)
   }
 
   def evalIncrExpr(irIncrExpr: IrIncrExpr, context: ScalanusScriptContext, scope: Int): Any = {
     val value = evalRefExpr(irIncrExpr.ref, context, scope)
+    val op = irIncrExpr.op match{
+      case IrPostfixDecrOp => IrSubOp
+      case IrPostfixIncrOp => IrAddOp
+      case IrPrefixDecrOp => IrSubOp
+      case IrPrefixIncrOp => IrAddOp
+    }
+    val irBinaryExpr = IrBinaryExpr(op, IrValue(value)(irIncrExpr.ctx), IrValue(1)(irIncrExpr.ctx))(irIncrExpr.ctx)
+    val newValue = evalBinaryExpr(irBinaryExpr, context, scope)
+    setRef(irIncrExpr.ref.ref, newValue, context, scope)
     irIncrExpr.op match{
-      case IrPostfixDecrOp =>
-        setRef(irIncrExpr.ref.ref, value.getClass.getMethod("-").invoke(value,1.asInstanceOf[AnyRef]), context, scope)
-        value
-      case IrPostfixIncrOp =>
-        setRef(irIncrExpr.ref.ref, value.getClass.getMethod("+").invoke(value,1.asInstanceOf[AnyRef]), context, scope)
-        value
-      case IrPrefixDecrOp =>
-        val newValue = value.getClass.getMethod("-").invoke(value,1.asInstanceOf[AnyRef])
-        setRef(irIncrExpr.ref.ref, newValue, context, scope)
-        newValue
-      case IrPrefixIncrOp =>
-        val newValue = value.getClass.getMethod("+").invoke(value,1.asInstanceOf[AnyRef])
-        setRef(irIncrExpr.ref.ref, newValue, context, scope)
-        newValue
+      case IrPostfixDecrOp => value
+      case IrPostfixIncrOp => value
+      case IrPrefixDecrOp => newValue
+      case IrPrefixIncrOp => newValue
     }
   }
 
@@ -230,7 +243,7 @@ object ScalanusInterpreter {
         }
         context.deleteScope(newScope)
         value
-      case fun: (Seq[Any] => Any) => fun(args)
+      case any => any.asInstanceOf[(Seq[Any] => Any)](args)
     }
   }
 
