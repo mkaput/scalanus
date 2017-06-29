@@ -429,7 +429,7 @@ object ScalanusInterpreter {
     if(eval(irIfExpr.cond, context, scope).equals(true))
       evalExpr(irIfExpr.ifBranch, context, scope)
     else if(irIfExpr.elseBranch.nonEmpty)
-      evalExpr(irIfExpr.ifBranch, context, scope)
+      evalExpr(irIfExpr.elseBranch.get, context, scope)
   }
 
   def evalBreak(irBreak: IrBreak, context: ScalanusScriptContext, scope: Int): Any = throw ScalanusBreak()
