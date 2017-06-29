@@ -17,5 +17,3 @@ for name, number in numbers {
 		number
 	)
 }
-
-

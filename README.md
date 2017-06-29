@@ -50,7 +50,7 @@ Check out [issues](https://github.com/mkaput/scalanus/issues) for details on wha
 |------------------|:------:|
 | CLI              | 🎉 |
 | | | | |
-| Standard library | 💔 |
+| Standard library | ⚙️ |
 | | | | |
 | Lang Reference   | 🎉 |
-| Presentation     | 💔 |
+| Presentation     | 🎉 |
