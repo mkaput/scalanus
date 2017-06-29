@@ -65,5 +65,9 @@ project(":cli") {
                 "Main-Class": "edu.scalanus.cli.Main"
             )
         }
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
     }
+
 }

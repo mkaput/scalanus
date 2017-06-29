@@ -114,6 +114,7 @@ object ScalanusInterpreter {
         val values: GenIterable[Any] =
           value match {
             case iterable: GenIterable[Any] => iterable
+            case product: Product => product.productIterator.toList
             case _ => Array(value)
           }
         irAssignStmt.pattern.patterns.zip(values)
