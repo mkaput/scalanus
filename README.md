@@ -1,4 +1,4 @@
-[![logo](./doc/logo.png)]
+![logo](./doc/logo.png)
 
 # Scalanus [![Build Status](https://travis-ci.org/mkaput/scalanus.svg?branch=master)](https://travis-ci.org/mkaput/scalanus)
 
