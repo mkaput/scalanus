@@ -1,0 +1,5 @@
+IO.print("N: ")
+
+n = IO.readLine
+
+IO.println(n)

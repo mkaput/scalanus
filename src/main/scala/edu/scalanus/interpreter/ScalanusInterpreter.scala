@@ -437,7 +437,7 @@ object ScalanusInterpreter {
   def evalContinue(irContinue: IrContinue, context: ScalanusScriptContext, scope: Int): Any = throw ScalanusContinue()
 
   def evalReturn(irReturn: IrReturn, context: ScalanusScriptContext, scope: Int): Any =
-    throw ScalanusReturn(irReturn.value)
+    throw ScalanusReturn(evalExpr(irReturn.value, context, scope))
 
   def evalTuple(irTuple: IrTuple, context: ScalanusScriptContext, scope: Int): Any =
     irTuple.values.map(value => evalExpr(value, context, scope))

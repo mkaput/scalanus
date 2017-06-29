@@ -1,7 +1,7 @@
 package edu.scalanus.interpreter
 
-import edu.scalanus.interpreter.ScalanusInterpreter.{evalAssignStmt, evalExpr}
-import edu.scalanus.ir.{IrAssignStmt, IrFnItem, IrValue}
+import edu.scalanus.interpreter.ScalanusInterpreter._
+import edu.scalanus.ir._
 import edu.scalanus.stdlib.ScalanusLib
 
 sealed trait ScalanusFunction {
@@ -23,7 +23,12 @@ case class ScalanusIrFunction(irFnItem: IrFnItem) extends ScalanusFunction{
   override def eval(args: Seq[Any], context: ScalanusScriptContext, scope: Int): Any = {
     val newScope = context.addHardScope()
     if(irFnItem.params.nonEmpty)
-      evalAssignStmt(IrAssignStmt(irFnItem.params.get, IrValue(args)(irFnItem.ctx))(irFnItem.ctx), context, newScope)
+      if(args.size == 1){
+        evalAssignStmt(IrAssignStmt(irFnItem.params.get, IrValue(args.head)(irFnItem.ctx))(irFnItem.ctx), context, newScope)
+      } else{
+        evalAssignStmt(IrAssignStmt(irFnItem.params.get, IrValue(args)(irFnItem.ctx))(irFnItem.ctx), context, newScope)
+      }
+
     try{
       evalExpr(irFnItem.routine, context, newScope)
     } catch {
