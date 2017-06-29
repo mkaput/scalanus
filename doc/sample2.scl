@@ -1,7 +1,7 @@
 i = 1
 
 while i <= 100 {
-    if i mod 3 == 0 and i mod 5 == 0{
+    if i mod 3 == 0 and i mod 5 == 0 {
         IO.println("Janusze Scali")
     } else if i mod 3 == 0 {
          IO.println("Janusz")

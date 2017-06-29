@@ -1,0 +1,24 @@
+arr = Array.of((1,2),(2,4),"abc", 2)
+
+i = 0
+
+//soft scope
+for e in arr {
+    IO.println(e)
+    if(e == "abc") {
+        break
+    }
+    i++
+}
+
+
+//hard scope
+fn fun(i) {
+    i++
+    IO.println(i)
+}
+
+fun(i)
+
+IO.println(i)
+
