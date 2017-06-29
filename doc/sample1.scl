@@ -6,7 +6,7 @@ fn funnyPrint(name, number) {
 	IO.println(name + " = " + number)
 }
 
-for (name, number) in numbers {
+for name, number in numbers {
 	funnyPrint(
 		// prawie wszystko jest wyrażeniem
 		if number mod 2 == 0 {
